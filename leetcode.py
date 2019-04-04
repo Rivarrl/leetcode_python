@@ -8,10 +8,12 @@ class ListNode:
         self.val = x
         self.next = None
 
+
 class Axis:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
 
 class RainNode:
     def __init__(self, x, y, h):
@@ -21,6 +23,7 @@ class RainNode:
 
     def __lt__(self, other):
         return int(self.h) < int(other.h)
+
 
 class Codec:
     def encode(self, longUrl):
@@ -610,7 +613,7 @@ class Solution:
             res.append(matrix[i][j])
             matrix[i][j] = 0
             c += 1
-            if matrix[(i+y)%row][(j+x)%col] == 0:
+            if matrix[(i + y) % row][(j + x) % col] == 0:
                 x, y = -y, x
             i += y
             j += x
@@ -624,9 +627,9 @@ class Solution:
         res: list(list(int)) = [[0 for _ in range(n)] for _ in range(n)]
         c = 1
         i, j, x, y = 0, 0, 1, 0
-        while c <= n**2:
+        while c <= n ** 2:
             res[i][j] = c
-            if res[(i+y)%n][(j+x)%n] != 0:
+            if res[(i + y) % n][(j + x) % n] != 0:
                 x, y = -y, x
             i += y
             j += x
@@ -643,7 +646,7 @@ class Solution:
             return 0
         m = max(height)
         idx = height.index(m)
-        return self.trapR(height[:idx+1], -1, m) + self.trapR(height[idx:], 0, m)
+        return self.trapR(height[:idx + 1], -1, m) + self.trapR(height[idx:], 0, m)
 
     def trapR(self, h, idx, m):
         l = len(h) - 1
@@ -654,7 +657,7 @@ class Solution:
         res = 0
         # 如果次大值不在两侧则进行递归
         if 0 < idx2 < l:
-            res = self.trapR(h[:idx2+1], -1, m2) + self.trapR(h[idx2:], 0, m2)
+            res = self.trapR(h[:idx2 + 1], -1, m2) + self.trapR(h[idx2:], 0, m2)
         else:
             # 最简接水结构，左右两侧分别是最大和次大
             for i in range(1, l):
@@ -687,7 +690,7 @@ class Solution:
         if N == 0:
             return x
         while n < N:
-            x, y = y, x+y
+            x, y = y, x + y
             n += 1
         return y
 
@@ -722,7 +725,7 @@ class Solution:
         """
         i = 0
         m = ""
-        while i < 2**10:
+        while i < 2 ** 10:
             try:
                 n = strs[0][i]
                 for each in strs[1:]:
@@ -758,7 +761,6 @@ class Solution:
             i += 1
         return m
 
-
     def grayCode(self, n):
         """
         :type n: int
@@ -777,7 +779,7 @@ class Solution:
         res = 0
         for i, x in enumerate(reversed(num1)):
             for j, y in enumerate(reversed(num2)):
-                res += int(x) * int(y) * (10**i) * (10**j)
+                res += int(x) * int(y) * (10 ** i) * (10 ** j)
         return str(res)
 
     def rotateRight(self, head, k):
@@ -799,9 +801,9 @@ class Solution:
         if i == 1:
             return ListNode(lh[0])
         k = k % i
-        rh = [lh[(j+i-k)%i] for j in range(i)]
+        rh = [lh[(j + i - k) % i] for j in range(i)]
         res = ListNode(rh[-1])
-        for r in rh[i-2::-1]:
+        for r in rh[i - 2::-1]:
             tmp = ListNode(r)
             tmp.next = res
             res = tmp
@@ -879,6 +881,7 @@ class Solution:
                 restmp.append(tmp)
             res.extend(restmp)
             res.append([i])
+
         for i in nums[1:]:
             subsetsR(i)
         res.append([])
@@ -924,10 +927,10 @@ class Solution:
         :rtype: int
         """
         m = heightMap.__len__()
-        if m<3:
+        if m < 3:
             return 0
         n = heightMap[0].__len__()
-        if n<3:
+        if n < 3:
             return 0
         area, h, x, y = 0, 0, 0, 1
         from queue import PriorityQueue
@@ -935,7 +938,7 @@ class Solution:
         visit = [[False for _ in range(n)] for _ in range(m)]
         for i in range(m):
             for j in range(n):
-                if i==0 or i==m-1 or j==0 or j==n-1:
+                if i == 0 or i == m - 1 or j == 0 or j == n - 1:
                     pq.put(RainNode(i, j, heightMap[i][j]))
                     visit[i][j] = True
         while not pq.empty():
@@ -947,11 +950,11 @@ class Solution:
                 for k in range(4):
                     i, j = f.x + x, f.y + y
                     x, y = -y, x
-                    if i>=0 and i<m and j>=0 and j<n and visit[i][j]==False:
+                    if i >= 0 and i < m and j >= 0 and j < n and visit[i][j] == False:
                         hh = heightMap[i][j]
                         print(i, j)
-                        if hh<h:
-                            area += h-hh
+                        if hh < h:
+                            area += h - hh
                         pq.put(RainNode(i, j, hh))
                         visit[i][j] = True
         return area
@@ -961,12 +964,12 @@ class Solution:
         :type s: str
         :rtype: int
         """
-        rmd = {'I':1, 'V':5, 'X':10, 'L':50, 'C':100, 'D':500, 'M':1000}
+        rmd = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}
         res = 0
         i, l = 0, len(s)
         while i < l:
-            if i < l - 1 and rmd[s[i]] < rmd[s[i+1]]:
-                res += rmd[s[i+1]] - rmd[s[i]]
+            if i < l - 1 and rmd[s[i]] < rmd[s[i + 1]]:
+                res += rmd[s[i + 1]] - rmd[s[i]]
                 i += 1
             else:
                 res += rmd[s[i]]
@@ -978,7 +981,8 @@ class Solution:
         :type num: int
         :rtype: str
         """
-        rmd = {1000:'M', 900:'CM', 500:'D', 400:'CD', 100:'C', 90:'XC', 50:'L', 40:'XL', 10:'X', 9:'IX', 5:'V', 4:'IV', 1:'I'}
+        rmd = {1000: 'M', 900: 'CM', 500: 'D', 400: 'CD', 100: 'C', 90: 'XC', 50: 'L', 40: 'XL', 10: 'X', 9: 'IX',
+               5: 'V', 4: 'IV', 1: 'I'}
         res = ''
         for k, v in rmd.items():
             while num >= k:
@@ -1024,30 +1028,30 @@ class Solution:
         if m > n:
             return self.findMedianSortedArrays(nums2, nums1)
         if m == 0:
-            return nums2[(n-1)//2]/1.0 if n & 1 else (nums2[(n-1)//2] + nums2[(n-1)//2+1]) / 2.0
+            return nums2[(n - 1) // 2] / 1.0 if n & 1 else (nums2[(n - 1) // 2] + nums2[(n - 1) // 2 + 1]) / 2.0
         t = (m + n + 1) // 2
         begin, end = 0, m
         while begin <= end:
             i = (begin + end) // 2
             j = t - i
-            if i > 0 and j < n and nums1[i-1] > nums2[j]:
+            if i > 0 and j < n and nums1[i - 1] > nums2[j]:
                 end = i - 1
-            elif j > 0 and i < m and nums2[j-1] > nums1[i]:
+            elif j > 0 and i < m and nums2[j - 1] > nums1[i]:
                 begin = i + 1
             else:
-                if i==0:
-                    left = nums2[j-1]
-                elif j==0:
-                    left = nums1[i-1]
+                if i == 0:
+                    left = nums2[j - 1]
+                elif j == 0:
+                    left = nums1[i - 1]
                 else:
-                    left = max(nums1[i-1], nums2[j-1])
-                if i==m:
+                    left = max(nums1[i - 1], nums2[j - 1])
+                if i == m:
                     right = nums2[j]
-                elif j==n:
+                elif j == n:
                     right = nums1[i]
                 else:
                     right = min(nums1[i], nums2[j])
-                return left/1.0 if (m + n) & 1 else (left+right)/2.0
+                return left / 1.0 if (m + n) & 1 else (left + right) / 2.0
         return 0.0
 
     def isMatch(self, s, p):
@@ -1063,22 +1067,22 @@ class Solution:
         dp[0][0] = True
         for i in range(1, lp):
             for j in range(0, ls):
-                if p[i-1] == '.':
-                    if i >= 2 and p[i-2] == '*' and j == 0:
+                if p[i - 1] == '.':
+                    if i >= 2 and p[i - 2] == '*' and j == 0:
                         dp[i][j] = False
-                    if j >= 1 and dp[i-1][j-1] is True:
+                    if j >= 1 and dp[i - 1][j - 1] is True:
                         dp[i][j] = True
-                elif p[i-1] == '*':
-                    if dp[i-1][j] is True:
+                elif p[i - 1] == '*':
+                    if dp[i - 1][j] is True:
                         dp[i][j] = True
-                    elif dp[i][j-1] is True and p[i-2] == '.':
+                    elif dp[i][j - 1] is True and p[i - 2] == '.':
                         dp[i][j] = True
-                    elif dp[i-2][j] is True:
+                    elif dp[i - 2][j] is True:
                         dp[i][j] = True
-                    elif dp[i-1][j-1] is True and (p[i-2] == s[j-1] or
-                                                   p[i-2] == '.'):
+                    elif dp[i - 1][j - 1] is True and (p[i - 2] == s[j - 1] or
+                                                       p[i - 2] == '.'):
                         dp[i][j] = True
-                elif j >= 1 and dp[i-1][j-1] is True and p[i-1] == s[j-1]:
+                elif j >= 1 and dp[i - 1][j - 1] is True and p[i - 1] == s[j - 1]:
                     dp[i][j] = True
         return dp[-1][-1]
 
@@ -1089,12 +1093,16 @@ class Solution:
         :rtype: List[str]
         """
         la = A.__len__()
-        alphabet = {'a': 0,'b': 0,'c': 0,'d': 0,'e': 0,'f': 0,'g': 0,'h': 0,'i': 0,'j': 0,'k': 0,'l': 0,'m': 0,'n': 0,'o': 0,'p': 0,'q': 0,'r': 0,'s': 0,'t': 0,'u': 0,'v': 0,'w': 0,'x': 0,'y': 0,'z': 0}
+        alphabet = {'a': 0, 'b': 0, 'c': 0, 'd': 0, 'e': 0, 'f': 0, 'g': 0, 'h': 0, 'i': 0, 'j': 0, 'k': 0, 'l': 0,
+                    'm': 0, 'n': 0, 'o': 0, 'p': 0, 'q': 0, 'r': 0, 's': 0, 't': 0, 'u': 0, 'v': 0, 'w': 0, 'x': 0,
+                    'y': 0, 'z': 0}
         bstr = ''
         for bb in B:
             if self.wordSubsetsT(bstr, bb):
                 continue
-            tmp = {'a': 0,'b': 0,'c': 0,'d': 0,'e': 0,'f': 0,'g': 0,'h': 0,'i': 0,'j': 0,'k': 0,'l': 0,'m': 0,'n': 0,'o': 0,'p': 0,'q': 0,'r': 0,'s': 0,'t': 0,'u': 0,'v': 0,'w': 0,'x': 0,'y': 0,'z': 0}
+            tmp = {'a': 0, 'b': 0, 'c': 0, 'd': 0, 'e': 0, 'f': 0, 'g': 0, 'h': 0, 'i': 0, 'j': 0, 'k': 0, 'l': 0,
+                   'm': 0, 'n': 0, 'o': 0, 'p': 0, 'q': 0, 'r': 0, 's': 0, 't': 0, 'u': 0, 'v': 0, 'w': 0, 'x': 0,
+                   'y': 0, 'z': 0}
             for b in bb:
                 tmp[b] += 1
                 if tmp[b] > alphabet[b]:
@@ -1118,47 +1126,84 @@ class Solution:
             l = c.__len__()
         return True
 
+    # 旋转数组
+    def rotate(self, nums: list, k: int) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        while k > 0:
+            a = nums.pop()
+            nums.insert(0, a)
+            k -= 1
+
+    def containsDuplicate(self, nums: list) -> bool:
+        return set(nums).__len__() < nums.__len__()
+
+    def intersect(self, nums1, nums2):
+        """
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+        l1 = nums1.__len__()
+        l2 = nums2.__len__()
+        if l2 < l1:
+            nums1, nums2 = nums2, nums1
+            l1, l2 = l2, l1
+        while l1 > 0:
+            i = l1 - 1
+            if nums1[i] in nums2:
+                nums2.remove(nums1[i])
+            else:
+                nums1.pop(i)
+            l1 -= 1
+        return nums1
+
 if __name__ == '__main__':
     s = Solution()
-    A = [2]
-    B = [5,7,10,12]
-    rs = s.findMedianSortedArrays(A, B)
-    print(rs)
-    s1 = TreeNode(1)
-    s2 = TreeNode(2)
-    s3 = TreeNode(3)
-    s4 = TreeNode(4)
-    s5 = TreeNode(5)
-    s6 = TreeNode(6)
-    s7 = TreeNode(7)
-    s8 = TreeNode(8)
-    s9 = TreeNode(9)
-    s10 = TreeNode(10)
-    s11 = TreeNode(11)
-    s12 = TreeNode(12)
-    s13 = TreeNode(13)
-    s14 = TreeNode(14)
-    s15 = TreeNode(15)
-    s16 = TreeNode(16)
-    s17 = TreeNode(17)
-    s18 = TreeNode(18)
-    s19 = TreeNode(19)
-    s20 = TreeNode(20)
-    s20.left = s15
-    s20.right = s7
-    s3.left = s9
-    s3.right = s20
-    l0 = ListNode(0)
-    l1 = ListNode(1)
-    l2 = ListNode(2)
-    l3 = ListNode(3)
-    l4 = ListNode(4)
-    l5 = ListNode(5)
-    l6 = ListNode(6)
-    l7 = ListNode(7)
-    l8 = ListNode(8)
-    l9 = ListNode(9)
-    ll1 = ListNode(1)
+    x = [4,7,9,7,6,7]
+    y = [5,0,0,6,1,6,2,2,4]
+    ans = s.intersect(x, y)
+    print(ans)
+    # A = [2]
+    # B = [5,7,10,12]
+    # rs = s.findMedianSortedArrays(A, B)
+    # print(rs)
+    # s1 = TreeNode(1)
+    # s2 = TreeNode(2)
+    # s3 = TreeNode(3)
+    # s4 = TreeNode(4)
+    # s5 = TreeNode(5)
+    # s6 = TreeNode(6)
+    # s7 = TreeNode(7)
+    # s8 = TreeNode(8)
+    # s9 = TreeNode(9)
+    # s10 = TreeNode(10)
+    # s11 = TreeNode(11)
+    # s12 = TreeNode(12)
+    # s13 = TreeNode(13)
+    # s14 = TreeNode(14)
+    # s15 = TreeNode(15)
+    # s16 = TreeNode(16)
+    # s17 = TreeNode(17)
+    # s18 = TreeNode(18)
+    # s19 = TreeNode(19)
+    # s20 = TreeNode(20)
+    # s20.left = s15
+    # s20.right = s7
+    # s3.left = s9
+    # s3.right = s20
+    # l0 = ListNode(0)
+    # l1 = ListNode(1)
+    # l2 = ListNode(2)
+    # l3 = ListNode(3)
+    # l4 = ListNode(4)
+    # l5 = ListNode(5)
+    # l6 = ListNode(6)
+    # l7 = ListNode(7)
+    # l8 = ListNode(8)
+    # l9 = ListNode(9)
+    # ll1 = ListNode(1)
     # l4.next = l5
     # l3.next = l4
     # l2.next = l3

@@ -1,2 +1,3 @@
 # leetcode_python
-question from https://leetcode-cn.com
+题源：https://leetcode-cn.com
+语言：python3

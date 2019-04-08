@@ -34,6 +34,7 @@ def activity_selector(s, f):
 def money_resolve(money, s, n):
     """
     钱币付款问题，有不同面值s的纸币分别数张n，用这些钱支付money元，至少要用多少张纸币？
+    注：总钱数一定>=money，付款要付够
     :param money:
     :param s:
     :param n:
@@ -57,6 +58,9 @@ def money_resolve(money, s, n):
     if money != 0:
         total += 1
     return total
+
+def knapsack():
+    return
 
 
 if __name__ == '__main__':

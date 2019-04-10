@@ -68,7 +68,16 @@ def triangle_max_pace(triangle, method=1):
                 dp[i][j] = max(dp[i - 1][j - 1], dp[i - 1][j]) + triangle[i][j]
         return max(dp[-1])
 
-
+def lcs(s1, s2):
+    """
+    POJ1458
+    查询最长公共子序列的长度
+    例如：X = 'ABCBDAB' Y = 'BDCABA' sub='BCBA' max_sub_len = 4
+    :param s1: str
+    :param s2: str
+    :return: int
+    """
+    pass
 
 if __name__ == '__main__':
     # m = min_of_multiply([1, 3, 2, 4, 2])

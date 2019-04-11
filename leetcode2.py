@@ -26,6 +26,7 @@ def counting_nums(t):
         result = inner(result)
     return result
 
+
 def removeDuplicates(nums):
     """
     :type nums: List[int]
@@ -42,6 +43,7 @@ def removeDuplicates(nums):
         else:
             i += 1
     return l
+
 
 def myAtoi(str):
     """
@@ -75,7 +77,7 @@ def myAtoi(str):
         else:
             return int(ls[0])
     res = ls[1:i] if k == 2 else ls[:i]
-    if self.isint(res):
+    if isint(res):
         if int(res) < int_min:
             return int_min
         elif int(res) > int_max:
@@ -85,6 +87,7 @@ def myAtoi(str):
                 return 0
             return int(res)
     return 0
+
 
 def isint(i):
     try:

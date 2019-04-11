@@ -68,6 +68,7 @@ def triangle_max_pace(triangle, method=1):
                 dp[i][j] = max(dp[i - 1][j - 1], dp[i - 1][j]) + triangle[i][j]
         return max(dp[-1])
 
+
 def lcs(s1, s2):
     """
     POJ1458
@@ -77,12 +78,28 @@ def lcs(s1, s2):
     :param s2: str
     :return: int
     """
-    pass
+    l1 = len(s1)
+    l2 = len(s2)
+    dp = [[0 for _ in range(l2 + 1)] for _ in range(l1 + 1)]
+    for i in range(l1 + 1):
+        for j in range(l2 + 1):
+            if i > 0 and j > 0:
+                if s1[i - 1] == s2[j - 1]:
+                    dp[i][j] = dp[i - 1][j - 1] + 1
+                else:
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1])
+    return dp[-1][-1]
+
 
 if __name__ == '__main__':
-    # m = min_of_multiply([1, 3, 2, 4, 2])
-    # print(m)
+    # res1 = min_of_multiply([1, 3, 2, 4, 2])
+    # print(res1)
 
-    tri = [[7, 0, 0, 0, 0], [3, 8, 0, 0, 0], [8, 1, 0, 0, 0], [2, 7, 4, 4, 0], [4, 5, 2, 6, 5]]
-    n = triangle_max_pace(tri, 2)
-    print(n)
+    # tri = [[7, 0, 0, 0, 0], [3, 8, 0, 0, 0], [8, 1, 0, 0, 0], [2, 7, 4, 4, 0], [4, 5, 2, 6, 5]]
+    # res2 = triangle_max_pace(tri, 2)
+    # print(res2)
+
+    s1 = "ABC"
+    s2 = "BDC"
+    res3 = lcs(s1, s2)
+    print(res3)

@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+import algorithm_utils as alg
 
 ## 贪心算法
 
@@ -62,14 +63,45 @@ def money_resolve(money, s, n):
 def knapsack():
     return
 
+def boat(sp):
+    """
+    POJ1700
+    小船过河问题
+    有一艘船，能乘2人，船的运行速度为2人中较慢一人的速度，过去后还需一个人把船划回来，问把n个人运到对岸，最少需要多久。
+    思路：
+    将所有人过河所需的时间按照升序排序，将当前单独过河所需时间最多的两人先送到对岸，有两种方式：
+    1.最快的和次快的过河，然后最快的将船划回来；次慢的和最慢的过河，然后次快的将船划回来，所需时间为：t[0]+2*t[1]+t[n-1]；
+    2.最快的和最慢的过河，然后最快的将船划回来，最快的和次慢的过河，然后最快的将船划回来，所需时间为：2*t[0]+t[n-2]+t[n-1]。
+    除上述方法外，其他方法用时更多。
+    且每次运送耗时最长的两个人不影响其他人，故问题具有贪心子结构的性质。
+    :param sp: List[int]
+    :return: int
+    """
+    l = len(sp)
+    alg.quick_sort(sp, 0, l - 1)
+    ans = 0
+    while l > 3:
+        ans = ans + min(sp[1] + sp[0] + sp[l-1] + sp[1], sp[l-1] + sp[0] + sp[l-2] + sp[0])
+        l -= 2
+    if l == 3:
+        ans += sp[0] + sp[1] + sp[2]
+    elif l == 2:
+        ans += sp[1]
+    else:
+        ans += sp[0]
+    return ans
 
 if __name__ == '__main__':
-    s = [1, 5, 3, 5, 3, 0, 6, 8, 8, 2, 12]
-    f = [4, 7, 8, 9, 5, 6, 10, 11, 12, 13, 14]
-    ans1 = activity_selector(s, f)
+    # s = [1, 5, 3, 5, 3, 0, 6, 8, 8, 2, 12]
+    # f = [4, 7, 8, 9, 5, 6, 10, 11, 12, 13, 14]
+    # ans1 = activity_selector(s, f)
     # print("活动选择答案：", ans1)
 
-    s = [1,2,5,10,20,50,100]
-    n = [3,0,2,1,0,3,5]
-    ans2 = money_resolve(154, s, n)
-    print("纸币找零答案：", ans2)
+    # s = [1,2,5,10,20,50,100]
+    # n = [3,0,2,1,0,3,5]
+    # ans2 = money_resolve(154, s, n)
+    # print("纸币找零答案：", ans2)
+
+    sp = [4, 3, 1, 5, 6]
+    ans3 = boat(sp)
+    print("小船过河答案：", ans3)

@@ -242,6 +242,97 @@ def max_sub_dp(nums):
     return max(dp)
 
 
+def max_of_two_sub(nums):
+    """
+    POJ2593
+    求数组里不相交的两个子串和的最大值
+    例如：
+    nums = [-5, 9, -5, 11, 20]
+    res = 40
+    思路：
+    从左向右遍历求以nums[i]结尾的子串求和最大值存入dp，再从右向左遍历求以nums[i]为开头的子串求和最大值，再将改值加dp[i-1]取最大值即为所求
+    nums = [-5, 9, -5, 11, 20]
+    left =  [0, -5, 9, 9, 15, 35] 为防止越界left[0] = 0
+    right = [40, 40, 31, 31, 20]
+    max(right[i] + left[i-1]) = 31 + 9 = 40
+    :param nums: List[int]
+    :return: int
+    """
+    inf = 2**31
+    l = nums.__len__()
+    dp = [0]
+    dp.extend([-inf for _ in range(l)])
+    sum, m = 0, -inf
+    for i in range(l):
+        sum += nums[i]
+        if sum > m:
+            m = sum
+        dp[i + 1] = m
+        if sum < 0:
+            sum = 0
+    sum, m = 0, -inf
+    ans = m
+    for i in range(l):
+        j = l - 1 - i
+        sum += nums[j]
+        if sum > m:
+            m = sum
+        t = m + dp[j]
+        if t > ans:
+            ans = t
+        if sum < 0:
+            sum = 0
+    return ans
+
+
+def max_sub_matrix(matrix):
+    """
+    POJ1050
+    求矩阵中的最大的子矩阵和
+    例如：
+    matrix = [[0, -2, 7, 0],
+              [9, 2, -6, 2],
+              [-4, 1, -4, 1],
+              [-1, 8, 0 ,-2]]
+    res = 15
+    因为子矩阵[[9, 2], [-4, 1], [-1, 8]]值最大
+    思路：
+    将第i行至第j行合并，matrix[i][k] + matrix[j][k]逐项相加，降成一维数组求最长子串长度，最大值即为所求
+    :param matrix: List[int]
+    :return: int
+    """
+    def inner_maxsub(nums):
+        m = -inf
+        tmp = -1
+        for i in range(col):
+            if tmp > 0:
+                tmp += nums[i]
+            else:
+                tmp = nums[i]
+            if tmp > m:
+                m = tmp
+        return m
+
+    inf = 2**31
+    inner_sum = lambda n1, n2: [x + y for x, y in zip(n1, n2)]
+    row = matrix.__len__()
+    col = matrix[0].__len__()
+
+    m = -inf
+    for i in range(row):
+        fit_row = [0 for _ in range(col)]
+        for j in range(i, row):
+            fit_row = inner_sum(fit_row, matrix[j])
+            tmp = inner_maxsub(fit_row)
+            if tmp > m:
+                m = tmp
+    return m
+
+
+def convex_polygon():
+    pass
+
+
 if __name__ == '__main__':
     # q1in1 = [1, 3, 2, 4, 2]
     # res1 = min_of_multiply(q1in1)
@@ -271,8 +362,19 @@ if __name__ == '__main__':
     # res4_ex1 = lis_ex1(q4ex1in1)
     # print(res4_ex1)
 
-    q5in1 = [-2, 11, -4, 13, -5, -2]
-    res5 = max_sub_rec(q5in1)
-    print(res5)
-    res5_2 = max_sub_dp(q5in1)
-    print(res5_2)
+    # q5in1 = [-2, 11, -4, 13, -5, -2]
+    # res5 = max_sub_rec(q5in1)
+    # print(res5)
+    # res5_2 = max_sub_dp(q5in1)
+    # print(res5_2)
+
+    # q6in1 = [-5, 9, -5, 11, 20]
+    # res6 = max_of_two_sub(q6in1)
+    # print(res6)
+
+    q7in1 = [[0, -2, -7, 0],
+             [9, 2, -6, 2],
+             [-4, 1, -4, 1],
+             [-1, 8, 0 ,-2]]
+    res7 = max_sub_matrix(q7in1)
+    print(res7)

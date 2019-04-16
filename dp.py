@@ -329,9 +329,46 @@ def max_sub_matrix(matrix):
     return m
 
 
-def convex_polygon():
-    pass
+def convex_polygon(weight):
+    """
+    用多边形顶点的逆时针序列表示凸多边形，即P={V0,V1,…,Vn}表示具有n+1条边的凸多边形。
+    给定凸多边形P，以及定义在由多边形的边和弦组成的三角形上的权函数w。
+    要求确定该凸多边形的三角剖分，使得即该三角剖分中诸三角形上权之和为最小。
+    思路：
+    若P={V0,V1……Vn}的最优三角剖分T包含三角形V0VkVn,则T的权为三个部分权之和：三角形V0VkVn的权，多边形{V0,V1……Vk}的权和多边形{Vk,Vk+1……Vn}的权之和。
+    可以断言，由T确定的这两个子多边形的三角剖分也是最优的。
+    设t[i][j]为凸多边形{Vi-1,Vi……Vj}的最优三角剖分所对应的最优权值，则P的最优权值为t[1][n]，有：
+    t[i][j] = 0 if i==j else min(t[i][k] + t[k+1][j] + w(vi-1, vk, vj)) w(x,y,z)表示三角形xyz的权值和
+    :param weight: List[List[int]]
+    :return: int
+    """
 
+    def inner(i, j, s):
+        if i == j:
+            return
+        inner(i, s[i][j], s)
+        inner(s[i][j] + 1, j, s)
+        print("三角剖分顶点：V%d, V%d, V%d"% (i-1, j, s[i][j]))
+
+    inf = 2 ** 31
+    l = weight.__len__()
+    t, s = [[0 for _ in range(l + 1)] for _ in range(l + 1)], [[0 for _ in range(l + 1)] for _ in range(l + 1)]
+    for r in range(2, l + 1):
+        for i in range(1, l + 1 - r):
+            j = i + r - 1
+            m = inf
+            for k in (i, j):
+                t[i][j] = t[i][k] + t[k+1][j] + (weight[i-1][k] + weight[k][j] + weight[j][i-1])
+                if t[i][j] < m:
+                    m = t[i][j]
+                    s[i][j] = k
+            t[i][j] = m
+    print(s)
+    print(t)
+    print(l)
+    print("此多边形的最优三角剖分值为：", t[1][l-1])
+    print("最优三角剖分结构为：")
+    inner(1, l - 1, s)
 
 if __name__ == '__main__':
     # q1in1 = [1, 3, 2, 4, 2]
@@ -372,9 +409,12 @@ if __name__ == '__main__':
     # res6 = max_of_two_sub(q6in1)
     # print(res6)
 
-    q7in1 = [[0, -2, -7, 0],
-             [9, 2, -6, 2],
-             [-4, 1, -4, 1],
-             [-1, 8, 0 ,-2]]
-    res7 = max_sub_matrix(q7in1)
-    print(res7)
+    # q7in1 = [[0, -2, -7, 0],
+    #          [9, 2, -6, 2],
+    #          [-4, 1, -4, 1],
+    #          [-1, 8, 0 ,-2]]
+    # res7 = max_sub_matrix(q7in1)
+    # print(res7)
+
+    q8in1 = [[0,2,2,3,1,4],[2,0,1,5,2,3],[2,1,0,2,1,4],[3,5,2,0,6,2],[1,2,1,6,0,1],[4,3,4,2,1,0]]
+    res8 = convex_polygon(q8in1)

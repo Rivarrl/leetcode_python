@@ -96,7 +96,69 @@ def isint(i):
     except:
         return False
 
+def countBits(num):
+    """
+    LC338
+    比特位计数
+    给定一个非负整数 num。对于 0 ≤ i ≤ num 范围中的每个数字 i ，计算其二进制数中的 1 的数目并将它们作为数组返回。
+    输入: 5
+    输出: [0,1,1,2,1,2]
+    进阶:
+    给出时间复杂度为O(n*sizeof(integer))的解答非常容易。但你可以在线性时间O(n)内用一趟扫描做到吗？
+    要求算法的空间复杂度为O(n)。
+    你能进一步完善解法吗？要求在C++或任何其他语言中不使用任何内置函数
+    思路:
+    动态规划，选用的思路1
+    1) ans[i] = ans[i >> 1] + (i & 1)   # 取右移后的数一定比当前值小
+    2) ans[i] = ans[i & (i - 1)] + 1    # i & (i - 1) < i
+    3) ans[i*2] = ans[i]                # 注意越界问题
+       ans[i*2+1] = ans[i] + 1
+    :param num: int
+    :return: List[int]
+    """
+    ans = [0 for _ in range(num + 1)]
+    for i in range(1, num + 1):
+        ans[i] = ans[i >> 1] + (i & 1)
+    return ans
+
+
+def minPathSum(grid):
+    """
+    LC64
+    最小路径和
+    给定一个包含非负整数的 m x n 网格，请找出一条从左上角到右下角的路径，使得路径上的数字总和为最小。
+    说明：每次只能向下或者向右移动一步。
+    输入: [[1,3,1],
+          [1,5,1],
+          [4,2,1]]
+    输出: 7
+    解释: 因为路径 1→3→1→1→1 的总和最小。
+    :param grid: List[List[int]]
+    :return: int
+    """
+    row = grid.__len__()
+    if row == 0:
+        return 0
+    col = grid[0].__len__()
+    dp = [[0 for _ in range(col)] for _ in range(row)]
+    r_sum, c_sum = 0, 0
+    for i in range(row):
+        for j in range(col):
+            if i == 0 or j == 0:
+                if i == 0:
+                    r_sum += grid[i][j]
+                    dp[i][j] = r_sum
+                if j == 0:
+                    c_sum += grid[i][j]
+                    dp[i][j] = c_sum
+            else:
+                dp[i][j] = grid[i][j] + min(dp[i][j-1], dp[i-1][j])
+    return dp[-1][-1]
 
 if __name__ == "__main__":
-    r = counting_nums(8)
-    print(r)
+    # a = [[1,3,1],[1,5,1],[4,2,1]]
+    # r = minPathSum(a)
+    # print(r)
+    # r = countBits(5)
+    # print(r)
+    print(1 << 31)

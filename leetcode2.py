@@ -155,10 +155,81 @@ def minPathSum(grid):
                 dp[i][j] = grid[i][j] + min(dp[i][j-1], dp[i-1][j])
     return dp[-1][-1]
 
+def countSubstrings(s):
+    """
+    LC647
+    回文子串数
+    给定一个字符串，你的任务是计算这个字符串中有多少个回文子串。
+    具有不同开始位置或结束位置的子串，即使是由相同的字符组成，也会被计为是不同的子串。
+    示例:
+    1.
+    输入: "abc"
+    输出: 3
+    解释: 三个回文子串: "a", "b", "c".
+    2.
+    输入: "aaa"
+    输出: 6
+    说明: 6个回文子串: "a", "a", "a", "aa", "aa", "aaa".
+    :param s: str
+    :return: int
+    """
+    l =len(s)
+    dp = [[0] * l for _ in range(l)]
+    ans = 0
+    for i in range(l):
+        for j in range(i, -1, -1):
+            if s[i] == s[j] and (i - j + 1 <= 2 or dp[i - 1][j + 1]):
+                dp[i][j] = 1
+                ans += 1
+    return ans
+
+def countSubstrings2(s):
+    """
+    LC647
+    44ms
+    :param s:
+    :return:
+    """
+    num = 0
+    n, i = len(s), 0
+    while i < n:
+        j = i
+        while j < n and s[j] == s[i]:
+            j += 1
+        d = j - i
+        num += d * (d + 1) // 2
+        il, ir = i - 1, j
+        while il >= 0 and ir < n and s[il] == s[ir]:
+            num += 1
+            il, ir = il - 1, ir + 1
+        i = j
+    return num
+
+def numDecodings(s):
+    """
+    LC91
+    解码方法
+    一条包含字母 A-Z 的消息通过以下方式进行了编码：
+    'A' -> 1
+    'B' -> 2
+    ...
+    'Z' -> 26
+    给定一个只包含数字的非空字符串，请计算解码方法的总数。
+    示例:
+    输入: "12"
+    输出: 2
+    解释: 它可以解码为 "AB"（1 2）或者 "L"（12）。
+    :param s: str
+    :return: int
+    """
+    l = len(s)
+    for i in range(l):
+
+
 if __name__ == "__main__":
     # a = [[1,3,1],[1,5,1],[4,2,1]]
     # r = minPathSum(a)
     # print(r)
     # r = countBits(5)
     # print(r)
-    print(1 << 31)
+    print(countSubstrings("aaaa"))

@@ -350,15 +350,17 @@ def convex_polygon(weight):
         inner(s[i][j] + 1, j, s)
         print("三角剖分顶点：V%d, V%d, V%d"% (i-1, j, s[i][j]))
 
+    w = lambda i, j, k: weight[i][k] + weight[k][j] + weight[j][i]
+
     inf = 2 ** 31
-    l = weight.__len__()
-    t, s = [[0 for _ in range(l + 1)] for _ in range(l + 1)], [[0 for _ in range(l + 1)] for _ in range(l + 1)]
-    for r in range(2, l + 1):
+    l = weight.__len__() + 1
+    t, s = [[0 for _ in range(l)] for _ in range(l)], [[0 for _ in range(l)] for _ in range(l)]
+    for r in range(2, l):
         for i in range(1, l + 1 - r):
             j = i + r - 1
             m = inf
             for k in (i, j):
-                t[i][j] = t[i][k] + t[k+1][j] + (weight[i-1][k] + weight[k][j] + weight[j][i-1])
+                t[i][j] = t[i][k] + t[k+1][j] + w(i-1, j, k)
                 if t[i][j] < m:
                     m = t[i][j]
                     s[i][j] = k
@@ -366,7 +368,7 @@ def convex_polygon(weight):
     print(s)
     print(t)
     print(l)
-    print("此多边形的最优三角剖分值为：", t[1][l-1])
+    print("此多边形的最优三角剖分值为：", t[1][l])
     print("最优三角剖分结构为：")
     inner(1, l - 1, s)
 

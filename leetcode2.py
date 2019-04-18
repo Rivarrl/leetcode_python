@@ -96,6 +96,7 @@ def isint(i):
     except:
         return False
 
+
 def countBits(num):
     """
     LC338
@@ -152,8 +153,9 @@ def minPathSum(grid):
                     c_sum += grid[i][j]
                     dp[i][j] = c_sum
             else:
-                dp[i][j] = grid[i][j] + min(dp[i][j-1], dp[i-1][j])
+                dp[i][j] = grid[i][j] + min(dp[i][j - 1], dp[i - 1][j])
     return dp[-1][-1]
+
 
 def countSubstrings(s):
     """
@@ -173,7 +175,7 @@ def countSubstrings(s):
     :param s: str
     :return: int
     """
-    l =len(s)
+    l = len(s)
     dp = [[0] * l for _ in range(l)]
     ans = 0
     for i in range(l):
@@ -182,6 +184,7 @@ def countSubstrings(s):
                 dp[i][j] = 1
                 ans += 1
     return ans
+
 
 def countSubstrings2(s):
     """
@@ -205,6 +208,7 @@ def countSubstrings2(s):
         i = j
     return num
 
+
 def numDecodings(s):
     """
     LC91
@@ -219,12 +223,161 @@ def numDecodings(s):
     输入: "12"
     输出: 2
     解释: 它可以解码为 "AB"（1 2）或者 "L"（12）。
+    思路: 举例找规律发现，题目类似于带有限制条件的Fibonacci数列
     :param s: str
     :return: int
     """
     l = len(s)
+    dp = [0] * (l + 1)
+    dp[0] = 1
     for i in range(l):
+        dp[i + 1] = 0 if s[i] == '0' else dp[i]
+        if i == 0:
+            continue
+        if s[i - 1] == '1' or (s[i - 1] == '2' and s[i] <= '6'):
+            dp[i + 1] += dp[i - 1]
+    return dp[-1]
 
+
+def minimumTotal(triangle):
+    """
+    LC120
+    三角形最小路径和
+    给定一个三角形，找出自顶向下的最小路径和。每一步只能移动到下一行中相邻的结点上。
+    例如，给定三角形：
+    [
+         [2],
+        [3,4],
+       [6,5,7],
+      [4,1,8,3]
+    ]
+    自顶向下的最小路径和为 11（即，2 + 3 + 5 + 1 = 11）。
+    :param triangle:
+    :return:
+    """
+    l = len(triangle)
+    if l == 0: return 0
+    i, j = 0, l - 2
+    while j >= 0:
+        triangle[j][i] += min(triangle[j + 1][i], triangle[j + 1][i + 1])
+        i += 1
+        if i > j:
+            j -= 1
+            i = 0
+    return triangle[0][0]
+
+
+def numSquares(n):
+    """
+    LC279
+    完全平方数 (超时)
+    给定正整数 n，找到若干个完全平方数（比如 1, 4, 9, 16, ...）使得它们的和等于 n。你需要让组成和的完全平方数的个数最少。
+    输入: n = 12
+    输出: 3
+    解释: 12 = 4 + 4 + 4.
+    输入: n = 13
+    输出: 2
+    解释: 13 = 4 + 9.
+    :param n: int
+    :return: int
+    """
+    if not n: return n
+    inf = 2 ** 31
+    dp = [0] * (n + 1)
+    dp[1] = 1
+    for i in range(2, n + 1):
+        j, j2, m = 1, 1, inf
+        while j2 <= i:
+            m = min(dp[i - j2], m)
+            j += 1
+            j2 = j ** 2
+        dp[i] = m + 1
+    return dp[-1]
+
+
+def numSquares2(n):
+    """
+    LC279
+    完全平方数
+    思路:
+    四平方定理:
+    任何一个正整数都可以表示成不超过四个整数的平方之和。
+    推论: 满足四数平方和定理的数n(四个整数的情况), 必定满足 n=4^a(8b+7)
+    :param n: int
+    :return: int
+    """
+    while n % 4 == 0:
+        n /= 4
+    if n % 8 == 7:
+        return 4
+    a = 0
+    while a ** 2 <= n:
+        b = int((n - a ** 2) ** 0.5)
+        if a ** 2 + b ** 2 == n:
+            return (not not a) + (not not b)
+        a += 1
+    return 3
+
+
+def maxProfit(prices):
+    """
+    LC309
+    给定一个整数数组，其中第 i 个元素代表了第 i 天的股票价格 。​
+    设计一个算法计算出最大利润。在满足以下约束条件下，你可以尽可能地完成更多的交易（多次买卖一支股票）:
+    你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+    卖出股票后，你无法在第二天买入股票 (即冷冻期为 1 天)。
+    示例:
+    输入: [1,2,3,0,2]
+    输出: 3
+    解释: 对应的交易状态为: [买入, 卖出, 冷冻期, 买入, 卖出]
+    :param prices: List[int]
+    :return: int
+    """
+    pass
+
+
+def mySqrt(x):
+    """
+    LC69
+    x的平方根
+    手写sqrt函数
+    思路:
+    牛顿迭代法求平方根下限整数
+    https://en.wikipedia.org/wiki/Integer_square_root#Using_only_integer_division
+    :param x:
+    :return:
+    """
+    if x <= 1:
+        return x
+    r = x
+    while r > x / r:
+        r = (r + x / r) // 2
+    return int(r)
+
+
+def twoSum(numbers, target):
+    """
+    LC167
+    给定一个已按照升序排列 的有序数组，找到两个数使得它们相加之和等于目标数。
+    函数应该返回这两个下标值 index1 和 index2，其中 index1 必须小于 index2。
+    说明:
+    返回的下标值（index1 和 index2）不是从零开始的。
+    你可以假设每个输入只对应唯一的答案，而且你不可以重复使用相同的元素。
+    示例:
+    输入: numbers = [2, 7, 11, 15], target = 9
+    输出: [1,2]
+    解释: 2 与 7 之和等于目标数 9 。因此 index1 = 1, index2 = 2 。
+    :param numbers: List[int]
+    :param target: int
+    :return: List[int]
+    """
+    l = len(numbers)
+    d = {}
+    for i in range(l):
+        tgt = target - numbers[i]
+        if tgt in d:
+            return [d[tgt] + 1, i + 1]
+        d[numbers[i]] = i
 
 if __name__ == "__main__":
     # a = [[1,3,1],[1,5,1],[4,2,1]]
@@ -232,4 +385,4 @@ if __name__ == "__main__":
     # print(r)
     # r = countBits(5)
     # print(r)
-    print(countSubstrings("aaaa"))
+    print(twoSum([-1, 0], -1))

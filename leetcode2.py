@@ -1,4 +1,6 @@
 # -*-coding:utf-8-*-
+import algorithm_utils as alg
+
 # leetcode.py 内容太杂了，新起一个leetcode2.py
 
 # 数数字，1->11->21->1211->.....
@@ -319,23 +321,6 @@ def numSquares2(n):
     return 3
 
 
-def maxProfit(prices):
-    """
-    LC309
-    给定一个整数数组，其中第 i 个元素代表了第 i 天的股票价格 。​
-    设计一个算法计算出最大利润。在满足以下约束条件下，你可以尽可能地完成更多的交易（多次买卖一支股票）:
-    你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
-    卖出股票后，你无法在第二天买入股票 (即冷冻期为 1 天)。
-    示例:
-    输入: [1,2,3,0,2]
-    输出: 3
-    解释: 对应的交易状态为: [买入, 卖出, 冷冻期, 买入, 卖出]
-    :param prices: List[int]
-    :return: int
-    """
-    pass
-
-
 def mySqrt(x):
     """
     LC69
@@ -379,10 +364,82 @@ def twoSum(numbers, target):
             return [d[tgt] + 1, i + 1]
         d[numbers[i]] = i
 
+
+
+def maxProfit(prices):
+    """
+    LC309
+    给定一个整数数组，其中第 i 个元素代表了第 i 天的股票价格 。​
+    设计一个算法计算出最大利润。在满足以下约束条件下，你可以尽可能地完成更多的交易（多次买卖一支股票）:
+    你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+    卖出股票后，你无法在第二天买入股票 (即冷冻期为 1 天)。
+    示例:
+    输入: [1,2,3,0,2]
+    输出: 3
+    解释: 对应的交易状态为: [买入, 卖出, 冷冻期, 买入, 卖出]
+    :param prices: List[int]
+    :return: int
+    """
+    l = len(prices)
+    dp = [0] * l
+    m = [0] * l
+    n = 0
+    if l < 2: return 0
+    for i in range(1, l):
+        c = prices[i] - prices[i - 1]
+        if i < 3:
+            dp[i] = max(dp[i-1] + c, 0)
+        else:
+            if c > 0:
+                dp[i] = max(m[i-3], dp[i-1]) + c
+            else:
+                dp[i] = max(dp[i-1] + c, 0)
+        n = max(n, dp[i])
+        m[i] = n
+    return n
+
+
+def threeSum(nums):
+    """
+    LC15
+    三数之和
+    给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。
+    注意：答案中不可以包含重复的三元组。
+    例如, 给定数组 nums = [-1, 0, 1, 2, -1, -4]，
+    满足要求的三元组集合为：
+    [
+      [-1, 0, 1],
+      [-1, -1, 2]
+    ]
+    :param nums: List[int]
+    :return: List[int]
+    """
+    l = len(nums)
+    if l <= 3:
+        return sum(nums)
+    alg.quick_sort(nums, 0, l - 1)
+    k = 0
+    res = []
+    while k < l:
+        i = l-1
+        if nums[k] + nums[i] + nums[j] < 0:
+            k += 1
+        elif nums[k] + nums[i] + nums[j] > 0:
+            for p in range(k+1, i):
+                q = j - k - 1
+                for r in range():
+                if nums[k] + nums[q] + nums[j] == 0:
+                    res.append([nums[k], nums[q], nums[i]])
+                    break
+        else:
+            res.append([k, i, j])
+    return res
+
+
 if __name__ == "__main__":
     # a = [[1,3,1],[1,5,1],[4,2,1]]
     # r = minPathSum(a)
     # print(r)
     # r = countBits(5)
     # print(r)
-    print(twoSum([-1, 0], -1))
+    print(threeSum([-1, 0, 1, 2, -1, -4]))

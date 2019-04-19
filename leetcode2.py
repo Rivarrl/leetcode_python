@@ -1,5 +1,6 @@
 # -*-coding:utf-8-*-
 import algorithm_utils as alg
+from algorithm_utils import ListNode
 
 # leetcode.py 内容太杂了，新起一个leetcode2.py
 
@@ -402,7 +403,7 @@ def maxProfit(prices):
 def threeSum(nums):
     """
     LC15
-    三数之和
+    三数之和 (超时) O(n^3)
     给定一个包含 n 个整数的数组 nums，判断 nums 中是否存在三个元素 a，b，c ，使得 a + b + c = 0 ？找出所有满足条件且不重复的三元组。
     注意：答案中不可以包含重复的三元组。
     例如, 给定数组 nums = [-1, 0, 1, 2, -1, -4]，
@@ -412,28 +413,273 @@ def threeSum(nums):
       [-1, -1, 2]
     ]
     :param nums: List[int]
-    :return: List[int]
+    :return: List[List[int]]
     """
     l = len(nums)
-    if l <= 3:
-        return sum(nums)
-    alg.quick_sort(nums, 0, l - 1)
-    k = 0
+    if l == 0: return []
+    nums.sort()
     res = []
-    while k < l:
-        i = l-1
-        if nums[k] + nums[i] + nums[j] < 0:
-            k += 1
-        elif nums[k] + nums[i] + nums[j] > 0:
-            for p in range(k+1, i):
-                q = j - k - 1
-                for r in range():
-                if nums[k] + nums[q] + nums[j] == 0:
-                    res.append([nums[k], nums[q], nums[i]])
+    for k in range(l):
+        for j in range(k+1, l):
+            for i in range(j+1, l):
+                if nums[k] + nums[j] + nums[i] == 0:
+                    b = sorted([nums[k], nums[j], nums[i]])
+                    if not b in res:
+                        res.append(b)
                     break
-        else:
-            res.append([k, i, j])
     return res
+
+
+def threeSum2(nums):
+    """
+    LC15
+    三数之和 (双指针法) O(n^2)
+    :param nums: List[int]
+    :return: List[List[int]]
+    """
+    nums.sort()
+    l = len(nums)
+    res = []
+    k = 0
+    while k < l:
+        i, j = k + 1, l - 1
+        s = nums[k]
+        while i < j:
+            if nums[i] + nums[j] == -s:
+                res.append([nums[i], nums[j], s])
+                i += 1
+                j -= 1
+                while nums[i] == nums[i-1]:
+                    i += 1
+                    if i >= j:
+                        break
+                while nums[j] == nums[j+1]:
+                    j -= 1
+                    if j <= i:
+                        break
+            elif nums[i] + nums[j] < -s:
+                i += 1
+            else:
+                j -= 1
+        while k + 1 < l and nums[k+1] == s:
+            k += 1
+        k += 1
+    return res
+
+
+def strStr(haystack, needle):
+    """
+    LC28
+    实现strStr() (O(n*p))
+    给定一个 haystack 字符串和一个 needle 字符串，在 haystack 字符串中找出 needle 字符串出现的第一个位置 (从0开始)。如果不存在，则返回  -1。
+    输入: haystack = "hello", needle = "ll"
+    输出: 2
+    输入: haystack = "aaaaa", needle = "bba"
+    输出: -1
+    :param haystack: str
+    :param needle: str
+    :return: int
+    """
+    h = 0
+    l = len(haystack)
+    nl = len(needle)
+    if nl > l: return -1
+    if haystack == needle: return 0
+    if nl == 0: return 0
+    while h < l:
+        i = 0
+        t = h
+        while haystack[t] == needle[i]:
+            t += 1
+            i += 1
+            if i == nl:
+                return h
+            if t == l:
+                return -1
+        h += 1
+    return -1
+
+
+def strStr2(haystack, needle):
+    """
+    LC28
+    实现strStr() (O(n+p))
+    KMP算法
+    :param haystack:
+    :param needle:
+    :return:
+    """
+    l = len(haystack)
+    nl = len(needle)
+    if nl > l: return -1
+    if haystack == needle: return 0
+    if nl == 0: return 0
+    f = [-1] * nl
+    k = -1
+    for j in range(1, nl):
+        while k > -1 and needle[k + 1] != needle[j]:
+            k = f[k]
+        if needle[k + 1] == needle[j]:
+            k += 1
+        f[j] = k
+    i, j = 0, 0
+    while i < l and j < nl:
+        if haystack[i] == needle[j]:
+            i += 1
+            j += 1
+        elif j == 0:
+            i += 1
+        else:
+            j = f[j-1] + 1
+    return i - nl if j == nl else -1
+
+
+def mergeTwoLists(l1, l2):
+    """
+    LC21
+    合并两个有序链表
+    将两个有序链表合并为一个新的有序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
+    输入：1->2->4, 1->3->4
+    输出：1->1->2->3->4->4
+    :param l1: ListNode
+    :param l2: ListNode
+    :return: ListNode
+    """
+    if not l1: return l2
+    if not l2: return l1
+    res = ListNode(0)
+    p = res
+    while l1 and l2:
+        if l1.val <= l2.val:
+            p.next = l1
+            p = p.next
+            l1 = l1.next
+        else:
+            p.next = l2
+            p = p.next
+            l2 = l2.next
+    if l1:
+        p.next = l1
+        p = p.next
+    if l2:
+        p.next = l2
+        p = p.next
+    return res.next
+
+
+def fourSum(nums, target):
+    """
+    LC18
+    四数之和
+    给定一个包含 n 个整数的数组 nums 和一个目标值 target，判断 nums 中是否存在四个元素 a，b，c 和 d ，使得 a + b + c + d 的值与 target 相等？找出所有满足条件且不重复的四元组。
+    答案中不可以包含重复的四元组。
+    给定数组 nums = [1, 0, -1, 0, -2, 2]，和 target = 0。
+    满足要求的四元组集合为：
+    [
+      [-1,  0, 0, 1],
+      [-2, -1, 1, 2],
+      [-2,  0, 0, 2]
+    ]
+    :param nums:
+    :param target:
+    :return:
+    """
+    def check(rs):
+        xd = {}
+        for r in rs:
+            if not r in xd:
+                xd[r] = 0
+            xd[r] += 1
+            if xd[r] > c[r]:
+                return False
+        return True
+    d = {}
+    c = {}
+    m = []
+    res = []
+    l = len(nums)
+    if l < 4: return res
+    for i in range(l):
+        if not nums[i] in c:
+            c[nums[i]] = 0
+        c[nums[i]] += 1
+    if target == 0 and 0 in c and c[0] >= 4:
+        res.append([0,0,0,0])
+    for i in range(l):
+        for j in range(i + 1, l):
+            s = nums[i] + nums[j]
+            sr = sorted([nums[i], nums[j]])
+            if not s in d:
+                d[s] = [sr]
+                m.append(s)
+            else:
+                if not sr in d[s]:
+                    d[s].append(sr)
+    lm = len(m)
+    m.sort()
+    print(d)
+    print(m)
+    print(c)
+    i, j = 0, lm - 1
+    while i <= j:
+        if m[i] + m[j] == target:
+            if i == j:
+                li = len(d[m[i]])
+                for ii in range(li):
+                    for jj in range(ii, li):
+                        [xi, yi], [xj, yj] = d[m[i]][ii], d[m[i]][jj]
+                        rs = sorted([xi, yi, xj, yj])
+                        if not rs in res and check(rs):
+                            res.append(rs)
+            else:
+                for xi, yi in d[m[i]]:
+                    for xj, yj in d[m[j]]:
+                        rs = sorted([xi, yi, xj, yj])
+                        if not rs in res and check(rs):
+                            res.append(rs)
+            i += 1
+            j -= 1
+        elif m[i] + m[j] > target:
+            j -= 1
+        else:
+            i += 1
+    return res
+
+
+def fourSumCount(A, B, C, D):
+    """
+    LC454
+    四数相加Ⅱ
+    给定四个包含整数的数组列表 A , B , C , D ,计算有多少个元组 (i, j, k, l) ，使得 A[i] + B[j] + C[k] + D[l] = 0。
+    为了使问题简单化，所有的 A, B, C, D 具有相同的长度 N，且 0 ≤ N ≤ 500 。所有整数的范围在 -228 到 228 - 1 之间，最终结果不会超过 231 - 1。
+    输入:
+    A = [ 1, 2]
+    B = [-2,-1]
+    C = [-1, 2]
+    D = [ 0, 2]
+    输出:
+    2
+    解释:
+    两个元组如下:
+    1. (0, 0, 0, 1) -> A[0] + B[0] + C[0] + D[1] = 1 + (-2) + (-1) + 2 = 0
+    2. (1, 1, 0, 0) -> A[1] + B[1] + C[0] + D[0] = 2 + (-1) + (-1) + 0 = 0
+    :param A: List[int]
+    :param B: List[int]
+    :param C: List[int]
+    :param D: List[int]
+    :return: int
+    """
+    n = 0
+    e = dict()
+    for a in A:
+        for b in B:
+            e[a + b] = e.get(a + b, 0) + 1
+    for c in C:
+        for d in D:
+            s = -(c + d)
+            if s in e:
+                n += e[s]
+    return n
 
 
 if __name__ == "__main__":
@@ -442,4 +688,21 @@ if __name__ == "__main__":
     # print(r)
     # r = countBits(5)
     # print(r)
-    print(threeSum([-1, 0, 1, 2, -1, -4]))
+    # print(threeSum2([-4,-2,-2,-2,0,1,2,2,2,3,3,4,4,6,6]))
+    # print(strStr("aabaaabaaac", "aabaaac"))
+    # a = ListNode(0)
+    # b = a
+    # for x in [1,2,4]:
+    #     next = ListNode(x)
+    #     b.next = next
+    #     b = b.next
+    # c = ListNode(0)
+    # b = c
+    # for x in [1,3,4]:
+    #     next = ListNode(x)
+    #     b.next = next
+    #     b = b.next
+    # print(mergeTwoLists(a.next, c.next))
+    # print(fourSum([-7,-5,0,7,1,1,-10,-2,7,7,-2,-6,0,-10,-5,7,-8,5], 28))
+    # print(fourSumCount([1, 2], [-2, -1], [-1, 2], [0, 2]))
+    print(strStr2("abababaababda", "babaaba"))

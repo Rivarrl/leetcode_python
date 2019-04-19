@@ -1,6 +1,11 @@
 # -*- coding:utf-8 -*-
 # 算法辅助类
 
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
 def binary_search(bs, b, e, x):
     """
     二分查找返回位置，查不到则返回大于x的第一个值的位置

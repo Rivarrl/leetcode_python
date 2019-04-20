@@ -7,7 +7,24 @@ from algorithm_utils import ListNode
 # 数数字，1->11->21->1211->.....
 # 1 -> 11(1个1)
 # 11 -> 21(2个1)
-def counting_nums(t):
+def countAndSay(n):
+    """
+    LC38
+    报数
+    报数序列是一个整数序列，按照其中的整数的顺序进行报数，得到下一个数。其前五项如下：
+    1.     1
+    2.     11
+    3.     21
+    4.     1211
+    5.     111221
+    1 被读作  "one 1"  ("一个一") , 即 11。
+    11 被读作 "two 1s" ("两个一"）, 即 21。
+    21 被读作 "one 2",  "one 1" （"一个二" ,  "一个一") , 即 1211。
+    给定一个正整数 n（1 ≤ n ≤ 30），输出报数序列的第 n 项。
+    注意：整数顺序将表示为一个字符串。
+    :param n: int
+    :return: str
+    """
     def inner(num):
         l = num.__len__()
         res = ""
@@ -25,7 +42,7 @@ def counting_nums(t):
         return res
 
     result = "1"
-    for _ in range(t - 1):
+    for _ in range(n - 1):
         result = inner(result)
     return result
 
@@ -682,6 +699,70 @@ def fourSumCount(A, B, C, D):
     return n
 
 
+def searchInsert(nums, target):
+    """
+    LC35
+    搜索插入位置
+    给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。如果目标值不存在于数组中，返回它将会被按顺序插入的位置。
+    你可以假设数组中无重复元素。
+    输入: [1,3,5,6], 5
+    输出: 2
+    :param nums: List[int]
+    :param target: int
+    :return: int
+    """
+    l = len(nums)
+    i, j = 0, l - 1
+    while i <= j:
+        mid = (i + j) // 2
+        if nums[mid] < target:
+            i = mid + 1
+        elif nums[mid] > target:
+            j = mid - 1
+        else:
+            return mid
+    return i
+
+
+def myPow(x, n):
+    """
+    LC50
+    Pow(x,n)
+    实现 pow(x, n) ，即计算 x 的 n 次幂函数。
+    思路:
+    当n可以被2整除时将n折半, x=x*x. 例如: 2^4 = 4^2
+    当n不能被2整除时n//=2, res*=x
+    :param x: float
+    :param n: int
+    :return: float
+    """
+    i, res = abs(n), 1.0
+    while i != 0:
+        if i % 2 != 0:
+           res *= x
+        x *= x
+        i //= 2
+    return res if n > 0 else 1/res
+
+
+def myPow2(x, n):
+    """
+    LC50
+    Pow(x,n)
+    递归解法
+    :param x: float
+    :param n: int
+    :return: float
+    """
+    if n == 0: return 1
+    if n == 1: return x
+    if n == -1: return 1/x
+    res = myPow2(x, n//2)
+    res *= res
+    res *= myPow2(x, n-(2*n//2))
+    return res
+
+
 if __name__ == "__main__":
     # a = [[1,3,1],[1,5,1],[4,2,1]]
     # r = minPathSum(a)
@@ -705,4 +786,6 @@ if __name__ == "__main__":
     # print(mergeTwoLists(a.next, c.next))
     # print(fourSum([-7,-5,0,7,1,1,-10,-2,7,7,-2,-6,0,-10,-5,7,-8,5], 28))
     # print(fourSumCount([1, 2], [-2, -1], [-1, 2], [0, 2]))
-    print(strStr2("abababaababda", "babaaba"))
+    # print(strStr2("abababaababda", "babaaba"))
+    # print(searchInsert([1,3,5,6], 4))
+    print(myPow2(2.00000, -2))

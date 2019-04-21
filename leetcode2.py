@@ -763,6 +763,83 @@ def myPow2(x, n):
     return res
 
 
+def permuteUnique(nums):
+    """
+    LC47
+    全排列Ⅱ
+    给定一个可包含重复数字的序列，返回所有不重复的全排列。
+    输入: [1,1,2]
+    输出:
+    [
+      [1,1,2],
+      [1,2,1],
+      [2,1,1]
+    ]
+    :param nums: List[int]
+    :return: List[List[int]]
+    """
+    def inner(ns):
+        cur = []
+        if len(ns) == 1:
+            cur.append(ns)
+        else:
+            for i, x in enumerate(ns):
+                if i >= 1 and ns[i - 1] == ns[i]:
+                    continue
+                rs = ns[:i] + ns[i + 1:]
+                for r in inner(rs):
+                    cur.append([x] + r)
+        return cur
+    nums.sort()
+    res = inner(nums)
+    return res
+
+
+def rotate(matrix):
+    """
+    LC48
+    旋转图像
+    给定一个 n × n 的二维矩阵表示一个图像。
+    将图像顺时针旋转 90 度。
+    你必须在原地旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要使用另一个矩阵来旋转图像。
+        给定 matrix =
+    [
+      [1,2,3],
+      [4,5,6],
+      [7,8,9]
+    ],
+
+    原地旋转输入矩阵，使其变为:
+    [
+      [7,4,1],
+      [8,5,2],
+      [9,6,3]
+    ]
+    :param matrix: List[List[int]]
+    :return: None
+    """
+    pass
+
+
+def groupAnagrams(strs):
+    """
+    LC49
+    字母异位词分组
+    给定一个字符串数组，将字母异位词组合在一起。字母异位词指字母相同，但排列不同的字符串。
+    输入: ["eat", "tea", "tan", "ate", "nat", "bat"],
+    输出:
+    [
+      ["ate","eat","tea"],
+      ["nat","tan"],
+      ["bat"]
+    ]
+    所有输入均为小写字母。
+    不考虑答案输出的顺序。
+    :param strs:
+    :return:
+    """
+    pass
+
 if __name__ == "__main__":
     # a = [[1,3,1],[1,5,1],[4,2,1]]
     # r = minPathSum(a)
@@ -788,4 +865,4 @@ if __name__ == "__main__":
     # print(fourSumCount([1, 2], [-2, -1], [-1, 2], [0, 2]))
     # print(strStr2("abababaababda", "babaaba"))
     # print(searchInsert([1,3,5,6], 4))
-    print(myPow2(2.00000, -2))
+    print(permuteUnique([1,1,2]))

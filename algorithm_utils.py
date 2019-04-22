@@ -6,6 +6,15 @@ class ListNode:
         self.val = x
         self.next = None
 
+
+# Definition for a binary tree node.
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
 def binary_search(bs, b, e, x):
     """
     二分查找返回位置，查不到则返回大于x的第一个值的位置

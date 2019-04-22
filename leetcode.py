@@ -272,7 +272,14 @@ class Solution:
         :type str: str
         :rtype: str
         """
-        return str.lower()
+        a = ord('a')
+        A = ord('A')
+        Z = ord('Z')
+        x = a - A
+        for s in str:
+            if A <= ord(s) <= Z:
+                str = str.replace(s, chr(ord(s) + x))
+        return str
 
     def constructMaximumBinaryTree(self, nums):
         """
@@ -1161,9 +1168,10 @@ class Solution:
 
 if __name__ == '__main__':
     s = Solution()
-    x = [4,7,9,7,6,7]
-    y = [5,0,0,6,1,6,2,2,4]
-    ans = s.intersect(x, y)
+    # x = [4,7,9,7,6,7]
+    # y = [5,0,0,6,1,6,2,2,4]
+    # ans = s.intersect(x, y)
+    ans = s.toLowerCase("Hello")
     print(ans)
     # A = [2]
     # B = [5,7,10,12]

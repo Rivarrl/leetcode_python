@@ -818,8 +818,16 @@ def rotate(matrix):
     :param matrix: List[List[int]]
     :return: None
     """
-    pass
-
+    l = len(matrix)
+    x = l // 2 + 1 if l % 2 == 1 else l // 2
+    for i in range(l//2):
+        for j in range(x):
+            tmp = matrix[i][j]
+            matrix[i][j] = matrix[l - 1 - j][i]
+            matrix[l - 1 - j][i] = matrix[l - 1 - i][l - 1 - j]
+            matrix[l - 1 - i][l - 1 - j] = matrix[j][l - 1 - i]
+            matrix[j][l - 1 - i] = tmp
+    print(matrix)
 
 def groupAnagrams(strs):
     """
@@ -835,10 +843,63 @@ def groupAnagrams(strs):
     ]
     所有输入均为小写字母。
     不考虑答案输出的顺序。
-    :param strs:
-    :return:
+    :param strs: List[str]
+    :return: List[List[str]]
     """
-    pass
+    def inner(s):
+        l = len(s)
+        res = [ord(x) for x in s]
+        r = ''
+        for _ in range(l):
+            m = min(res)
+            res.remove(m)
+            r += chr(m)
+        return r
+
+    d = {}
+    res = []
+    l = len(strs)
+    k = 0
+    for i in range(l):
+        xs = inner(strs[i])
+        if not xs in d.keys():
+            d[xs] = k
+            k += 1
+            res.append([strs[i]])
+        else:
+            res[d[xs]].append(strs[i])
+    return res
+
+
+def PredictTheWinner(nums):
+    """
+    LC486
+    预测赢家
+    给定一个表示分数的非负整数数组。
+    玩家1从数组任意一端拿取一个分数，随后玩家2继续从剩余数组任意一端拿取分数，然后玩家1拿，……。
+    每次一个玩家只能拿取一个分数，分数被拿取之后不再可取。
+    直到没有剩余分数可取时游戏结束。
+    最终获得分数总和最多的玩家获胜。
+    给定一个表示分数的数组，预测玩家1是否会成为赢家。
+    你可以假设每个玩家的玩法都会使他的分数最大化。
+    输入: [1, 5, 2]
+    输出: False
+    解释: 一开始，玩家1可以从1和2中进行选择。
+    如果他选择2（或者1），那么玩家2可以从1（或者2）和5中进行选择。如果玩家2选择了5，那么玩家1则只剩下1（或者2）可选。
+    所以，玩家1的最终分数为 1 + 2 = 3，而玩家2为 5。
+    因此，玩家1永远不会成为赢家，返回 False。
+    :param nums: List[int]
+    :return: bool
+    """
+    l = len(nums)
+    if l%2 == 0: return True
+    dp = [[nums[i] if i == j else 0 for j in range(l)] for i in range(l)]
+    for k in range(1, l):
+        for i in range(k, l): # 斜着遍历
+            j = i - k
+            dp[j][i] = max(nums[i] - dp[j][i-1], nums[j] - dp[j+1][i])
+    return dp[0][-1] > 0
+
 
 if __name__ == "__main__":
     # a = [[1,3,1],[1,5,1],[4,2,1]]
@@ -865,4 +926,8 @@ if __name__ == "__main__":
     # print(fourSumCount([1, 2], [-2, -1], [-1, 2], [0, 2]))
     # print(strStr2("abababaababda", "babaaba"))
     # print(searchInsert([1,3,5,6], 4))
-    print(permuteUnique([1,1,2]))
+    # print(permuteUnique([1,1,2]))
+    # rotate([[1, 2, 3, 4],[5, 6, 7, 8],[9, 10, 11, 12],[13,14,15,16]])
+    # rotate([[1, 2, 3],[4, 5, 6],[7, 8, 9]])
+    # print(PredictTheWinner([0]))
+    print(groupAnagrams(["eat","tea","tan","ate","nat","bat"]))

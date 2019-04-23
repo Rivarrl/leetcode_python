@@ -42,16 +42,16 @@ def quick_sort(arr, l, r):
     if l >= r:
         return
     i, j = l, r
-    if l < r:
-        base = arr[i]
+    base = arr[l]
+    while i < j:
         while arr[j] >= base and i < j:
             j -= 1
         while arr[i] <= base and i < j:
             i += 1
         swap(arr, i, j)
     swap(arr, l, j)
-    quick_sort(arr, l, j-1)
-    quick_sort(arr, j+1, r)
+    quick_sort(arr, l, i-1)
+    quick_sort(arr, i+1, r)
 
 if __name__ == '__main__':
     a = [12, 4, 7, 2]

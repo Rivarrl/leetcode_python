@@ -901,6 +901,33 @@ def PredictTheWinner(nums):
     return dp[0][-1] > 0
 
 
+def numTrees(n):
+    """
+    96. 不同的二叉搜索树
+    给定一个整数 n，求以 1 ... n 为节点组成的二叉搜索树有多少种？
+    示例:
+    输入: 3
+    输出: 5
+    解释:
+    给定 n = 3, 一共有 5 种不同结构的二叉搜索树:
+       1         3     3      2      1
+        \       /     /      / \      \
+         3     2     1      1   3      2
+        /     /       \                 \
+       2     1         2                 3
+    :param n: int
+    :return: int
+    """
+    dp = [0] * (n + 1)
+    dp[0] = 1
+    dp[1] = 1
+    for i in range(2, n + 1):
+        for j in range(1, i + 1):
+            dp[i] += dp[j - 1] * dp[i - j]
+    return dp[n]
+
+
+
 if __name__ == "__main__":
     # a = [[1,3,1],[1,5,1],[4,2,1]]
     # r = minPathSum(a)
@@ -930,4 +957,5 @@ if __name__ == "__main__":
     # rotate([[1, 2, 3, 4],[5, 6, 7, 8],[9, 10, 11, 12],[13,14,15,16]])
     # rotate([[1, 2, 3],[4, 5, 6],[7, 8, 9]])
     # print(PredictTheWinner([0]))
-    print(groupAnagrams(["eat","tea","tan","ate","nat","bat"]))
+    # print(groupAnagrams(["eat","tea","tan","ate","nat","bat"]))
+    print(numTrees(5))

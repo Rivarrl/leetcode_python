@@ -14,6 +14,11 @@ class TreeNode:
         self.left = None
         self.right = None
 
+# Definition for a Node.
+class Node:
+    def __init__(self, val, children):
+        self.val = val
+        self.children = children
 
 def binary_search(bs, b, e, x):
     """

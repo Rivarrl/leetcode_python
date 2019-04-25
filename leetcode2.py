@@ -927,6 +927,49 @@ def numTrees(n):
     return dp[n]
 
 
+def wordBreak(s, wordDict):
+    """
+    139. 单词拆分
+    给定一个非空字符串 s 和一个包含非空单词列表的字典 wordDict，判定 s 是否可以被空格拆分为一个或多个在字典中出现的单词。
+    说明：
+    拆分时可以重复使用字典中的单词。
+    你可以假设字典中没有重复的单词。
+    示例 1：
+    输入: s = "leetcode", wordDict = ["leet", "code"]
+    输出: true
+    解释: 返回 true 因为 "leetcode" 可以被拆分成 "leet code"。
+    示例 2：
+    输入: s = "applepenapple", wordDict = ["apple", "pen"]
+    输出: true
+    解释: 返回 true 因为 "applepenapple" 可以被拆分成 "apple pen apple"。
+         注意你可以重复使用字典中的单词。
+    示例 3：
+    输入: s = "catsandog", wordDict = ["cats", "dog", "sand", "and", "cat"]
+    输出: false
+    :param s: str
+    :param wordDict: List[str]
+    :return: bool
+    """
+    l = len(s)
+    dp = [False] * (l + 1)
+    dp[0] = True
+    inf = 2 ** 31
+    _min, _max = inf, -1
+    for i, word in enumerate(wordDict):
+        li = len(wordDict[i])
+        if li < _min:
+            _min = li
+        if li > _max:
+            _max = li
+    for i in range(1, l + 1):
+        for j in range(i):
+            if dp[j] and s[j:i-j] in wordDict:
+                dp[i] = True
+                break
+    print(dp)
+    return dp[l]
+
+
 
 if __name__ == "__main__":
     # a = [[1,3,1],[1,5,1],[4,2,1]]
@@ -958,4 +1001,7 @@ if __name__ == "__main__":
     # rotate([[1, 2, 3],[4, 5, 6],[7, 8, 9]])
     # print(PredictTheWinner([0]))
     # print(groupAnagrams(["eat","tea","tan","ate","nat","bat"]))
-    print(numTrees(5))
+    # print(numTrees(5))
+    s = "leetcode"
+    wordDict = ["leet", "code"]
+    print(wordBreak(s, wordDict))

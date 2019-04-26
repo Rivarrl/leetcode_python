@@ -961,13 +961,114 @@ def wordBreak(s, wordDict):
             _min = li
         if li > _max:
             _max = li
+    print(_max)
+    print(_min)
     for i in range(1, l + 1):
-        for j in range(i):
-            if dp[j] and s[j:i-j] in wordDict:
+        k = min(i, _max)
+        for j in range(_min, k):
+            if dp[j] and s[j:i] in wordDict:
                 dp[i] = True
                 break
     print(dp)
     return dp[l]
+
+
+
+def integerBreak(n):
+    """
+    343. 整数拆分
+    给定一个正整数 n，将其拆分为至少两个正整数的和，并使这些整数的乘积最大化。 返回你可以获得的最大乘积。
+    示例 1:
+    输入: 2
+    输出: 1
+    解释: 2 = 1 + 1, 1 × 1 = 1。
+    示例 2:
+    输入: 10
+    输出: 36
+    解释: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36。
+    说明: 你可以假设 n 不小于 2 且不大于 58。
+    :param n: int
+    :return: int
+    """
+    if n < 4: return n - 1
+    if n == 4: return n
+    dp = [0] * (n + 1)
+    for i in range(1, n + 1):
+        if i <= 4:
+            dp[i] = i
+            continue
+        j = i // 2
+        for k in range(j + 1, 0, -1):
+            dp[i] = max(dp[i], dp[k] * dp[i-k])
+    return dp[n]
+
+
+def coinChange(coins, amount):
+    """
+    322. 零钱兑换
+    给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1。
+    输入: coins = [1, 2, 5], amount = 11
+    输出: 3
+    解释: 11 = 5 + 5 + 1
+    :param coins: List[int]
+    :param amount: int
+    :return: int
+    """
+    dp = [2**31] * (amount + 1)
+    dp[0] = 0
+    for i in range(1, amount + 1):
+        for j in coins:
+            if j <= i:
+                dp[i] = min(dp[i], dp[i - j] + 1)
+    return dp[amount] if dp[amount] < 2**31 else -1
+
+
+def maxEnvelopes(envelopes):
+    """
+    354. 俄罗斯套娃信封问题
+    给定一些标记了宽度和高度的信封，宽度和高度以整数对形式 (w, h) 出现。当另一个信封的宽度和高度都比这个信封大的时候，这个信封就可以放进另一个信封里，如同俄罗斯套娃一样。
+    请计算最多能有多少个信封能组成一组“俄罗斯套娃”信封（即可以把一个信封放到另一个信封里面）。
+    说明:
+    不允许旋转信封。
+    示例:
+    输入: envelopes = [[5,4],[6,4],[6,7],[2,3]]
+    输出: 3
+    解释: 最多信封的个数为 3, 组合为: [2,3] => [5,4] => [6,7]。
+    :param envelopes: List[List[int]]
+    :return: int
+    """
+    l = len(envelopes)
+    if l == 0: return 0
+    for i in range(l):
+        for j in range(i):
+            if envelopes[i][0] < envelopes[j][0]:
+                envelopes[i], envelopes[j] = envelopes[j], envelopes[i]
+            elif envelopes[i][0] == envelopes[j][0] and envelopes[i][1] > envelopes[j][1]:
+                envelopes[i], envelopes[j] = envelopes[j], envelopes[i]
+    m, c = 1, 1
+    print(envelopes)
+    i = 1
+    b = 0
+    for i in range(l):
+        if envelopes[i][0] == envelopes[i-1][0]:
+            b = envelopes[i][1]
+            if c > m: m = c
+            continue
+        if b > envelopes[i-1][1]:
+            c += 1
+            if envelopes[i][1] > b:
+                c += 1
+            else:
+                c = 0
+            b = 0
+            if c > m: m = c
+            continue
+        if envelopes[i][1] > envelopes[i-1][1]:
+            c += 1
+        elif envelopes[i][1] < envelopes[i-1][1]:
+            c = 0
+        if c > m: m = c
+    return m
 
 
 
@@ -1005,3 +1106,6 @@ if __name__ == "__main__":
     s = "leetcode"
     wordDict = ["leet", "code"]
     print(wordBreak(s, wordDict))
+    # print(integerBreak(10))
+    # print(coinChange([1,2,5], 11))
+    print(maxEnvelopes([[1,3],[3,5],[6,7],[6,8],[8,4],[9,5]]))

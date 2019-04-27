@@ -951,25 +951,21 @@ def wordBreak(s, wordDict):
     :return: bool
     """
     l = len(s)
+    lw = len(wordDict)
+    if l == 0 or lw == 0: return False
     dp = [False] * (l + 1)
     dp[0] = True
-    inf = 2 ** 31
-    _min, _max = inf, -1
-    for i, word in enumerate(wordDict):
-        li = len(wordDict[i])
-        if li < _min:
-            _min = li
-        if li > _max:
-            _max = li
-    print(_max)
-    print(_min)
-    for i in range(1, l + 1):
-        k = min(i, _max)
-        for j in range(_min, k):
+    inf = (2**31) - 1
+    low, high = inf, -1
+    for word in wordDict:
+        le = len(word)
+        if le < low: low = le
+        if le > high: high = le
+    for i in range(low, l + 1):
+        for j in range(max(i - high, 0), i):
             if dp[j] and s[j:i] in wordDict:
                 dp[i] = True
                 break
-    print(dp)
     return dp[l]
 
 
@@ -1039,37 +1035,46 @@ def maxEnvelopes(envelopes):
     """
     l = len(envelopes)
     if l == 0: return 0
-    for i in range(l):
-        for j in range(i):
-            if envelopes[i][0] < envelopes[j][0]:
-                envelopes[i], envelopes[j] = envelopes[j], envelopes[i]
-            elif envelopes[i][0] == envelopes[j][0] and envelopes[i][1] > envelopes[j][1]:
-                envelopes[i], envelopes[j] = envelopes[j], envelopes[i]
-    m, c = 1, 1
-    print(envelopes)
-    i = 1
-    b = 0
-    for i in range(l):
-        if envelopes[i][0] == envelopes[i-1][0]:
-            b = envelopes[i][1]
-            if c > m: m = c
-            continue
-        if b > envelopes[i-1][1]:
-            c += 1
-            if envelopes[i][1] > b:
-                c += 1
-            else:
-                c = 0
-            b = 0
-            if c > m: m = c
-            continue
-        if envelopes[i][1] > envelopes[i-1][1]:
-            c += 1
-        elif envelopes[i][1] < envelopes[i-1][1]:
-            c = 0
-        if c > m: m = c
-    return m
 
+    def map_quick_sort(arr, l, r):
+        if l >= r:
+            return
+        i, j = l, r
+        base = arr[l][0]
+        base1 = arr[l][1]
+        while i < j:
+            while (arr[j][0] > base or (arr[j][0] == base and arr[j][1] <= base1)) and i < j:
+                j -= 1
+            while (arr[i][0] < base or (arr[i][0] == base and arr[i][1] >= base1)) and i < j:
+                i += 1
+            arr[i], arr[j] = arr[j], arr[i]
+        arr[l], arr[j] = arr[j], arr[l]
+        map_quick_sort(arr, l, i - 1)
+        map_quick_sort(arr, i + 1, r)
+
+    map_quick_sort(envelopes, 0, l - 1)
+    print(envelopes)
+    # for i in range(l):
+    #     for j in range(i):
+    #         if envelopes[i][0] < envelopes[j][0]:
+    #             envelopes[i], envelopes[j] = envelopes[j], envelopes[i]
+    #         elif envelopes[i][0] == envelopes[j][0] and envelopes[i][1] > envelopes[j][1]:
+    #             envelopes[i], envelopes[j] = envelopes[j], envelopes[i]
+
+    dp = [envelopes[0][1]]
+    for i in range(1, l):
+        if envelopes[i][1] > dp[-1]:
+            dp.append(envelopes[i][1])
+        else:
+            j, k = 0, dp.__len__()
+            while j < k:
+                mid = (j + k) // 2
+                if dp[mid] < envelopes[i][1]:
+                    j = mid + 1
+                else:
+                    k = mid
+            dp[j] = envelopes[i][1]
+    return len(dp)
 
 
 if __name__ == "__main__":
@@ -1103,9 +1108,9 @@ if __name__ == "__main__":
     # print(PredictTheWinner([0]))
     # print(groupAnagrams(["eat","tea","tan","ate","nat","bat"]))
     # print(numTrees(5))
-    s = "leetcode"
-    wordDict = ["leet", "code"]
+    s = "applepenapple"
+    wordDict = ["apple","pen"]
     print(wordBreak(s, wordDict))
     # print(integerBreak(10))
     # print(coinChange([1,2,5], 11))
-    print(maxEnvelopes([[1,3],[3,5],[6,7],[6,8],[8,4],[9,5]]))
+    # print(maxEnvelopes([[1,3],[3,5],[6,7],[8,9],[6,8],[8,4],[9,5]]))

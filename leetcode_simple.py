@@ -510,6 +510,299 @@ def peakIndexInMountainArray(A):
     return l
 
 
+def isPalindrome(s):
+    """
+    125. 验证回文串
+    给定一个字符串，验证它是否是回文串，只考虑字母和数字字符，可以忽略字母的大小写。
+    说明：本题中，我们将空字符串定义为有效的回文串。
+    输入: "A man, a plan, a canal: Panama"
+    输出: true
+    :param s: str
+    :return: bool
+    """
+    import re
+    s = re.sub("[^a-zA-Z0-9]", "", s).lower()
+    return s == s[::-1]
+
+
+def isPalindrome2(s):
+    """
+    125. 验证回文串
+    不用正则
+    :param s: str
+    :return: bool
+    """
+    s = ''.join([chr(ord(x) - ord('a') + ord('A')) if 'a'<=x<='z' else x if 'A'<=x<='Z' or '0'<=x<='9' else '' for x in s])
+    return s == s[::-1]
+
+
+def generate(numRows):
+    """
+    118. 杨辉三角
+    给定一个非负整数 numRows，生成杨辉三角的前 numRows 行。
+    在杨辉三角中，每个数是它左上方和右上方的数的和。
+    示例:
+    输入: 5
+    输出:
+    [
+         [1],
+        [1,1],
+       [1,2,1],
+      [1,3,3,1],
+     [1,4,6,4,1]
+    ]
+    :param numRows: int
+    :return: List[List[int]]
+    """
+    res = []
+    for i in range(numRows):
+        row = [1] * (i + 1)
+        if i > 1:
+            for j in range(1, i):
+                row[j] = last[j] + last[j-1]
+        last = res[-1]
+        res.append(row)
+    return res
+
+
+def generate2(numRows):
+    """
+    118. 杨辉三角
+    map, 错位补0相加
+    :param numRows: int
+    :return: List[List[int]]
+    """
+    if numRows == 0: return []
+    res = [[1]]
+    while numRows > 1:
+        res.append(list(map(lambda l, r: l + r, [0] + res[-1], res[-1] + [0])))
+        numRows -= 1
+    return res
+
+
+def isHappy(n):
+    """
+    202. 快乐数
+    编写一个算法来判断一个数是不是“快乐数”。
+    一个“快乐数”定义为：对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和，然后重复这个过程直到这个数变为 1，也可能是无限循环但始终变不到 1。如果可以变为 1，那么这个数就是快乐数。
+    示例:
+    输入: 19
+    输出: true
+    解释:
+    12 + 92 = 82
+    82 + 22 = 68
+    62 + 82 = 100
+    12 + 02 + 02 = 1
+    :param n: int
+    :return: bool
+    """
+    rs = {}
+    while n != 1 and n not in rs:
+        rs[n] = 1
+        m = 0
+        while n > 0:
+            m += (n%10)**2
+            n //= 10
+        n = m
+    return n == 1
+
+
+def plusOne(digits):
+    """
+    66. 加一
+    给定一个由整数组成的非空数组所表示的非负整数，在该数的基础上加一。
+    最高位数字存放在数组的首位， 数组中每个元素只存储一个数字。
+    你可以假设除了整数 0 之外，这个整数不会以零开头。
+    输入: [1,2,3]
+    输出: [1,2,4]
+    解释: 输入数组表示数字 123。
+    :param digits:
+    :return:
+    """
+    # 一行
+    # return [int(x) for x in str(int(''.join([str(e) for e in digits])) + 1)]
+
+    i = len(digits)
+    if digits[-1] != 9:
+        digits[-1] += 1
+    else:
+        digits.insert(0, 0)
+        while i >= 0 and digits[i] == 9:
+            digits[i] = 0
+            i -= 1
+        digits[i] += 1
+    return digits if digits[0] != 0 else digits[1:]
+
+
+def containsDuplicate(nums):
+    """
+    217. 存在重复元素
+    给定一个整数数组，判断是否存在重复元素。
+    如果任何值在数组中出现至少两次，函数返回 true。如果数组中每个元素都不相同，则返回 false。
+    示例 1:
+    输入: [1,2,3,1]
+    输出: true
+    示例 2:
+    输入: [1,2,3,4]
+    输出: false
+    :param nums: List[int]
+    :return: bool
+    """
+    return len(set(nums)) == nums
+
+
+def removeElements(head, val):
+    """
+    203. 移除链表元素
+    删除链表中等于给定值 val 的所有节点。
+    示例:
+    输入: 1->2->6->3->4->5->6, val = 6
+    输出: 1->2->3->4->5
+    :param head: ListNode
+    :param val: int
+    :return: ListNode
+    """
+    if head:
+        p = head
+        while p:
+            if p.next and p.next.val == val:
+                if p.next.next:
+                    p.next = p.next.next
+                else:
+                    p.next = None
+                    break
+            else:
+                p = p.next
+    if head and head.val == val:
+        if head.next:
+            head = head.next
+        else:
+            head = None
+    return head
+
+
+def countPrimes(n):
+    """
+    204. 计数质数
+    统计所有小于非负整数 n 的质数的数量。
+    示例:
+    输入: 10
+    输出: 4
+    解释: 小于 10 的质数一共有 4 个, 它们是 2, 3, 5, 7 。
+    (暴力法和除质数法都超时，需要用厄拉多塞筛法)
+    :param n: int
+    :return: int
+    """
+    """
+    超时
+    if n < 3: return 0
+    primes = [2]
+    for i in range(3, n):
+        for j in primes:
+            if i % j == 0:
+                break
+        else:
+            primes.append(i)
+    return primes.__len__()
+    """
+    if n < 3: return 0
+    dp = [1] * n
+    for i in range(2):
+        dp[i] = 0
+    for i in range(2, int(n**0.5) + 1):
+        if dp[i] == 1:
+            x = i*i
+            while x < n:
+                dp[x] = 0
+                x += i
+    # print(dp)
+    return sum(dp)
+
+
+def isIsomorphic(s, t):
+    """
+    205. 同构字符串
+    给定两个字符串 s 和 t，判断它们是否是同构的。
+    如果 s 中的字符可以被替换得到 t ，那么这两个字符串是同构的。
+    所有出现的字符都必须用另一个字符替换，同时保留字符的顺序。两个字符不能映射到同一个字符上，但字符可以映射自己本身。
+    示例 1:
+    输入: s = "egg", t = "add"
+    输出: true
+    示例 2:
+    输入: s = "foo", t = "bar"
+    输出: false
+    示例 3:
+    输入: s = "paper", t = "title"
+    输出: true
+    说明:
+    你可以假设 s 和 t 具有相同的长度。
+    :param s: str
+    :param t: str
+    :return: bool
+    """
+    l = len(s)
+    x, y = "", ""
+    xd, yd = {}, {}
+    j = 1
+    for i in range(l):
+        if s[i] not in xd:
+            xd[s[i]] = j
+        if t[i] not in yd:
+            yd[t[i]] = j
+        x = "%s%d"%(x, xd[s[i]])
+        y = "%s%d"%(y, yd[t[i]])
+        j += 1
+    return x == y
+
+
+def buddyStrings(A, B):
+    """
+    859. 亲密字符串
+    给定两个由小写字母构成的字符串 A 和 B ，只要我们可以通过交换 A 中的两个字母得到与 B 相等的结果，就返回 true ；否则返回 false 。
+    示例 1：
+    输入： A = "ab", B = "ba"
+    输出： true
+    示例 2：
+    输入： A = "ab", B = "ab"
+    输出： false
+    示例 3:
+    输入： A = "aa", B = "aa"
+    输出： true
+    示例 4：
+    输入： A = "aaaaaaabc", B = "aaaaaaacb"
+    输出： true
+    示例 5：
+    输入： A = "", B = "aa"
+    输出： false
+    提示：
+    0 <= A.length <= 20000
+    0 <= B.length <= 20000
+    A 和 B 仅由小写字母构成。
+    :param A: str
+    :param B: str
+    :return: bool
+    """
+    la = len(A)
+    lb = len(B)
+    if la != lb or la < 2: return False
+    sa = set(A).__len__()
+    if sa != set(B).__len__(): return False
+    if A == B and la == sa: return False
+    da, db = {}, {}
+    c = 0
+    for i in range(la):
+        if A[i] != B[i]:
+            c += 1
+            if A[i] not in da:
+                da[A[i]] = 0
+            da[A[i]] += 1
+            if B[i] not in db:
+                db[B[i]] = 0
+            db[B[i]] += 1
+    print(da, db)
+    return da.__len__() == sum(da.values()) and sorted(da.keys()) == sorted(db.keys()) and c < 3
+
+
 if __name__ == '__main__':
     # words = ["gin", "zen", "gig", "msg"]
     # print(uniqueMorseRepresentations(words))
@@ -521,5 +814,18 @@ if __name__ == '__main__':
     # print(selfDividingNumbers(1,22))
     # print(repeatedNTimes([9,5,3,3]))
     # print(peakIndexInMountainArray([0,2,3,4,3]))
-    a = Node(1, [Node(3, [Node(5, []), Node(6, [])]),Node(2, []),Node(4, [])])
-    postorder2(a)
+    # a = Node(1, [Node(3, [Node(5, []), Node(6, [])]),Node(2, []),Node(4, [])])
+    # postorder2(a)
+    # print(isPalindrome("A man, a plan, a canal: Panama"))
+    # print(generate(5))
+    # print(isHappy(2))
+    # print(plusOne([9,9,9]))
+    # x = ListNode(0)
+    # p = x
+    # for i in [1,1,1]:
+    #     p.next = ListNode(i)
+    #     p = p.next
+    # removeElements(x.next, 1)
+    # print(countPrimes(10))
+    # print(isIsomorphic("papxr", "title"))
+    print(buddyStrings("ab", "ab"))

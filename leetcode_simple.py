@@ -736,23 +736,45 @@ def isIsomorphic(s, t):
     输出: true
     说明:
     你可以假设 s 和 t 具有相同的长度。
+    思路1：(太慢，只能击败6%)
+    同构说明同时遍历两个字符串，分别以相同规则统一赋值后的字符串是相等的，这里使用下标
+    例如：
+    abbc = "1224" = gffd
+    cvbndjfker = "12345678910"
+    思路2：
+    在思路1基础上发现，只要对比当前部分，发现不一致就return False，进一步发现，只要对比当前字符的下表编号就可以。
     :param s: str
     :param t: str
     :return: bool
     """
+    # 解一
+    # l = len(s)
+    # # x, y = "", ""
+    # x, y = [0] * l, [0] * l
+    # xd, yd = {}, {}
+    # for i in range(l):
+    #     if s[i] not in xd:
+    #         xd[s[i]] = i
+    #     if t[i] not in yd:
+    #         yd[t[i]] = i
+    #     if xd[s[i]] != yd[t[i]]: return False
+    #     x[i] = xd[s[i]]
+    #     y[i] = yd[t[i]]
+    #     # x = "%s%d"%(x, xd[s[i]])
+    #     # y = "%s%d"%(y, yd[t[i]])
+    #     # if x != y: return False
+    # return x == y
+
+    # 解二
     l = len(s)
-    x, y = "", ""
     xd, yd = {}, {}
-    j = 1
     for i in range(l):
         if s[i] not in xd:
-            xd[s[i]] = j
+            xd[s[i]] = i
         if t[i] not in yd:
-            yd[t[i]] = j
-        x = "%s%d"%(x, xd[s[i]])
-        y = "%s%d"%(y, yd[t[i]])
-        j += 1
-    return x == y
+            yd[t[i]] = i
+        if xd[s[i]] != yd[t[i]]: return False
+    return True
 
 
 def buddyStrings(A, B):
@@ -804,6 +826,7 @@ def buddyStrings(A, B):
 
 
 if __name__ == '__main__':
+    pass
     # words = ["gin", "zen", "gig", "msg"]
     # print(uniqueMorseRepresentations(words))
     # x = [-4, -1, 0, 3, 10]
@@ -828,4 +851,4 @@ if __name__ == '__main__':
     # removeElements(x.next, 1)
     # print(countPrimes(10))
     # print(isIsomorphic("papxr", "title"))
-    print(buddyStrings("ab", "ab"))
+    # print(buddyStrings("ab", "ab"))

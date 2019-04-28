@@ -54,6 +54,27 @@ def divide(dividend, divisor):
     return res if f else -res
 
 
+def maxCoins(nums):
+    """
+    312. 戳气球
+    有 n 个气球，编号为0 到 n-1，每个气球上都标有一个数字，这些数字存在数组 nums 中。
+    现在要求你戳破所有的气球。每当你戳破一个气球 i 时，你可以获得 nums[left] * nums[i] * nums[right] 个硬币。
+    这里的 left 和 right 代表和 i 相邻的两个气球的序号。注意当你戳破了气球 i 后，气球 left 和气球 right 就变成了相邻的气球。
+    求所能获得硬币的最大数量。
+    说明:
+    你可以假设 nums[-1] = nums[n] = 1，但注意它们不是真实存在的所以并不能被戳破。
+    0 ≤ n ≤ 500, 0 ≤ nums[i] ≤ 100
+    示例:
+    输入: [3,1,5,8]
+    输出: 167
+    解释: nums = [3,1,5,8] --> [3,5,8] -->   [3,8]   -->  [8]  --> []
+         coins =  3*1*5      +  3*5*8    +  1*3*8      + 1*8*1   = 167
+    :param nums: List[int]
+    :return: int
+    """
+    pass
+
+
 def combinationSum(candidates, target):
     """
     39. 组合总和
@@ -105,5 +126,48 @@ def pancakeSort(A):
     pass
 
 
+
+
+def threeSumClosest(nums, target):
+    """
+    16. 最接近的三数之和
+    给定一个包括 n 个整数的数组 nums 和 一个目标值 target。
+    找出 nums 中的三个整数，使得它们的和与 target 最接近。返回这三个数的和。假定每组输入只存在唯一答案。
+    例如，给定数组 nums = [-1，2，1，-4], 和 target = 1.
+    与 target 最接近的三个数的和为 2. (-1 + 2 + 1 = 2).
+    :param nums: List[int]
+    :param target: int
+    :return: int
+    """
+    l = len(nums)
+    nums.sort()
+    two_sum = [target - x for x in nums]
+    resx = 2**31 - 1
+    # print(nums)
+    # print(two_sum)
+    for k in range(l):
+        i, j = 0, l - 1
+        while i < j:
+            if i == k:
+                i += 1
+                continue
+            if j == k:
+                j -= 1
+                continue
+            x = two_sum[k] - nums[i] - nums[j]
+            # print(i, j, k, x)
+            if x == 0:
+                return target
+            elif x > 0:
+                i += 1
+            else:
+                j -= 1
+            if abs(x) < abs(resx):
+                resx = x
+    # print(resx)
+    return target - resx
+
+
 if __name__ == '__main__':
-    print(divide(10,2))
+    # print(divide(10,2))
+    print(threeSumClosest([1,6,9,14,16,70], 81))

@@ -339,25 +339,6 @@ def numSquares2(n):
     return 3
 
 
-def mySqrt(x):
-    """
-    LC69
-    x的平方根
-    手写sqrt函数
-    思路:
-    牛顿迭代法求平方根下限整数
-    https://en.wikipedia.org/wiki/Integer_square_root#Using_only_integer_division
-    :param x:
-    :return:
-    """
-    if x <= 1:
-        return x
-    r = x
-    while r > x / r:
-        r = (r + x / r) // 2
-    return int(r)
-
-
 def twoSum(numbers, target):
     """
     LC167

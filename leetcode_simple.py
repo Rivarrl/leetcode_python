@@ -825,6 +825,169 @@ def buddyStrings(A, B):
     return da.__len__() == sum(da.values()) and sorted(da.keys()) == sorted(db.keys()) and c < 3
 
 
+def mySqrt(x):
+    """
+    LC69
+    x的平方根
+    手写sqrt函数
+    思路:
+    牛顿迭代法求平方根下限整数
+    https://en.wikipedia.org/wiki/Integer_square_root#Using_only_integer_division
+    :param x: int
+    :return: int
+    """
+    if x <= 1:
+        return x
+    r = x
+    while r > x / r:
+        r = (r + x / r) // 2
+    return int(r)
+
+
+def removeElement(nums, val):
+    """
+    27. 移除元素
+    给定一个数组 nums 和一个值 val，你需要原地移除所有数值等于 val 的元素，返回移除后数组的新长度。
+    不要使用额外的数组空间，你必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成。
+    元素的顺序可以改变。你不需要考虑数组中超出新长度后面的元素。
+    示例 1:
+    给定 nums = [3,2,2,3], val = 3,
+    函数应该返回新的长度 2, 并且 nums 中的前两个元素均为 2。
+    你不需要考虑数组中超出新长度后面的元素。
+    :param nums: List[int]
+    :param val: int
+    :return: int
+    """
+    i, j = 0, len(nums) - 1
+    while i <= j:
+        if nums[i] == val:
+            nums.pop(i)
+            j -= 1
+        elif nums[j] == val:
+            nums.pop()
+            j -= 1
+        else:
+            i += 1
+    return j + 1
+
+
+def addBinary(a, b):
+    """
+    给定两个二进制字符串，返回他们的和（用二进制表示）。
+    输入为非空字符串且只包含数字 1 和 0。
+    示例 1:
+    输入: a = "11", b = "1"
+    输出: "100"
+    示例 2:
+    输入: a = "1010", b = "1011"
+    输出: "10101"
+    :param a: str
+    :param b: str
+    :return: str
+    """
+    i, j = len(a) - 1, len(b) - 1
+    # a >= b
+    if i < j:
+        i, j = j, i
+        a, b = b, a
+    k, nx = 0, 0
+    c = [x for x in a]
+    z = ["0", "1"]
+    while k <= j:
+        p, q = i - k, j - k
+        if a[p] == "1" and b[q] == "1":
+            c[p] = z[nx]
+            nx = 1
+        elif a[p] == "0" and b[q] == "0":
+            c[p] = z[nx]
+            nx = 0
+        else:
+            c[p] = z[-1-nx]
+        k += 1
+    while k <= i:
+        p = i - k
+        if nx == 1:
+            if a[p] == "1":
+                c[p] = "0"
+            else:
+                c[p] = "1"
+                nx = 0
+        else:
+            c[p] = a[p]
+        k += 1
+    res = "".join(c)
+    return res if nx == 0 else "1" + res
+
+
+def largestSumAfterKNegations(A, K):
+    """
+    1005. K 次取反后最大化的数组和
+    给定一个整数数组 A，我们只能用以下方法修改该数组：我们选择某个个索引 i 并将 A[i] 替换为 -A[i]，然后总共重复这个过程 K 次。（我们可以多次选择同一个索引 i。）
+    以这种方式修改数组后，返回数组可能的最大和。
+    示例 1：
+    输入：A = [4,2,3], K = 1
+    输出：5
+    解释：选择索引 (1,) ，然后 A 变为 [4,-2,3]。
+    示例 2：
+    输入：A = [3,-1,0,2], K = 3
+    输出：6
+    解释：选择索引 (1, 2, 2) ，然后 A 变为 [3,1,0,2]。
+    示例 3：
+    输入：A = [2,-3,-1,5,-4], K = 2
+    输出：13
+    解释：选择索引 (1, 4) ，然后 A 变为 [2,3,-1,5,4]。
+    提示：
+    1 <= A.length <= 10000
+    1 <= K <= 10000
+    -100 <= A[i] <= 100
+    :param A: List[int]
+    :param K: int
+    :return: int
+    """
+    c = 0
+    neg, pos = [], []
+    for a in A:
+        if a < 0:
+            neg.append(a)
+        elif a > 0:
+            pos.append(a)
+        else:
+            c += 1
+    neg.sort()
+    pos.sort()
+    ln = len(neg)
+    res = 0
+    if ln > 0:
+        if K > ln:
+            n = K - ln
+            if c > 0:
+                res += sum(pos)
+                res -= sum(neg)
+            else:
+                if n % 2 == 0:
+                    res += sum(pos)
+                    res -= sum(neg)
+                else:
+                    res += sum(pos[1:])
+                    res -= sum(neg[:-1])
+                    res += max(-neg[-1], pos[0])
+                    res += max(-pos[0], neg[-1])
+        elif K == ln:
+            res += sum(pos)
+            res -= sum(neg)
+        else:
+            res += sum(pos)
+            res += sum(neg[K:])
+            res -= sum(neg[:K])
+    else:
+        res += sum(pos[1:])
+        if K % 2 == 1:
+            res -= pos[0]
+        else:
+            res += pos[0]
+    return res
+
+
 if __name__ == '__main__':
     pass
     # words = ["gin", "zen", "gig", "msg"]
@@ -852,3 +1015,6 @@ if __name__ == '__main__':
     # print(countPrimes(10))
     # print(isIsomorphic("papxr", "title"))
     # print(buddyStrings("ab", "ab"))
+    # print(removeElement([1,3,4,5,2,1,2,3,2,3], 2))
+    # print(addBinary("101111", "10"))
+    print(largestSumAfterKNegations([8,-7,-3,-9,1,9,-6,-9,3], 8))

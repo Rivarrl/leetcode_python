@@ -988,8 +988,131 @@ def largestSumAfterKNegations(A, K):
     return res
 
 
+def letterCasePermutation(S):
+    """
+    784. 字母大小写全排列
+    给定一个字符串S，通过将字符串S中的每个字母转变大小写，我们可以获得一个新的字符串。返回所有可能得到的字符串集合。
+    示例:
+    输入: S = "a1b2"
+    输出: ["a1b2", "a1B2", "A1b2", "A1B2"]
+    输入: S = "3z4"
+    输出: ["3z4", "3Z4"]
+    输入: S = "12345"
+    输出: ["12345"]
+    :param S: str
+    :return: List[str]
+    """
+    res = [S]
+    l = len(S)
+    a = ord('a')
+    z = ord('z')
+    A = ord('A')
+    Z = ord('Z')
+    for i in range(l):
+        s = ord(S[i])
+        if a <= s <= z:
+            res.extend([r[:i] + chr(ord(r[i]) - a + A) + r[i+1:] for r in res])
+        elif A <= s <= Z:
+            res.extend([r[:i] + chr(ord(r[i]) + a - A) + r[i+1:] for r in res])
+    return res
+
+
+def readBinaryWatch(num):
+    """
+    401. 二进制手表
+    二进制手表顶部有 4 个 LED 代表小时（0-11），底部的 6 个 LED 代表分钟（0-59）。
+    每个 LED 代表一个 0 或 1，最低位在右侧。
+    例如，上面的二进制手表读取 “3:25”。
+    给定一个非负整数 n 代表当前 LED 亮着的数量，返回所有可能的时间。
+    案例:
+    输入: n = 1
+    返回: ["1:00", "2:00", "4:00", "8:00", "0:01", "0:02", "0:04", "0:08", "0:16", "0:32"]
+    :param num: int
+    :return: List[str]
+    """
+    pass
+
+
+def hammingWeight(n):
+    """
+    191. 位1的个数
+    编写一个函数，输入是一个无符号整数，返回其二进制表达式中数字位数为 ‘1’ 的个数（也被称为汉明重量）。
+    示例 1：
+    输入：00000000000000000000000000001011
+    输出：3
+    解释：输入的二进制串 00000000000000000000000000001011 中，共有三位为 '1'。
+    :param n: int
+    :return: int
+    """
+    res = 0
+    while n > 0:
+        res = res + 1 if n & 1 else res
+        n >>= 1
+    return res
+
+
+def reverseBits(n):
+    """
+    190. 颠倒二进制位
+    颠倒给定的 32 位无符号整数的二进制位。
+    示例 1：
+    输入: 00000010100101000001111010011100
+    输出: 00111001011110000010100101000000
+    解释: 输入的二进制串 00000010100101000001111010011100 表示无符号整数 43261596，
+          因此返回 964176192，其二进制表示形式为 00111001011110000010100101000000。
+    :param n: int
+    :return: int
+    """
+    res = 0
+    cmp = 1
+    for i in range(32):
+        if i > 0:
+            res <<= 1
+        if n & cmp:
+            res += 1
+        cmp <<= 1
+    return res
+
+
+def trailingZeroes(n):
+    """
+    172. 阶乘后的零
+    给定一个整数 n，返回 n! 结果尾数中零的数量。
+    示例 1:
+    输入: 3
+    输出: 0
+    解释: 3! = 6, 尾数中没有零。
+    示例 2:
+    输入: 5
+    输出: 1
+    解释: 5! = 120, 尾数中有 1 个零.
+    说明: 你算法的时间复杂度应为 O(log n) 。
+    :param n: int
+    :return: int
+    """
+    # c = ['0'] * 200
+    # for q in range(200):
+    #     i = 1
+    #     l = 1
+    #     while i <= q:
+    #         l *= i
+    #         i += 1
+    #     x = str(l)
+    #     c[q] = len(x) - len(x.rstrip("0"))
+    #     if q > 0 and c[q] != c[q-1]:
+    #         print(q, q//5, c[q])
+    res = 0
+    while n > 1:
+        res += n // 5
+        n //= 5
+    return res
+
+
 if __name__ == '__main__':
     pass
+    # print(hammingWeight(0b00000000000000000000000000001011))
+    # print(reverseBits(0b00000010100101000001111010011100))
+    print(trailingZeroes(50))
     # words = ["gin", "zen", "gig", "msg"]
     # print(uniqueMorseRepresentations(words))
     # x = [-4, -1, 0, 3, 10]
@@ -1017,4 +1140,5 @@ if __name__ == '__main__':
     # print(buddyStrings("ab", "ab"))
     # print(removeElement([1,3,4,5,2,1,2,3,2,3], 2))
     # print(addBinary("101111", "10"))
-    print(largestSumAfterKNegations([8,-7,-3,-9,1,9,-6,-9,3], 8))
+    # print(largestSumAfterKNegations([8,-7,-3,-9,1,9,-6,-9,3], 8))
+    # print(letterCasePermutation("a1b2"))

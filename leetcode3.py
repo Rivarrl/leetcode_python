@@ -6,6 +6,8 @@
 # ======================================
 
 # leetcode3
+from algorithm_utils import *
+
 
 def divide(dividend, divisor):
     """
@@ -168,6 +170,61 @@ def threeSumClosest(nums, target):
     return target - resx
 
 
+def findBottomLeftValue(root):
+    """
+    513. 找树左下角的值
+    给定一个二叉树，在树的最后一行找到最左边的值。
+    示例 1:
+    输入:
+        2
+       / \
+      1   3
+    输出:
+    1
+    示例 2:
+    输入:
+            1
+           / \
+          2   3
+         /   / \
+        4   5   6
+           /
+          7
+    输出:
+    7
+    注意: 您可以假设树（即给定的根节点）不为 NULL。
+    :param root: TreeNode
+    :return: int
+    """
+    def inner(r, c):
+        c += 1
+        if r.left and r.right:
+            il = inner(r.left, c)
+            ir = inner(r.right, c)
+            if il[1] < ir[1]:
+                return ir
+            else:
+                return il
+        elif r.left:
+            return inner(r.left, c)
+        elif r.right:
+            return inner(r.right, c)
+        else:
+            return [r, c]
+    return inner(root, 0)[0].val
+
+
 if __name__ == '__main__':
     # print(divide(10,2))
-    print(threeSumClosest([1,6,9,14,16,70], 81))
+    # print(threeSumClosest([1,6,9,14,16,70], 81))
+    x = TreeNode(5)
+    x.left = TreeNode(7)
+    y = TreeNode(3)
+    y.left = x
+    y.right = TreeNode(6)
+    z = TreeNode(2)
+    z.left = TreeNode(4)
+    t = TreeNode(1)
+    t.left = z
+    t.right = y
+    print(findBottomLeftValue(t))

@@ -1017,22 +1017,6 @@ def letterCasePermutation(S):
     return res
 
 
-def readBinaryWatch(num):
-    """
-    401. 二进制手表
-    二进制手表顶部有 4 个 LED 代表小时（0-11），底部的 6 个 LED 代表分钟（0-59）。
-    每个 LED 代表一个 0 或 1，最低位在右侧。
-    例如，上面的二进制手表读取 “3:25”。
-    给定一个非负整数 n 代表当前 LED 亮着的数量，返回所有可能的时间。
-    案例:
-    输入: n = 1
-    返回: ["1:00", "2:00", "4:00", "8:00", "0:01", "0:02", "0:04", "0:08", "0:16", "0:32"]
-    :param num: int
-    :return: List[str]
-    """
-    pass
-
-
 def hammingWeight(n):
     """
     191. 位1的个数
@@ -1108,11 +1092,176 @@ def trailingZeroes(n):
     return res
 
 
+def readBinaryWatch(num):
+    """
+    401. 二进制手表
+    二进制手表顶部有 4 个 LED 代表小时（0-11），底部的 6 个 LED 代表分钟（0-59）。
+    每个 LED 代表一个 0 或 1，最低位在右侧。
+    例如，上面的二进制手表读取 “3:25”。
+    给定一个非负整数 n 代表当前 LED 亮着的数量，返回所有可能的时间。
+    案例:
+    输入: n = 1
+    返回: ["1:00", "2:00", "4:00", "8:00", "0:01", "0:02", "0:04", "0:08", "0:16", "0:32"]
+    :param num: int
+    :return: List[str]
+    """
+    pass
+
+
+def minDepth(root):
+    """
+    111. 二叉树的最小深度
+    给定一个二叉树，找出其最小深度。
+    最小深度是从根节点到最近叶子节点的最短路径上的节点数量。
+    说明: 叶子节点是指没有子节点的节点。
+    示例:
+    给定二叉树 [3,9,20,null,null,15,7],
+        3
+       / \
+      9  20
+        /  \
+       15   7
+    返回它的最小深度  2.
+    :param root: TreeNode
+    :return: int
+    """
+    if not root:
+        return 0
+    l = minDepth(root.left)
+    r = minDepth(root.right)
+    return min(l, r) + 1 if l * r > 0 else l + r + 1
+
+
+def convertBST(root):
+    """
+    538. 把二叉搜索树转换为累加树
+    给定一个二叉搜索树（Binary Search Tree），把它转换成为累加树（Greater Tree)，使得每个节点的值是原来的节点值加上所有大于它的节点值之和。
+    例如：
+    输入: 二叉搜索树:
+              5
+            /   \
+           2     13
+    输出: 转换为累加树:
+             18
+            /   \
+          20     13
+    :param root: TreeNode
+    :return: TreeNode
+    """
+    cur = [0]
+    def inner(root):
+        if not root:
+            return
+        inner(root.right)
+        root.val += cur[-1]
+        cur.append(root.val)
+        inner(root.left)
+    p = root
+    inner(p)
+    return root
+
+
+def isAnagram(s, t):
+    """
+    242. 有效的字母异位词
+    给定两个字符串 s 和 t ，编写一个函数来判断 t 是否是 s 的一个字母异位词。
+    示例 1:
+    输入: s = "anagram", t = "nagaram"
+    输出: true
+    示例 2:
+    输入: s = "rat", t = "car"
+    输出: false
+    说明:
+    你可以假设字符串只包含小写字母。
+    进阶:
+    如果输入字符串包含 unicode 字符怎么办？你能否调整你的解法来应对这种情况？
+    :param s: str
+    :param t: str
+    :return: bool
+    """
+    if len(s) != len(t): return False
+    for x in set(s):
+        s = s.replace(x, '')
+        t = t.replace(x, '')
+        if len(s) != len(t): return False
+    return True
+
+
+def bitwiseComplement(N):
+    """
+    1009. 十进制整数的反码
+    每个非负整数 N 都有其二进制表示。例如， 5 可以被表示为二进制 "101"，11 可以用二进制 "1011" 表示，依此类推。注意，除 N = 0 外，任何二进制表示中都不含前导零。
+    二进制的反码表示是将每个 1 改为 0 且每个 0 变为 1。例如，二进制数 "101" 的二进制反码为 "010"。
+    给定十进制数 N，返回其二进制表示的反码所对应的十进制整数。
+    示例 1：
+    输入：5
+    输出：2
+    解释：5 的二进制表示为 "101"，其二进制反码为 "010"，也就是十进制中的 2 。
+    示例 2：
+    输入：7
+    输出：0
+    解释：7 的二进制表示为 "111"，其二进制反码为 "000"，也就是十进制中的 0 。
+    示例 3：
+    输入：10
+    输出：5
+    解释：10 的二进制表示为 "1010"，其二进制反码为 "0101"，也就是十进制中的 5 。
+    提示：
+    0 <= N < 10^9
+    :param N: int
+    :return: int
+    """
+    i, j = 0, 31
+    if N == 0: return 0
+    while i < j:
+        mid = (i + j) >> 1
+        if N >= 2 ** mid:
+            i = mid + 1
+        if N < 2 ** mid:
+            j = mid
+    return N ^ ((2 ** j) - 1)
+
+
+def longestWord(words):
+    """
+    720. 词典中最长的单词
+    给出一个字符串数组words组成的一本英语词典。从中找出最长的一个单词，该单词是由words词典中其他单词逐步添加一个字母组成。若其中有多个可行的答案，则返回答案中字典序最小的单词。
+    若无答案，则返回空字符串。
+    示例 1:
+    输入:
+    words = ["w","wo","wor","worl", "world"]
+    输出: "world"
+    解释:
+    单词"world"可由"w", "wo", "wor", 和 "worl"添加一个字母组成。
+    :param words: List[str]
+    :return: str
+    """
+    d = {}
+    l = len(words)
+    words.sort()
+    for i in range(l):
+        if len(words[i]) == 1:
+            Trie(words[i])
+
+
+def getSum(a, b):
+    """
+    371. 两整数之和
+    不使用运算符 + 和 - ​​​​​​​，计算两整数 ​​​​​​​a 、b ​​​​​​​之和。
+    :param a: int
+    :param b: int
+    :return: int
+    """
+    pass
+
+
+
 if __name__ == '__main__':
     pass
+    print(longestWord(["a","banana","app","appl","ap","apply","apple"]))
+    # print(bitwiseComplement(5))
     # print(hammingWeight(0b00000000000000000000000000001011))
     # print(reverseBits(0b00000010100101000001111010011100))
-    print(trailingZeroes(50))
+    # print(trailingZeroes(50))
     # words = ["gin", "zen", "gig", "msg"]
     # print(uniqueMorseRepresentations(words))
     # x = [-4, -1, 0, 3, 10]

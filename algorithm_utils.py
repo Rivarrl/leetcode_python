@@ -1,6 +1,11 @@
 # -*- coding:utf-8 -*-
 # 算法辅助类
 
+class Trie:
+    def __init__(self, x):
+        self.val = x
+        self.children = [None] * 26
+
 class ListNode:
     def __init__(self, x):
         self.val = x

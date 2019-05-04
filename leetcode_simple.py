@@ -1221,39 +1221,6 @@ def bitwiseComplement(N):
     return N ^ ((2 ** j) - 1)
 
 
-def longestWord(words):
-    """
-    720. 词典中最长的单词
-    给出一个字符串数组words组成的一本英语词典。从中找出最长的一个单词，该单词是由words词典中其他单词逐步添加一个字母组成。若其中有多个可行的答案，则返回答案中字典序最小的单词。
-    若无答案，则返回空字符串。
-    示例 1:
-    输入:
-    words = ["w","wo","wor","worl", "world"]
-    输出: "world"
-    解释:
-    单词"world"可由"w", "wo", "wor", 和 "worl"添加一个字母组成。
-    :param words: List[str]
-    :return: str
-    """
-    d = {}
-    l = len(words)
-    words.sort()
-    for i in range(l):
-        if len(words[i]) == 1:
-            Trie(words[i])
-
-
-def getSum(a, b):
-    """
-    371. 两整数之和
-    不使用运算符 + 和 - ​​​​​​​，计算两整数 ​​​​​​​a 、b ​​​​​​​之和。
-    :param a: int
-    :param b: int
-    :return: int
-    """
-    pass
-
-
 def findLHS(nums):
     """
     594. 最长和谐子序列
@@ -1279,10 +1246,163 @@ def findLHS(nums):
             m = max(m, d[n] + d[n - 1])
     return m
 
+
+def getSum(a, b):
+    """
+    371. 两整数之和
+    不使用运算符 + 和 - ​​​​​​​，计算两整数 ​​​​​​​a 、b ​​​​​​​之和。
+    :param a: int
+    :param b: int
+    :return: int
+    """
+    upbound = 0xffffffff
+    while b!=0:
+        print(a, b)
+        a, b = (a ^ b) & upbound, (a & b) << 1
+    return a if a <= 0x7fffffff else ~(a ^ upbound)
+
+
+def numberOfLines(widths, S):
+    """
+    806. 写字符串需要的行数
+    我们要把给定的字符串 S 从左到右写到每一行上，每一行的最大宽度为100个单位，如果我们在写某个字母的时候会使这行超过了100 个单位，那么我们应该把这个字母写到下一行。我们给定了一个数组 widths ，这个数组 widths[0] 代表 'a' 需要的单位， widths[1] 代表 'b' 需要的单位，...， widths[25] 代表 'z' 需要的单位。
+    现在回答两个问题：至少多少行能放下S，以及最后一行使用的宽度是多少个单位？将你的答案作为长度为2的整数列表返回。
+    示例 1:
+    输入:
+    widths = [10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10]
+    S = "abcdefghijklmnopqrstuvwxyz"
+    输出: [3, 60]
+    解释:
+    所有的字符拥有相同的占用单位10。所以书写所有的26个字母，
+    我们需要2个整行和占用60个单位的一行。
+    注：
+    字符串 S 的长度在 [1, 1000] 的范围。
+    S 只包含小写字母。
+    widths 是长度为 26的数组。
+    widths[i] 值的范围在 [2, 10]。
+    :param widths: List[int]
+    :param S: str
+    :return: List[int]
+    """
+    a = ord('a')
+    r, x = 0, 0
+    for xs in S:
+        s = ord(xs)
+        if x + widths[s - a] > 100:
+            x = widths[s - a]
+            r += 1
+        else:
+            x += widths[s - a]
+    return [r, x]
+
+
+def longestWord(words):
+    """
+    720. 词典中最长的单词
+    给出一个字符串数组words组成的一本英语词典。从中找出最长的一个单词，该单词是由words词典中其他单词逐步添加一个字母组成。若其中有多个可行的答案，则返回答案中字典序最小的单词。
+    若无答案，则返回空字符串。
+    示例 1:
+    输入:
+    words = ["w","wo","wor","worl", "world"]
+    输出: "world"
+    解释:
+    单词"world"可由"w", "wo", "wor", 和 "worl"添加一个字母组成。
+    :param words: List[str]
+    :return: str
+    """
+    d = {}
+    l = len(words)
+    words.sort()
+    for i in range(l):
+        if len(words[i]) == 1:
+            Trie(words[i])
+
+
+
+def fizzBuzz(n):
+    """
+    412. Fizz Buzz
+    写一个程序，输出从 1 到 n 数字的字符串表示。
+    1. 如果 n 是3的倍数，输出“Fizz”；
+    2. 如果 n 是5的倍数，输出“Buzz”；
+    3.如果 n 同时是3和5的倍数，输出 “FizzBuzz”。
+    示例：
+    n = 15,
+    返回:
+    [
+        "1",
+        "2",
+        "Fizz",
+        "4",
+        "Buzz",
+        "Fizz",
+        "7",
+        "8",
+        "Fizz",
+        "Buzz",
+        "11",
+        "Fizz",
+        "13",
+        "14",
+        "FizzBuzz"
+    ]
+    :param n: int
+    :return: List[str]
+    """
+    return ["FizzBuzz" if i%3==0 and i%5==0 else "Fizz" if i%3==0 else "Buzz" if i%5==0 else str(i) for i in range(1, n + 1)]
+
+
+def numSpecialEquivGroups(A):
+    """
+    893. 特殊等价字符串组
+    一次移动包括选择两个索引 i 和 j，且 i ％ 2 == j ％ 2，并且交换 S[j] 和 S [i]。
+    现在规定，A 中的特殊等价字符串组是 A 的非空子集 S，这样不在 S 中的任何字符串与 S 中的任何字符串都不是特殊等价的。
+    返回 A 中特殊等价字符串组的数量。
+    示例 1：
+    输入：["a","b","c","a","c","c"]
+    输出：3
+    解释：3 组 ["a","a"]，["b"]，["c","c","c"]
+    示例 2：
+    输入：["aa","bb","ab","ba"]
+    输出：4
+    解释：4 组 ["aa"]，["bb"]，["ab"]，["ba"]
+    示例 3：
+    输入：["abc","acb","bac","bca","cab","cba"]
+    输出：3
+    解释：3 组 ["abc","cba"]，["acb","bca"]，["bac","cab"]
+    示例 4：
+    输入：["abcd","cdab","adcb","cbad"]
+    输出：1
+    解释：1 组 ["abcd","cdab","adcb","cbad"]
+    提示：
+    1 <= A.length <= 1000
+    1 <= A[i].length <= 20
+    所有 A[i] 都具有相同的长度。
+    所有 A[i] 都只由小写字母组成。
+    :param A: List[str]
+    :return: int
+    """
+    def strsort(x):
+        return ''.join(sorted([a for a in x]))
+    d = {}
+    r = 0
+    for a in A:
+        x = a[::2]
+        y = a[1::2]
+        k = strsort(x) + strsort(y)
+        print(k)
+        if k not in d:
+            d[k] = 1
+            r += 1
+    return r
+
+
 if __name__ == '__main__':
     pass
     # print(longestWord(["a","banana","app","appl","ap","apply","apple"]))
-    print(findLHS([1,2,2,1]))
+    print(numSpecialEquivGroups(["abcd","cdab","adcb","cbad"]))
+    # print(getSum(-2,1))
+    # print(findLHS([1,2,2,1]))
     # print(bitwiseComplement(5))
     # print(hammingWeight(0b00000000000000000000000000001011))
     # print(reverseBits(0b00000010100101000001111010011100))

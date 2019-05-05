@@ -238,52 +238,25 @@ def minimumDeleteSum(s1, s2):
     :param s2: str
     :return: int
     """
-    l1 = len(s1)
-    l2 = len(s2)
-    if l1 == 0:
-        return sum(ord(x) for x in s2)
-    if l2 == 0:
-        return sum(ord(x) for x in s1)
-    dp = [['' for _ in range(l1)] for _ in range(l2)]
-    dp[0][0] = s1[0] + s2[0] if s1[0] != s2[0] else ''
-    x, y = s1[0], s2[0]
-    if x == y:
-        dp[0][0] = ''
-        x = ''
-        y = ''
-    else:
-        dp[0][0] = x + y
-    for i in range(1, l2):
-        if s2[i] == x:
-            dp[0][i] = dp[0][i-1].replace(x, '')
-            x = ''
-        else:
-            dp[0][i] = dp[0][i-1] + s2[i]
-    for i in range(1, l1):
-        if s1[i] == y:
-            dp[i][0] = dp[i-1][0].replace(y, '')
-            y = ''
-        else:
-            dp[i][0] = dp[i-1][0] + s1[i]
-    print(dp)
-    for i in range(1, l2):
-        for j in range(1, l1):
-            if s1[j] == s2[i]:
+    l1, l2 = len(s1), len(s2)
+    dp = [[float('inf') for _ in range(l2+1)] for _ in range(l1+1)]
+    dp[0][0] = 0
+    for i in range(l1):
+        dp[i + 1][0] = dp[i][0] + ord(s1[i])
+    for i in range(l2):
+        dp[0][i + 1] = dp[0][i] + ord(s2[i])
+    for i in range(1, l1+1):
+        for j in range(1, l2+1):
+            if s1[i-1] == s2[j-1]:
                 dp[i][j] = dp[i-1][j-1]
             else:
-                t1 = dp[i][j - 1] + s2[i]
-                t2 = dp[i-1][j] + s1[j]
-                x1 = sum(ord(x) for x in t1)
-                x2 = sum(ord(x) for x in t2)
-                dp[i][j] = t1 if x1 < x2 else t2
-    print(dp)
-    return sum(ord(x) for x in dp[l2-1][l1-1])
-
+                dp[i][j] = min(dp[i-1][j] + ord(s1[i-1]), dp[i][j-1] + ord(s2[j-1]))
+    return dp[-1][-1]
 
 
 if __name__ == '__main__':
     pass
-    print(minimumDeleteSum("delete", "leet"))
+    print(minimumDeleteSum("sea","eat"))
     # print(divide(10,2))
     # print(threeSumClosest([1,6,9,14,16,70], 81))
     # x = TreeNode(5)

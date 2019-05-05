@@ -372,6 +372,63 @@ def convex_polygon(weight):
     print("最优三角剖分结构为：")
     inner(1, l - 1, s)
 
+
+# 背包问题
+def bag01(W, V, size):
+    """
+    零一背包问题: 有n种重量和价值分别为Wi和Vi的物品。从这些物品中挑选出总重量不超过w的物品，每种物品都只能挑选一件，求所有挑选方案中价值总和的最大值。
+    思路：
+    用dp[i][j]表示前i个物品中挑选总重量不超过j的方案价值的最大值
+    :param W: List[int]
+    :param V: List[int]
+    :param size: int
+    :return: int
+    """
+    l = len(W)
+    dp = [[0 for _ in range(size + 1)] for _ in range(l + 1)]
+    for i in range(l):
+        for j in range(size):
+            if j < W[i]:
+                dp[i+1][j] = dp[i][j]
+            else:
+                dp[i+1][j] = max(dp[i][j], dp[i][j-W[i]] + V[i])
+    return dp[l][size]
+
+
+def bagfull(W, V, size):
+    """
+    完全背包问题:有n种重量和价值分别为Wi和Vi的物品。从这些物品中挑选出总重量不超过w的物品，每种物品都可以挑选多件，求所有挑选方案中价值总和的最大值。
+    思路：
+    同01背包问题，区别在于当前的状态与当前状态的其他重量值相关，而01背包是与上一个状态的其他重量相关
+    :param W: List[int]
+    :param V: List[int]
+    :param size: int
+    :return: int
+    """
+    l = len(W)
+    dp = [[0 for _ in range(size + 1)] for _ in range(l + 1)]
+    for i in range(l):
+        for j in range(size):
+            if j < W[i]:
+                dp[i+1][j] = dp[i][j]
+            else:
+                dp[i+1][j] = max(dp[i][j], dp[i+1][j-W[i]] + V[i])
+    return dp[l][size]
+
+
+def bagpart(W, V, N, size):
+    """
+    部分背包问题:有n种重量和价值分别为Wi和Vi的物品。从这些物品中挑选出总重量不超过w的物品，第i种物品最多选mi个，求所有挑选方案中价值总和的最大值。
+    :param W: List[int]
+    :param V: List[int]
+    :param N: List[int]
+    :param size: int
+    :return: int
+    """
+    pass
+
+
+
 if __name__ == '__main__':
     # q1in1 = [1, 3, 2, 4, 2]
     # res1 = min_of_multiply(q1in1)

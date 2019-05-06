@@ -253,10 +253,126 @@ def minimumDeleteSum(s1, s2):
                 dp[i][j] = min(dp[i-1][j] + ord(s1[i-1]), dp[i][j-1] + ord(s2[j-1]))
     return dp[-1][-1]
 
+def mergeKLists(lists):
+    """
+    23. 合并K个排序链表 （内存溢出）
+    合并 k 个排序链表，返回合并后的排序链表。请分析和描述算法的复杂度。
+    示例:
+    输入:
+    [
+      1->4->5,
+      1->3->4,
+      2->6
+    ]
+    输出: 1->1->2->3->4->4->5->6
+    :param lists: List[ListNode]
+    :return: ListNode
+    """
+    def k_append(l):
+        lstk = stk.__len__()
+        if lstk == 0:
+            stk.append(l)
+        else:
+            if l.val > stk[-1].val:
+                stk.append(l)
+            else:
+                i, j = 0, lstk - 1
+                while i <= j:
+                    mid = (i + j) // 2
+                    if stk[mid].val < l.val:
+                        i = mid + 1
+                    elif stk[mid].val > l.val:
+                        j = mid - 1
+                    else:
+                        i, j = mid, mid
+                        break
+                # print(i, j, mid, end='\t')
+                # print("stk", end=' ')
+                # for s in stk:
+                #     print(s.val, end='')
+                # print(end='\t')
+                # print(l.val)
+                stk.insert(i, l)
+
+    stk = []
+    for l in lists:
+        while l:
+            k_append(l)
+            l = l.next
+    h = ListNode(0)
+    p = h
+    for s in stk:
+        p.next = s
+        p = p.next
+    #     print(s.val)
+    return h.next
+
+
+def mergeKLists2(lists):
+    """
+    23. 合并K个排序链表
+    :param lists: List[ListNode]
+    :return: ListNode
+    """
+    def merge2Lists(p, q):
+        if not p:
+            return q
+        if not q:
+            return p
+        res = None
+        if p.val <= q.val:
+            res = p
+            res.next = merge2Lists(p.next, q)
+        else:
+            res = q
+            res.next = merge2Lists(p, q.next)
+        return res
+    def mergeSLists(lists):
+        l = len(lists)
+        if l == 1:
+            return lists[0]
+        else:
+            return merge2Lists(mergeSLists(lists[:l//2]), mergeSLists(lists[l//2:]))
+    return mergeSLists(lists)
+
+
+def mergeKLists3(lists):
+    """
+    23. 合并K个排序链表
+    :param lists: List[ListNode]
+    :return: ListNode
+    """
+    res = []
+    for l in lists:
+        while l:
+            res.append(l)
+            l = l.next
+    res.sort(key=lambda x: x.val)
+    h = ListNode(0)
+    p = h
+    for s in res:
+        p.next = s
+        p = p.next
+    return h.next
+
 
 if __name__ == '__main__':
     pass
-    print(minimumDeleteSum("sea","eat"))
+    x = ListNode(1)
+    p = x
+    for y in [2,2]:
+        p.next = ListNode(y)
+        p = p.next
+    y = ListNode(1)
+    q = y
+    for z in [1,2]:
+        q.next = ListNode(z)
+        q = q.next
+    a = ListNode(2)
+    a.next = ListNode(6)
+    # y.next = z
+    mergeKLists([x,y])
+    # print(minimumDeleteSum("delete", "leet"))
     # print(divide(10,2))
     # print(threeSumClosest([1,6,9,14,16,70], 81))
     # x = TreeNode(5)

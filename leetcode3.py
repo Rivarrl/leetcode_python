@@ -56,27 +56,6 @@ def divide(dividend, divisor):
     return res if f else -res
 
 
-def maxCoins(nums):
-    """
-    312. 戳气球
-    有 n 个气球，编号为0 到 n-1，每个气球上都标有一个数字，这些数字存在数组 nums 中。
-    现在要求你戳破所有的气球。每当你戳破一个气球 i 时，你可以获得 nums[left] * nums[i] * nums[right] 个硬币。
-    这里的 left 和 right 代表和 i 相邻的两个气球的序号。注意当你戳破了气球 i 后，气球 left 和气球 right 就变成了相邻的气球。
-    求所能获得硬币的最大数量。
-    说明:
-    你可以假设 nums[-1] = nums[n] = 1，但注意它们不是真实存在的所以并不能被戳破。
-    0 ≤ n ≤ 500, 0 ≤ nums[i] ≤ 100
-    示例:
-    输入: [3,1,5,8]
-    输出: 167
-    解释: nums = [3,1,5,8] --> [3,5,8] -->   [3,8]   -->  [8]  --> []
-         coins =  3*1*5      +  3*5*8    +  1*3*8      + 1*8*1   = 167
-    :param nums: List[int]
-    :return: int
-    """
-    pass
-
-
 def combinationSum(candidates, target):
     """
     39. 组合总和
@@ -371,22 +350,190 @@ def mergeKLists3(lists):
     return h.next
 
 
+def maxCoins(nums):
+    """
+    312. 戳气球
+    有 n 个气球，编号为0 到 n-1，每个气球上都标有一个数字，这些数字存在数组 nums 中。
+    现在要求你戳破所有的气球。每当你戳破一个气球 i 时，你可以获得 nums[left] * nums[i] * nums[right] 个硬币。
+    这里的 left 和 right 代表和 i 相邻的两个气球的序号。注意当你戳破了气球 i 后，气球 left 和气球 right 就变成了相邻的气球。
+    求所能获得硬币的最大数量。
+    说明:
+    你可以假设 nums[-1] = nums[n] = 1，但注意它们不是真实存在的所以并不能被戳破。
+    0 ≤ n ≤ 500, 0 ≤ nums[i] ≤ 100
+    示例:
+    输入: [3,1,5,8]
+    输出: 167
+    解释: nums = [3,1,5,8] --> [3,5,8] -->   [3,8]   -->  [8]  --> []
+         coins =  3*1*5      +  3*5*8    +  1*3*8      + 1*8*1   = 167
+    :param nums: List[int]
+    :return: int
+    """
+    l = len(nums)
+    if l == 0: return 0
+    if l == 1: return nums[0]
+    nums = [1] + nums + [1]
+    dp = [[0] * (l+2) for _ in range(l+2)]
+    for q in range(1, l + 1):
+        for i in range(1, l - q + 2):
+            j = i + q - 1
+            dp[i][j] = max(dp[i][k-1] + dp[k+1][j] + nums[k] * nums[i - 1] * nums[j+1] for k in range(i, j+1))
+    # print(dp)
+    return dp[1][l]
+
+
+def numberOfArithmeticSlices(A):
+    """
+    413. 等差数列划分
+    如果一个数列至少有三个元素，并且任意两个相邻元素之差相同，则称该数列为等差数列。
+    例如，以下数列为等差数列:
+    1, 3, 5, 7, 9
+    7, 7, 7, 7
+    3, -1, -5, -9
+    以下数列不是等差数列。
+    1, 1, 2, 5, 7
+    数组 A 包含 N 个数，且索引从0开始。数组 A 的一个子数组划分为数组 (P, Q)，P 与 Q 是整数且满足 0<=P<Q<N 。
+    如果满足以下条件，则称子数组(P, Q)为等差数组：
+    元素 A[P], A[p + 1], ..., A[Q - 1], A[Q] 是等差的。并且 P + 1 < Q 。
+    函数要返回数组 A 中所有为等差数组的子数组个数。
+    示例:
+    A = [1, 2, 3, 4]
+    返回: 3, A 中有三个子等差数组: [1, 2, 3], [2, 3, 4] 以及自身 [1, 2, 3, 4]。
+    :param A: List[int]
+    :return: int
+    """
+    l = len(A)
+    dp = [0] * l
+    if l < 3: return 0
+    size = 0
+    for i in range(2, l):
+        if A[i - 1] - A[i - 2] == A[i] - A[i - 1]:
+            size += 1
+            dp[i] = dp[i-1] + size
+        else:
+            size = 0
+            dp[i] = dp[i-1]
+    return dp[-1]
+
+
+def numberOfArithmeticSlicesv2(A):
+    """
+    446. 等差数列划分 II - 子序列
+    如果一个数列至少有三个元素，并且任意两个相邻元素之差相同，则称该数列为等差数列。
+    例如，以下数列为等差数列:
+    1, 3, 5, 7, 9
+    7, 7, 7, 7
+    3, -1, -5, -9
+    以下数列不是等差数列。
+    1, 1, 2, 5, 7
+    数组 A 包含 N 个数，且索引从 0 开始。该数组子序列将划分为整数序列 (P0, P1, ..., Pk)，P 与 Q 是整数且满足 0 ≤ P0 < P1 < ... < Pk < N。
+    如果序列 A[P0]，A[P1]，...，A[Pk-1]，A[Pk] 是等差的，那么数组 A 的子序列 (P0，P1，…，PK) 称为等差序列。值得注意的是，这意味着 k ≥ 2。
+    函数要返回数组 A 中所有等差子序列的个数。
+    输入包含 N 个整数。每个整数都在 -231 和 231-1 之间，另外 0 ≤ N ≤ 1000。保证输出小于 231-1。
+    示例：
+    输入：[2, 4, 6, 8, 10]
+    输出：7
+    解释：
+    所有的等差子序列为：
+    [2,4,6]
+    [4,6,8]
+    [6,8,10]
+    [2,4,6,8]
+    [4,6,8,10]
+    [2,4,6,8,10]
+    [2,6,10]
+    思路：
+    将不同步长的结果分别记录到字典中
+    :param A: List[int]
+    :return: int
+    """
+    l = len(A)
+    ans = 0
+    dp = [{} for _ in range(l)]
+    for i in range(1, l):
+        for j in range(i):
+            x = A[i] - A[j]
+            if x in dp[i]:
+                dp[i][x] += 1
+            else:
+                dp[i][x] = 1
+            if x in dp[j]:
+                dp[i][x] += dp[j][x]
+                ans += dp[j][x]
+    return ans
+
+
+def mergeStones(stones, K):
+    """
+    1000. 合并石头的最低成本
+    有 N 堆石头排成一排，第 i 堆中有 stones[i] 块石头。
+    每次移动（move）需要将连续的 K 堆石头合并为一堆，而这个移动的成本为这 K 堆石头的总数。
+    找出把所有石头合并成一堆的最低成本。如果不可能，返回 -1 。
+    示例 1：
+    输入：stones = [3,2,4,1], K = 2
+    输出：20
+    解释：
+    从 [3, 2, 4, 1] 开始。
+    合并 [3, 2]，成本为 5，剩下 [5, 4, 1]。
+    合并 [4, 1]，成本为 5，剩下 [5, 5]。
+    合并 [5, 5]，成本为 10，剩下 [10]。
+    总成本 20，这是可能的最小值。
+    示例 2：
+    输入：stones = [3,2,4,1], K = 3
+    输出：-1
+    解释：任何合并操作后，都会剩下 2 堆，我们无法再进行合并。所以这项任务是不可能完成的。.
+    示例 3：
+    输入：stones = [3,5,1,2,6], K = 3
+    输出：25
+    解释：
+    从 [3, 5, 1, 2, 6] 开始。
+    合并 [5, 1, 2]，成本为 8，剩下 [3, 8, 6]。
+    合并 [3, 8, 6]，成本为 17，剩下 [17]。
+    总成本 25，这是可能的最小值。
+    提示：
+    1 <= stones.length <= 30
+    2 <= K <= 30
+    1 <= stones[i] <= 100
+    :param stones: List[int]
+    :param K: int
+    :return: int
+    """
+    n = len(stones)
+    if (n - 1) % (K-1) > 0: return -1
+    inf = float('inf')
+    dp = [[[inf for _ in range(n+1)] for _ in range(n+1)] for _ in range(n+1)]
+    for i in range(1, n+1):
+        dp[i][i][1] = 0
+    ss = [0] + [sum(stones[:i]) for i in range(1, n+1)]
+    for ln in range(2, n+1):
+        for l in range(1, n-ln+2):
+            r = l + ln - 1
+            for m in range(l, r):
+                for k in range(2, ln+1):
+                    dp[l][r][k] = min(dp[l][r][k], dp[l][m][k-1] + dp[m+1][r][1])
+            dp[l][r][1] = dp[l][r][K] + ss[r] - ss[l-1]
+    print(dp)
+    return dp[1][n][1]
+
+
 if __name__ == '__main__':
     pass
-    x = ListNode(1)
-    p = x
-    for y in [2,2]:
-        p.next = ListNode(y)
-        p = p.next
-    y = ListNode(1)
-    q = y
-    for z in [1,2]:
-        q.next = ListNode(z)
-        q = q.next
-    a = ListNode(2)
-    a.next = ListNode(6)
+    # print(numberOfArithmeticSlicesv2([1,2,3,5,6,7]))
+    print(mergeStones([25,68,35,62,52,57,35,83,40,51,30,20,51], 7))
+    # print(maxCoins([3,1,5,8]))
+    # x = ListNode(1)
+    # p = x
+    # for y in [2,2]:
+    #     p.next = ListNode(y)
+    #     p = p.next
+    # y = ListNode(1)
+    # q = y
+    # for z in [1,2]:
+    #     q.next = ListNode(z)
+    #     q = q.next
+    # a = ListNode(2)
+    # a.next = ListNode(6)
     # y.next = z
-    mergeKLists([x,y])
+    # mergeKLists([x,y])
     # print(minimumDeleteSum("delete", "leet"))
     # print(divide(10,2))
     # print(threeSumClosest([1,6,9,14,16,70], 81))

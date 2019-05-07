@@ -56,36 +56,6 @@ def divide(dividend, divisor):
     return res if f else -res
 
 
-def combinationSum(candidates, target):
-    """
-    39. 组合总和
-    给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
-    candidates 中的数字可以无限制重复被选取。
-    说明：
-    所有数字（包括 target）都是正整数。
-    解集不能包含重复的组合。
-    示例 1:
-    输入: candidates = [2,3,6,7], target = 7,
-    所求解集为:
-    [
-      [7],
-      [2,2,3]
-    ]
-    示例 2:
-    输入: candidates = [2,3,5], target = 8,
-    所求解集为:
-    [
-      [2,2,2,2],
-      [2,3,3],
-      [3,5]
-    ]
-    :param candidates: List[int]
-    :param target: int
-    :return: List[List[int]]
-    """
-    pass
-
-
 def pancakeSort(A):
     """
     969. 煎饼排序
@@ -493,6 +463,8 @@ def mergeStones(stones, K):
     1 <= stones.length <= 30
     2 <= K <= 30
     1 <= stones[i] <= 100
+    思路：
+    利用三维数组dp，dp[i][j][k]表示i-j的子序列合成k堆的最优解（最小值）
     :param stones: List[int]
     :param K: int
     :return: int
@@ -503,22 +475,67 @@ def mergeStones(stones, K):
     dp = [[[inf for _ in range(n+1)] for _ in range(n+1)] for _ in range(n+1)]
     for i in range(1, n+1):
         dp[i][i][1] = 0
+    # 避免重复计算sum
     ss = [0] + [sum(stones[:i]) for i in range(1, n+1)]
+    # ln为窗口大小，也就是问题规模，最小为2
     for ln in range(2, n+1):
+        # 使l和r在窗口两侧，随窗口值步进
         for l in range(1, n-ln+2):
             r = l + ln - 1
+            # 相当于遍历子序列stones[l:r]
             for m in range(l, r):
+                # K值，从2依次递增至当前问题规模大小
                 for k in range(2, ln+1):
                     dp[l][r][k] = min(dp[l][r][k], dp[l][m][k-1] + dp[m+1][r][1])
+            # 把x=K堆合并为1堆，需要dp[l][r][K] + sum(stones[l:r])
             dp[l][r][1] = dp[l][r][K] + ss[r] - ss[l-1]
     print(dp)
     return dp[1][n][1]
 
 
+def combinationSum(candidates, target):
+    """
+    39. 组合总和
+    给定一个无重复元素的数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+    candidates 中的数字可以无限制重复被选取。
+    说明：
+    所有数字（包括 target）都是正整数。
+    解集不能包含重复的组合。
+    示例 1:
+    输入: candidates = [2,3,6,7], target = 7,
+    所求解集为:
+    [
+      [7],
+      [2,2,3]
+    ]
+    示例 2:
+    输入: candidates = [2,3,5], target = 8,
+    所求解集为:
+    [
+      [2,2,2,2],
+      [2,3,3],
+      [3,5]
+    ]
+    :param candidates: List[int]
+    :param target: int
+    :return: List[List[int]]
+    """
+    if target == 0:
+        return [[]]
+    elif not candidates or target < min(candidates):
+        return []
+    res = []
+    for i in candidates:
+        for j in combinationSum(list(filter(lambda x: x <= i, candidates)), target - i):
+            res.append([i] + j)
+    return res
+
+
 if __name__ == '__main__':
     pass
+    print(combinationSum([2, 3, 6, 7], 7))
     # print(numberOfArithmeticSlicesv2([1,2,3,5,6,7]))
-    print(mergeStones([25,68,35,62,52,57,35,83,40,51,30,20,51], 7))
+    # print(mergeStones([25,68,35,62,52,57,35,83,40,51,30,20,51], 7))
     # print(maxCoins([3,1,5,8]))
     # x = ListNode(1)
     # p = x

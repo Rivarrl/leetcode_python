@@ -1397,10 +1397,66 @@ def numSpecialEquivGroups(A):
     return r
 
 
+def isPowerOfThree(n):
+    """
+    326. 3的幂
+    给定一个整数，写一个函数来判断它是否是 3 的幂次方。
+    示例 1:
+    输入: 27
+    输出: true
+    示例 2:
+    输入: 0
+    输出: false
+    示例 3:
+    输入: 9
+    输出: true
+    示例 4:
+    输入: 45
+    输出: false
+    进阶：
+    你能不使用循环或者递归来完成本题吗？
+    :param n: int
+    :return: bool
+    """
+    if n <= 0: return False
+    import math
+    return 3 ** (round(math.log(n, 3), 0)) == n
+
+
+def findMaxAverage(nums, k):
+    """
+    643. 子数组最大平均数 I
+    给定 n 个整数，找出平均数最大且长度为 k 的连续子数组，并输出该最大平均数。
+    示例 1:
+    输入: [1,12,-5,-6,50,3], k = 4
+    输出: 12.75
+    解释: 最大平均数 (12-5-6+50)/4 = 51/4 = 12.75
+    注意:
+    1 <= k <= n <= 30,000。
+    所给数据范围 [-10,000，10,000]。
+    :param nums: List[int]
+    :param k: int
+    :return: float
+    """
+    now = 0
+    n = len(nums)
+    for i in range(k):
+        now += nums[i]
+    res = now
+    for i in range(k, n):
+        now += nums[i]
+        now -= nums[i - k]
+        if now > res:
+            res = now
+    return res / k
+
+
 if __name__ == '__main__':
     pass
+    print(findMaxAverage([0,1,1,3,3], 4))
+    # print(isPowerOfThree(10))
     # print(longestWord(["a","banana","app","appl","ap","apply","apple"]))
-    print(numSpecialEquivGroups(["abcd","cdab","adcb","cbad"]))
+    # print(numSpecialEquivGroups(["abcd","cdab","adcb","cbad"]))
     # print(getSum(-2,1))
     # print(findLHS([1,2,2,1]))
     # print(bitwiseComplement(5))

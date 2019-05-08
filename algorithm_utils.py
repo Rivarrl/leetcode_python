@@ -63,6 +63,13 @@ def quick_sort(arr, l, r):
     quick_sort(arr, l, i-1)
     quick_sort(arr, i+1, r)
 
+
+def print_list_node(head):
+    while head.next:
+        print(head.val, end='->')
+        head = head.next
+    print(head.val)
+
 if __name__ == '__main__':
     a = [12, 4, 7, 2]
     quick_sort(a, 0, 3)

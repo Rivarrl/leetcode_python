@@ -516,6 +516,8 @@ def combinationSum(candidates, target):
       [2,3,3],
       [3,5]
     ]
+    思路:
+    回溯法，用filter筛选符合接下来条件的candidates进行回溯(去重)
     :param candidates: List[int]
     :param target: int
     :return: List[List[int]]
@@ -531,17 +533,152 @@ def combinationSum(candidates, target):
     return res
 
 
+def swapPairs(head):
+    """
+    24. 两两交换链表中的节点
+    给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
+    你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+    示例:
+    给定 1->2->3->4, 你应该返回 2->1->4->3.
+    :param head: ListNode
+    :return: ListNode
+    """
+    p = head
+    head = p.next
+    while p and p.next:
+        q = p.next.next
+        p.next.next = p
+        p.next = q if not (q and q.next) else q.next
+        p = q
+    return head
+
+
+def nextPermutation(nums):
+    """
+    31. 下一个排列
+    实现获取下一个排列的函数，算法需要将给定数字序列重新排列成字典序中下一个更大的排列。
+    如果不存在下一个更大的排列，则将数字重新排列成最小的排列（即升序排列）。
+    必须原地修改，只允许使用额外常数空间。
+    以下是一些例子，输入位于左侧列，其相应输出位于右侧列。
+    1,2,3 → 1,3,2
+    3,2,1 → 1,2,3
+    1,1,5 → 1,5,1
+    :param nums: List[int]
+    :return: None
+    """
+    l = len(nums)
+    i = 0
+    for i in range(l-2, -1, -1):
+        if nums[i] < nums[i+1]:
+            j = i
+            for j in range(i+1, l):
+                if nums[j] <= nums[i]:
+                    j -= 1
+                    break
+            nums[i], nums[j] = nums[j], nums[i]
+            break
+    else:
+        nums.sort()
+    for j in range(i + 1, l):
+        for k in range(j + 1, l):
+            if nums[j] > nums[k]:
+                nums[k], nums[j] = nums[j], nums[k]
+    print(nums)
+
+
+def removeNthFromEnd(head, n):
+    """
+    19. 删除链表的倒数第N个节点
+    给定一个链表，删除链表的倒数第 n 个节点，并且返回链表的头结点。
+    示例：
+    给定一个链表: 1->2->3->4->5, 和 n = 2.
+    当删除了倒数第二个节点后，链表变为 1->2->3->5.
+    说明：
+    给定的 n 保证是有效的。
+    进阶：
+    你能尝试使用一趟扫描实现吗？
+    :param head: ListNode
+    :param n: int
+    :return: ListNode
+    """
+    stk = []
+    p = head
+    while p:
+        stk.append(p)
+        p = p.next
+    if stk.__len__() == n:
+        head = head.next
+    else:
+        stk[-1 - n].next = stk[1-n] if n > 1 else None
+    return head
+
+
+def search(nums, target):
+    """
+    33. 搜索旋转排序数组
+    假设按照升序排序的数组在预先未知的某个点上进行了旋转。
+    ( 例如，数组 [0,1,2,4,5,6,7] 可能变为 [4,5,6,7,0,1,2] )。
+    搜索一个给定的目标值，如果数组中存在这个目标值，则返回它的索引，否则返回 -1 。
+    你可以假设数组中不存在重复的元素。
+    你的算法时间复杂度必须是 O(log n) 级别。
+    示例 1:
+    输入: nums = [4,5,6,7,0,1,2], target = 0
+    输出: 4
+    示例 2:
+    输入: nums = [4,5,6,7,0,1,2], target = 3
+    输出: -1
+    :param nums: List[int]
+    :param target: int
+    :return: int
+    """
+    l = len(nums)
+    i, j = 0, l - 1
+    while i < j:
+        m = (i+j) // 2
+        print(nums[m])
+        if nums[i] == target: return i
+        if nums[j] == target: return j
+        if nums[m] == target: return m
+        # nums[i:j]有序
+        if nums[i] < nums[j]:
+            if nums[i] > target or nums[j] < target:
+                return -1
+            else:
+                if nums[m] > target:
+                    j = m - 1
+                else:
+                    i = m + 1
+        else:
+            if nums[i] < nums[m]:
+                # 左边是顺序的
+                if nums[i] > target or nums[m] < target:
+                    # 去右侧找
+                    i = m + 1
+                else:
+                    j = m - 1
+            else:
+                # 右边是顺序的
+                if nums[j] < target or nums[m] > target:
+                    j = m - 1
+                else:
+                    i = m + 1
+    return -1 if not nums or nums[i] != target else i
+
+
 if __name__ == '__main__':
     pass
-    print(combinationSum([2, 3, 6, 7], 7))
+    print(search([1,2,3,4,5,6], 4))
+    # nextPermutation([1,5,1])
+    # print(combinationSum([2, 3, 6, 7], 7))
     # print(numberOfArithmeticSlicesv2([1,2,3,5,6,7]))
     # print(mergeStones([25,68,35,62,52,57,35,83,40,51,30,20,51], 7))
     # print(maxCoins([3,1,5,8]))
     # x = ListNode(1)
     # p = x
-    # for y in [2,2]:
+    # for y in [2,3,4]:
     #     p.next = ListNode(y)
     #     p = p.next
+    # print_list_node(swapPairs(x))
     # y = ListNode(1)
     # q = y
     # for z in [1,2]:

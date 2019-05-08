@@ -60,8 +60,6 @@ def money_resolve(money, s, n):
         total += 1
     return total
 
-def knapsack():
-    return
 
 def boat(sp):
     """
@@ -90,6 +88,9 @@ def boat(sp):
     else:
         ans += sp[0]
     return ans
+
+
+
 
 if __name__ == '__main__':
     # s = [1, 5, 3, 5, 3, 0, 6, 8, 8, 2, 12]

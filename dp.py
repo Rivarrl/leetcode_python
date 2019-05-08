@@ -416,19 +416,6 @@ def bagfull(W, V, size):
     return dp[l][size]
 
 
-def bagpart(W, V, N, size):
-    """
-    部分背包问题:有n种重量和价值分别为Wi和Vi的物品。从这些物品中挑选出总重量不超过w的物品，第i种物品最多选mi个，求所有挑选方案中价值总和的最大值。
-    :param W: List[int]
-    :param V: List[int]
-    :param N: List[int]
-    :param size: int
-    :return: int
-    """
-    pass
-
-
-
 if __name__ == '__main__':
     # q1in1 = [1, 3, 2, 4, 2]
     # res1 = min_of_multiply(q1in1)

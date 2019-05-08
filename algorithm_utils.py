@@ -6,6 +6,16 @@ class Trie:
         self.val = x
         self.children = [None] * 26
 
+class Employee:
+    def __init__(self, id, importance, subordinates):
+        # It's the unique id of each node.
+        # unique id of this employee
+        self.id = id
+        # the importance value of this employee
+        self.importance = importance
+        # the id of direct subordinates
+        self.subordinates = subordinates
+
 class ListNode:
     def __init__(self, x):
         self.val = x

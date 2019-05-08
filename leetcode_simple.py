@@ -1092,21 +1092,6 @@ def trailingZeroes(n):
     return res
 
 
-def readBinaryWatch(num):
-    """
-    401. 二进制手表
-    二进制手表顶部有 4 个 LED 代表小时（0-11），底部的 6 个 LED 代表分钟（0-59）。
-    每个 LED 代表一个 0 或 1，最低位在右侧。
-    例如，上面的二进制手表读取 “3:25”。
-    给定一个非负整数 n 代表当前 LED 亮着的数量，返回所有可能的时间。
-    案例:
-    输入: n = 1
-    返回: ["1:00", "2:00", "4:00", "8:00", "0:01", "0:02", "0:04", "0:08", "0:16", "0:32"]
-    :param num: int
-    :return: List[str]
-    """
-    pass
-
 
 def minDepth(root):
     """
@@ -1296,29 +1281,6 @@ def numberOfLines(widths, S):
     return [r, x]
 
 
-def longestWord(words):
-    """
-    720. 词典中最长的单词
-    给出一个字符串数组words组成的一本英语词典。从中找出最长的一个单词，该单词是由words词典中其他单词逐步添加一个字母组成。若其中有多个可行的答案，则返回答案中字典序最小的单词。
-    若无答案，则返回空字符串。
-    示例 1:
-    输入:
-    words = ["w","wo","wor","worl", "world"]
-    输出: "world"
-    解释:
-    单词"world"可由"w", "wo", "wor", 和 "worl"添加一个字母组成。
-    :param words: List[str]
-    :return: str
-    """
-    d = {}
-    l = len(words)
-    words.sort()
-    for i in range(l):
-        if len(words[i]) == 1:
-            Trie(words[i])
-
-
-
 def fizzBuzz(n):
     """
     412. Fizz Buzz
@@ -1451,9 +1413,188 @@ def findMaxAverage(nums, k):
     return res / k
 
 
+def longestWord(words):
+    """
+    720. 词典中最长的单词
+    给出一个字符串数组words组成的一本英语词典。从中找出最长的一个单词，该单词是由words词典中其他单词逐步添加一个字母组成。若其中有多个可行的答案，则返回答案中字典序最小的单词。
+    若无答案，则返回空字符串。
+    示例 1:
+    输入:
+    words = ["w","wo","wor","worl", "world"]
+    输出: "world"
+    解释:
+    单词"world"可由"w", "wo", "wor", 和 "worl"添加一个字母组成。
+    示例 2:
+    输入:
+    words = ["a", "banana", "app", "appl", "ap", "apply", "apple"]
+    输出: "apple"
+    解释:
+    "apply"和"apple"都能由词典中的单词组成。但是"apple"得字典序小于"apply"。
+    注意:
+    所有输入的字符串都只包含小写字母。
+    words数组长度范围为[1,1000]。
+    words[i]的长度范围为[1,30]。
+    :param words: List[str]
+    :return: str
+    """
+    # Trie树
+    l = len(words)
+    words.sort()
+    a = Trie('^')
+    ans = 0
+    res = ''
+    for i in range(l):
+        p = a
+        tmp = 0
+        for j, x in enumerate(words[i]):
+            if not p.children[ord(x) - ord('a')]:
+                if j != len(words[i]) - 1:
+                    tmp = 0
+                    break
+                p.children[ord(x) - ord('a')] = Trie(x)
+            p = p.children[ord(x) - ord('a')]
+            tmp += 1
+        if tmp > ans:
+            ans = tmp
+            res = words[i]
+    return res
+
+
+def longestWord2(words):
+    """
+    720. 词典中最长的单词
+    :param words: List[str]
+    :return: str
+    """
+    # 倒叙遍历在Set中查找
+    words.sort()
+    words.sort(key=len, reverse=True)
+    words_set = set(words)
+    for w in words:
+        flag = False
+        for i in range(1, len(w) + 1):
+            if w[:i] not in words_set:
+                flag = False
+                break
+            else:
+                flag = True
+        if flag:
+            return w
+    return ''
+
+
+def readBinaryWatch(num):
+    """
+    401. 二进制手表
+    二进制手表顶部有 4 个 LED 代表小时（0-11），底部的 6 个 LED 代表分钟（0-59）。
+    每个 LED 代表一个 0 或 1，最低位在右侧。
+    8 4 2x 1x
+    32 16x 8x 4 2 1x
+    例如，上面的二进制手表读取 “3:25”。
+    给定一个非负整数 n 代表当前 LED 亮着的数量，返回所有可能的时间。
+    案例:
+    输入: n = 1
+    返回: ["1:00", "2:00", "4:00", "8:00", "0:01", "0:02", "0:04", "0:08", "0:16", "0:32"]
+    :param num: int
+    :return: List[str]
+    """
+    # 回溯
+    hours = [0, 0, 0, 0]
+    minites = [0, 0, 0, 0, 0, 0]
+    res = []
+
+    def dfs(depth, p):
+        if depth >= num:
+            h = 0
+            for i in range(4):
+                if hours[i]:
+                    h += 2 ** i
+            if h >= 12:
+                return
+            m = 0
+            for i in range(6):
+                if minites[i]:
+                    m += 2 ** i
+            if m >= 60:
+                return
+            s = str(h) + ":"
+            if m < 10:
+                s += "0"
+            s += str(m)
+            res.append(s)
+            return
+        if p < 6:
+            for i in range(p, 6):
+                if not minites[i]:
+                    minites[i] = 1
+                    dfs(depth + 1, i)
+                    minites[i] = 0
+        x = 0
+        if p > 6:
+            x = p - 6
+        for i in range(x, 4):
+            if not hours[i]:
+                hours[i] = 1
+                dfs(depth + 1, i + 6)
+                hours[i] = 0
+        return
+
+    dfs(0, 0)
+    return res
+
+
+def getImportance(employees, id):
+    """
+    690. 员工的重要性
+    给定一个保存员工信息的数据结构，它包含了员工唯一的id，重要度 和 直系下属的id。
+    比如，员工1是员工2的领导，员工2是员工3的领导。他们相应的重要度为15, 10, 5。那么员工1的数据结构是[1, 15, [2]]，员工2的数据结构是[2, 10, [3]]，员工3的数据结构是[3, 5, []]。注意虽然员工3也是员工1的一个下属，但是由于并不是直系下属，因此没有体现在员工1的数据结构中。
+    现在输入一个公司的所有员工信息，以及单个员工id，返回这个员工和他所有下属的重要度之和。
+    示例 1:
+    输入: [[1, 5, [2, 3]], [2, 3, []], [3, 3, []]], 1
+    输出: 11
+    解释:
+    员工1自身的重要度是5，他有两个直系下属2和3，而且2和3的重要度均为3。因此员工1的总重要度是 5 + 3 + 3 = 11。
+    注意:
+    一个员工最多有一个直系领导，但是可以有多个直系下属
+    员工数量不超过2000。
+    :param employees: List[Employee]
+    :param id: int
+    :return: int
+    """
+    """
+    # 回溯法
+    res = 0
+    for i, employee in enumerate(employees):
+        if employee.id == id:
+            res += employee.importance
+            for j in employee.subordinates:
+                res += getImportance(employees[:i] + employees[i+1:], j)
+    return res    
+    """
+    # 非递归
+    def enter_stack(stack, id):
+        for e in employees:
+            if e.id == id:
+                stack.append(e)
+                break
+        return stack
+
+    stack = []
+    res = 0
+    enter_stack(stack, id)
+    while stack:
+        leader = stack.pop()
+        res += leader.importance
+        if leader.subordinates:
+            for i in leader.subordinates:
+                enter_stack(stack, i)
+    return res
+
+
 if __name__ == '__main__':
     pass
-    print(findMaxAverage([0,1,1,3,3], 4))
+    print(longestWord2(["sg","qgca","s","qzu","qzub","qzubvs","hlyc","hl","qg","qzubv","qgc","qgcab","qz","sgs","sgsnyn","hly","hlycf","sgsn"]))
+    # print(findMaxAverage([0,1,1,3,3], 4))
     # print(isPowerOfThree(10))
     # print(longestWord(["a","banana","app","appl","ap","apply","apple"]))
     # print(numSpecialEquivGroups(["abcd","cdab","adcb","cbad"]))

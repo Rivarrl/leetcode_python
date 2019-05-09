@@ -748,10 +748,133 @@ def maxPathSum(root):
     return ans[-1]
 
 
+def sortList(head):
+    """
+    148. 排序链表
+    在 O(n log n) 时间复杂度和常数级空间复杂度下，对链表进行排序。
+    示例 1:
+    输入: 4->2->1->3
+    输出: 1->2->3->4
+    示例 2:
+    输入: -1->5->3->4->0
+    输出: -1->0->3->4->5
+    :param head: ListNode
+    :return: ListNode
+    """
+    if not head or not head.next:  # 如果无节点或只有一个节点
+        return head
+    elif not head.next.next:  # 如果刚好两个结点
+        if head.next.val < head.val:  # 更正顺序
+            head.next.next = head
+            head = head.next
+            head.next.next = None
+        return head
+
+    slow, fast = head, head  # 快慢指针找中点
+    while fast.next and fast.next.next:
+        fast = fast.next.next
+        slow = slow.next
+
+    # 截断并分别递归
+    head2 = slow.next
+    slow.next = None
+    l1 = sortList(head)
+    l2 = sortList(head2)
+
+    # 合并
+    if not l1 or not l2:
+        return l1 or l2
+    head = cur = ListNode(0)
+    while l1 and l2:
+        if l1.val < l2.val:
+            cur.next = l1
+            l1 = l1.next
+        else:
+            cur.next = l2
+            l2 = l2.next
+        cur = cur.next
+    cur.next = l1 or l2
+    return head.next
+
+
+def detectCycle(head):
+    """
+    142. 环形链表 II
+    给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+    为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。
+    说明：不允许修改给定的链表。
+    示例 1：
+    输入：head = [3,2,0,-4], pos = 1
+    输出：tail connects to node index 1
+    解释：链表中有一个环，其尾部连接到第二个节点。
+    示例 2：
+    输入：head = [1,2], pos = 0
+    输出：tail connects to node index 0
+    解释：链表中有一个环，其尾部连接到第一个节点。
+    示例 3：
+    输入：head = [1], pos = -1
+    输出：no cycle
+    解释：链表中没有环。
+    进阶：
+    你是否可以不用额外空间解决此题？
+    :param head: ListNode
+    :return: ListNode
+    """
+    pass
+
+
+def kthSmallest(root, k):
+    """
+    230. 二叉搜索树中第K小的元素
+    给定一个二叉搜索树，编写一个函数 kthSmallest 来查找其中第 k 个最小的元素。
+    说明：
+    你可以假设 k 总是有效的，1 ≤ k ≤ 二叉搜索树元素个数。
+    示例 1:
+    输入: root = [3,1,4,null,2], k = 1
+       3
+      / \
+     1   4
+      \
+       2
+    输出: 1
+    示例 2:
+    输入: root = [5,3,6,2,4,null,null,1], k = 3
+           5
+          / \
+         3   6
+        / \
+       2   4
+      /
+     1
+    输出: 3
+    进阶：
+    如果二叉搜索树经常被修改（插入/删除操作）并且你需要频繁地查找第 k 小的值，你将如何优化 kthSmallest 函数？
+    :param root: TreeNode
+    :param k: int
+    :return: int
+    """
+    stk = [root]
+    last = None
+    while stk and k >= 0:
+        p = stk[-1]
+        if p.left and p.left != last:
+            stk.append(p.left)
+            continue
+        if p.right and p.right != last:
+            stk.append(p.right)
+            continue
+        k -= 1
+        last = stk.pop()
+    return last.val
+
+
+
 if __name__ == '__main__':
     pass
-    tree = construct_tree_node([1,-2,-3,1,3,-2,None,-1])
-    maxPathSum(tree)
+    tree = construct_tree_node([3,1,4,None,2])
+    kthSmallest(tree, 1)
+    # tree = construct_tree_node([1,-2,-3,1,3,-2,None,-1])
+    # maxPathSum(tree)
     # print(search([1,2,3,4,5,6], 4))
     # nextPermutation([1,5,1])
     # print(combinationSum([2, 3, 6, 7], 7))

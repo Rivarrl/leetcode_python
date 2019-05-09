@@ -710,9 +710,49 @@ def compareVersion(version1, version2):
     return 0
 
 
+def maxPathSum(root):
+    """
+    124. 二叉树中的最大路径和
+    给定一个非空二叉树，返回其最大路径和。
+    本题中，路径被定义为一条从树中任意节点出发，达到任意节点的序列。该路径至少包含一个节点，且不一定经过根节点。
+    示例 1:
+    输入: [1,2,3]
+           1
+          / \
+         2   3
+    输出: 6
+    示例 2:
+    输入: [-10,9,20,null,null,15,7]
+       -10
+       / \
+      9  20
+        /  \
+       15   7
+    输出: 42
+    :param root: TreeNode
+    :return: int
+    """
+    def helper(root):
+        p = MIN
+        if root:
+            p = root.val
+            l = helper(root.left)
+            r = helper(root.right)
+            cur = max(p, p+l, p+r)
+            ans[-1] = max(ans[-1], cur, l, r, p+l+r)
+            p = cur
+        return p
+    MIN = -2**31
+    ans = [MIN]
+    helper(root)
+    return ans[-1]
+
+
 if __name__ == '__main__':
     pass
-    print(search([1,2,3,4,5,6], 4))
+    tree = construct_tree_node([1,-2,-3,1,3,-2,None,-1])
+    maxPathSum(tree)
+    # print(search([1,2,3,4,5,6], 4))
     # nextPermutation([1,5,1])
     # print(combinationSum([2, 3, 6, 7], 7))
     # print(numberOfArithmeticSlicesv2([1,2,3,5,6,7]))

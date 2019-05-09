@@ -80,7 +80,68 @@ def print_list_node(head):
         head = head.next
     print(head.val)
 
+
+def construct_list_node(arr):
+    res = ListNode(None)
+    p = res
+    for x in arr:
+        p.next = ListNode(x)
+        p = p.next
+    return res.next
+
+
+def binary_fills(i):
+    if i == 0: return 0
+    x = 1
+    while x <= i:
+        x <<= 1
+    return x - i - 1
+
+
+def split_tree_list(arr):
+    depth = pow((len(arr) + 1), 2)
+    arrl, arrr = [], []
+    for i in range(1, depth):
+        l = 2 ** i
+        r = l * 2 - 1
+        m = (l + r) // 2
+        arrl += arr[l - 1 : m]
+        arrr += arr[m: r]
+    return arrl, arrr
+
+
+def construct_tree_node(arr):
+    arr += [None] * binary_fills(len(arr))
+    if len(arr) == 0 or arr[0] == None: return None
+    root = TreeNode(arr[0])
+    arrl, arrr = split_tree_list(arr)
+    left = construct_tree_node(arrl)
+    right = construct_tree_node(arrr)
+    root.left = left
+    root.right = right
+    return root
+
+
+def print_tree_node(root):
+    def inner(root):
+        res = None
+        if root:
+            res = []
+            res.append(root.val)
+            left, right = inner(root.left), inner(root.right)
+            if left or right:
+                res += [left, right]
+        return res
+    res = inner(root)
+    print(res)
+
+
 if __name__ == '__main__':
-    a = [12, 4, 7, 2]
-    quick_sort(a, 0, 3)
-    print(a)
+    pass
+    # a = [12, 4, 7, 2]
+    # quick_sort(a, 0, 3)
+    # print(a)
+    a = construct_list_node([1,2,3,4,5,6])
+    print_list_node(a)
+    b = construct_tree_node([1,2,3,4,5,None,6])
+    print_tree_node(b)

@@ -84,6 +84,90 @@ def findLengthOfLCIS(nums):
     return ans
 
 
+def getIntersectionNode(headA, headB):
+    """
+    160. 相交链表
+    编写一个程序，找到两个单链表相交的起始节点。
+    例如: A = [1,2,3,4,5], B = [6,7,3,4,5], return 3 因为[3,4,5]
+    :param headA: ListNode
+    :param headB: ListNode
+    :return: ListNode
+    """
+    """
+    # 把两个链表拼接为AB和BA比较
+    if not headA or not headB: return None
+    a, b = headA, headB
+    while a!=b:
+        a = headB if not a else a.next
+        b = headA if not b else b.next
+    return a
+    """
+    # 将较长链表去头后再做比较
+    pa, pb = headA, headB
+    a, b = 0, 0
+    while pa:
+        pa = pa.next
+        a += 1
+    while pb:
+        pb = pb.next
+        b += 1
+    pa, pb = headA, headB
+    for i in range(abs(a-b)):
+        if a > b: pa = pa.next
+        if a < b: pb = pb.next
+    while pa!=pb:
+        pa = pa.next
+        pb = pb.next
+    return pa
+
+
+def reverseList(head):
+    """
+    206. 反转链表
+    反转一个单链表。
+    示例:
+    输入: 1->2->3->4->5->NULL
+    输出: 5->4->3->2->1->NULL
+    进阶:
+    你可以迭代或递归地反转链表。你能否用两种方法解决这道题？
+    :param head: ListNode
+    :return: ListNode
+    """
+    """
+    # 迭代
+    stk = []
+    while head:
+        stk.append(head)
+        head = head.next
+    if stk:
+        head = stk.pop()
+        p = head
+        while stk:
+            p.next = stk.pop()
+            p.next.next = None
+            p = p.next
+    print_list_node(head)
+    return head    
+    """
+    """
+    # 迭代
+    if not head or not head.next: return head
+    p, q = head, head
+    while head.next:
+        r = q
+        q = p.next
+        p.next = None if not p.next.next else p.next.next
+        q.next = r
+    return q
+    """
+    # 递归
+    p = head
+    if p and p.next:
+        head = reverseList(p.next)
+        p.next.next, p.next = p, None
+    return head
+
+
 def findSecondMinimumValue(root):
     """
     671. 二叉树中第二小的节点
@@ -108,7 +192,17 @@ def findSecondMinimumValue(root):
     :param root: TreeNode
     :return: int
     """
-    pass
+    def inner(root, memo):
+        if root:
+            if val < root.val < memo:
+                memo = root.val
+            memo = min(inner(root.left, memo), inner(root.right, memo))
+        return memo
+    MAX = 0xffffffff
+    if root:
+        val = root.val
+        res = min(inner(root.left, MAX), inner(root.right, MAX))
+        return -1 if res == MAX else res
 
 
 def trimBST(root, L, R):
@@ -148,10 +242,25 @@ def trimBST(root, L, R):
     :param R: int
     :return: TreeNode
     """
-    pass
+    p = root
+    if p:
+        if L <= p.val <= R:
+            p.left = trimBST(p.left, L, R)
+            p.right = trimBST(p.right, L, R)
+        elif p.val < L:
+            p = trimBST(p.right, L, R)
+        else:
+            p = trimBST(p.left, L, R)
+    root = p
+    return root
 
 
 if __name__ == '__main__':
     # calPoints(["5","2","C","D","+"])
-    findLengthOfLCIS([2,2,2,2,2])
+    # findLengthOfLCIS([2,2,2,2,2])
+    # a = construct_list_node([1,2,3,4,5])
+    # reverseList(a)
+    a = construct_tree_node([2,2,5,None,None,5,7])
+    print_tree_node(a)
+    print(findSecondMinimumValue(a))
     pass

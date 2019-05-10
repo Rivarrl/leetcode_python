@@ -797,32 +797,6 @@ def sortList(head):
     return head.next
 
 
-def detectCycle(head):
-    """
-    142. 环形链表 II
-    给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
-    为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。
-    说明：不允许修改给定的链表。
-    示例 1：
-    输入：head = [3,2,0,-4], pos = 1
-    输出：tail connects to node index 1
-    解释：链表中有一个环，其尾部连接到第二个节点。
-    示例 2：
-    输入：head = [1,2], pos = 0
-    输出：tail connects to node index 0
-    解释：链表中有一个环，其尾部连接到第一个节点。
-    示例 3：
-    输入：head = [1], pos = -1
-    输出：no cycle
-    解释：链表中没有环。
-    进阶：
-    你是否可以不用额外空间解决此题？
-    :param head: ListNode
-    :return: ListNode
-    """
-    pass
-
-
 def kthSmallest(root, k):
     """
     230. 二叉搜索树中第K小的元素
@@ -853,26 +827,112 @@ def kthSmallest(root, k):
     :param k: int
     :return: int
     """
-    stk = [root]
-    last = None
-    while stk and k >= 0:
-        p = stk[-1]
-        if p.left and p.left != last:
-            stk.append(p.left)
-            continue
-        if p.right and p.right != last:
-            stk.append(p.right)
-            continue
-        k -= 1
-        last = stk.pop()
-    return last.val
+    def inner(root):
+        if root:
+            inner(root.left)
+            ans.append(root.val)
+            inner(root.right)
+    ans = []
+    inner(root)
+    return ans[k-1]
 
+
+def detectCycle(head):
+    """
+    142. 环形链表 II
+    给定一个链表，返回链表开始入环的第一个节点。 如果链表无环，则返回 null。
+    为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。
+    说明：不允许修改给定的链表。
+    示例 1：
+    输入：head = [3,2,0,-4], pos = 1
+    输出：tail connects to node index 1
+    解释：链表中有一个环，其尾部连接到第二个节点。
+    示例 2：
+    输入：head = [1,2], pos = 0
+    输出：tail connects to node index 0
+    解释：链表中有一个环，其尾部连接到第一个节点。
+    示例 3：
+    输入：head = [1], pos = -1
+    输出：no cycle
+    解释：链表中没有环。
+    进阶：
+    你是否可以不用额外空间解决此题？
+    :param head: ListNode
+    :return: ListNode
+    """
+    pass
+
+
+def lowestCommonAncestor(root, p, q):
+    """
+    236. 二叉树的最近公共祖先
+    给定一个二叉树, 找到该树中两个指定节点的最近公共祖先。
+    百度百科中最近公共祖先的定义为：“对于有根树 T 的两个结点 p、q，最近公共祖先表示为一个结点 x，满足 x 是 p、q 的祖先且 x 的深度尽可能大（一个节点也可以是它自己的祖先）。”
+    例如，给定如下二叉树:  root = [3,5,1,6,2,0,8,null,null,7,4]
+    示例 1:
+    输入: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 1
+    输出: 3
+    解释: 节点 5 和节点 1 的最近公共祖先是节点 3。
+    示例 2:
+    输入: root = [3,5,1,6,2,0,8,null,null,7,4], p = 5, q = 4
+    输出: 5
+    解释: 节点 5 和节点 4 的最近公共祖先是节点 5。因为根据定义最近公共祖先节点可以为节点本身。
+    说明:
+    所有节点的值都是唯一的。
+    p、q 为不同节点且均存在于给定的二叉树中。
+    :param root: TreeNode
+    :param p: TreeNode
+    :param q: TreeNode
+    :return: TreeNode
+    """
+    pass
+
+
+def productExceptSelf(nums):
+    """
+    238. 除自身以外数组的乘积
+    给定长度为 n 的整数数组 nums，其中 n > 1，返回输出数组 output ，其中 output[i] 等于 nums 中除 nums[i] 之外其余各元素的乘积。
+    示例:
+    输入: [1,2,3,4]
+    输出: [24,12,8,6]
+    说明: 请不要使用除法，且在 O(n) 时间复杂度内完成此题。
+    进阶：
+    你可以在常数空间复杂度内完成这个题目吗？（ 出于对空间复杂度分析的目的，输出数组不被视为额外空间。）
+    :param nums: List[int]
+    :return: List[int]
+    """
+    """
+    # O(n^2)
+    from functools import reduce
+    l = len(nums)
+    res = [0] * l
+    d = {}
+    f = lambda x, y: x * y
+    for i in range(l):
+        if nums[i] not in d:
+            d[nums[i]] = reduce(f, nums[:i] + nums[i+1:])
+        res[i] = d[nums[i]]
+    return res
+    """
+    # O(n) 且空间复杂度常数
+    # 从左乘到右，再从右乘到左，每次做乘法的时候错开自身
+    left, right, length = 1, 1, len(nums)
+    res = [0] * length
+    for i in range(length):
+        res[i] = left
+        left *= nums[i]
+    print(res)
+    for i in range(length-1, -1, -1):
+        res[i] *= right
+        right *= nums[i]
+    return res
 
 
 if __name__ == '__main__':
     pass
-    tree = construct_tree_node([3,1,4,None,2])
-    kthSmallest(tree, 1)
+    print(productExceptSelf([1, 2, 3, 4]))
+    # tree = construct_tree_node([3,1,4,None,2])
+    # print(kthSmallest(tree, 2))
     # tree = construct_tree_node([1,-2,-3,1,3,-2,None,-1])
     # maxPathSum(tree)
     # print(search([1,2,3,4,5,6], 4))

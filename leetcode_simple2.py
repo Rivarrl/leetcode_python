@@ -718,11 +718,163 @@ def lowestCommonAncestor(root, p, q):
     :param q: int
     :return: int
     """
-    pass
+    if p.val > q.val:
+        p, q = q, p
+    if root:
+        if p.val > root.val:
+            return lowestCommonAncestor(root.right, p, q)
+        elif q.val < root.val:
+            return lowestCommonAncestor(root.left, p, q)
+        if p.val <= root.val <= q.val:
+            return root
 
+
+def distributeCandies(candies):
+    """
+    575. 分糖果
+    给定一个偶数长度的数组，其中不同的数字代表着不同种类的糖果，每一个数字代表一个糖果。你需要把这些糖果平均分给一个弟弟和一个妹妹。返回妹妹可以获得的最大糖果的种类数。
+    示例 1:
+    输入: candies = [1,1,2,2,3,3]
+    输出: 3
+    解析: 一共有三种种类的糖果，每一种都有两个。
+         最优分配方案：妹妹获得[1,2,3],弟弟也获得[1,2,3]。这样使妹妹获得糖果的种类数最多。
+    示例 2 :
+    输入: candies = [1,1,2,3]
+    输出: 2
+    解析: 妹妹获得糖果[2,3],弟弟获得糖果[1,1]，妹妹有两种不同的糖果，弟弟只有一种。这样使得妹妹可以获得的糖果种类数最多。
+    注意:
+    数组的长度为[2, 10,000]，并且确定为偶数。
+    数组中数字的大小在范围[-100,000, 100,000]内。
+    :param candies: List[int]
+    :return: int
+    """
+    return min(len(set(candies)), len(candies) // 2)
+
+
+def islandPerimeter(grid):
+    """
+    463. 岛屿的周长
+    给定一个包含 0 和 1 的二维网格地图，其中 1 表示陆地 0 表示水域。
+    网格中的格子水平和垂直方向相连（对角线方向不相连）。整个网格被水完全包围，但其中恰好有一个岛屿（或者说，一个或多个表示陆地的格子相连组成的岛屿）。
+    岛屿中没有“湖”（“湖” 指水域在岛屿内部且不和岛屿周围的水相连）。格子是边长为 1 的正方形。网格为长方形，且宽度和高度均不超过 100 。计算这个岛屿的周长。
+    示例 :
+    输入:
+    [[0,1,0,0],
+     [1,1,1,0],
+     [0,1,0,0],
+     [1,1,0,0]]
+    输出: 16
+    解释: 它的周长是下面图片中的 16 个黄色的边：
+    :param grid: List[List[int]]
+    :return: int
+    """
+    def inner(i, j):
+        ans = 4
+        if i > 0:
+            ans -= grid[i-1][j]
+        if j > 0:
+            ans -= grid[i][j-1]
+        if i < li - 1:
+            ans -= grid[i+1][j]
+        if j < lj - 1:
+            ans -= grid[i][j+1]
+        return ans
+
+    li = len(grid)
+    if li == 0: return 0
+    lj = len(grid[0])
+    res = 0
+    for i in range(li):
+        for j in range(lj):
+            if grid[i][j] == 1:
+                res += inner(i, j)
+    return res
+
+
+def hasAlternatingBits(n):
+    """
+    693. 交替位二进制数
+    给定一个正整数，检查他是否为交替位二进制数：换句话说，就是他的二进制数相邻的两个位数永不相等。
+    示例 1:
+    输入: 5
+    输出: True
+    解释:
+    5的二进制数是: 101
+    示例 2:
+    输入: 7
+    输出: False
+    解释:
+    7的二进制数是: 111
+    示例 3:
+    输入: 11
+    输出: False
+    解释:
+    11的二进制数是: 1011
+    示例 4:
+    输入: 10
+    输出: True
+    解释:
+    10的二进制数是: 1010
+    :param n: int
+    :return: bool
+    """
+    # return not (n ^ (n >> 1)) & ((n ^ (n >> 1)) + 1)
+    t = 0 if (n & 1) == 1 else 1
+    while n:
+        if (n & 1) == t:
+            return False
+        t = n & 1
+        n >>= 1
+    return True
+
+
+def isToeplitzMatrix(matrix):
+    """
+    766. 托普利茨矩阵
+    如果一个矩阵的每一方向由左上到右下的对角线上具有相同元素，那么这个矩阵是托普利茨矩阵。
+    给定一个 M x N 的矩阵，当且仅当它是托普利茨矩阵时返回 True。
+    示例 1:
+    输入:
+    matrix = [
+      [1,2,3,4],
+      [5,1,2,3],
+      [9,5,1,2]
+    ]
+    输出: True
+    解释:
+    在上述矩阵中, 其对角线为:
+    "[9]", "[5, 5]", "[1, 1, 1]", "[2, 2, 2]", "[3, 3]", "[4]"。
+    各条对角线上的所有元素均相同, 因此答案是True。
+    示例 2:
+    输入:
+    matrix = [
+      [1,2],
+      [2,2]
+    ]
+    输出: False
+    解释:
+    对角线"[1, 2]"上的元素不同。
+    说明:
+    matrix 是一个包含整数的二维数组。
+    matrix 的行数和列数均在 [1, 20]范围内。
+    matrix[i][j] 包含的整数在 [0, 99]范围内。
+    进阶:
+    如果矩阵存储在磁盘上，并且磁盘内存是有限的，因此一次最多只能将一行矩阵加载到内存中，该怎么办？
+    如果矩阵太大以至于只能一次将部分行加载到内存中，该怎么办？
+    :param matrix: List[List[int]]
+    :return: bool
+    """
+    l = len(matrix)
+    if l == 0: return False
+    lt = len(matrix[0])
+    for i in range(1, l):
+        for j in range(1, lt):
+            if matrix[i][j] != matrix[i-1][j-1]: return False
+    return True
 
 
 if __name__ == '__main__':
+    # print(islandPerimeter([[1], [0]]))
     # print(getRow(4))
     # x = construct_tree_node([1,2,2,3,4,4,3])
     # print(isSymmetric(x))

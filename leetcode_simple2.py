@@ -873,7 +873,173 @@ def isToeplitzMatrix(matrix):
     return True
 
 
+def divisorGame(N):
+    """
+    1025. 除数博弈
+    爱丽丝和鲍勃一起玩游戏，他们轮流行动。爱丽丝先手开局。
+    最初，黑板上有一个数字 N 。在每个玩家的回合，玩家需要执行以下操作：
+    选出任一 x，满足 0 < x < N 且 N % x == 0 。
+    用 N - x 替换黑板上的数字 N 。
+    如果玩家无法执行这些操作，就会输掉游戏。
+    只有在爱丽丝在游戏中取得胜利时才返回 True，否则返回 false。假设两个玩家都以最佳状态参与游戏。
+    示例 1：
+    输入：2
+    输出：true
+    解释：爱丽丝选择 1，鲍勃无法进行操作。
+    示例 2：
+    输入：3
+    输出：false
+    解释：爱丽丝选择 1，鲍勃也选择 1，然后爱丽丝无法进行操作。
+    提示：
+    1 <= N <= 1000
+    :param N: int
+    :return: bool
+    """
+    return N % 2 == 0
+
+
+def sumEvenAfterQueries(A, queries):
+    """
+    985. 查询后的偶数和
+    给出一个整数数组 A 和一个查询数组 queries。
+    对于第 i 次查询，有 val = queries[i][0], index = queries[i][1]，我们会把 val 加到 A[index] 上。然后，第 i 次查询的答案是 A 中偶数值的和。
+    （此处给定的 index = queries[i][1] 是从 0 开始的索引，每次查询都会永久修改数组 A。）
+    返回所有查询的答案。你的答案应当以数组 answer 给出，answer[i] 为第 i 次查询的答案。
+    示例：
+    输入：A = [1,2,3,4], queries = [[1,0],[-3,1],[-4,0],[2,3]]
+    输出：[8,6,2,4]
+    解释：
+    开始时，数组为 [1,2,3,4]。
+    将 1 加到 A[0] 上之后，数组为 [2,2,3,4]，偶数值之和为 2 + 2 + 4 = 8。
+    将 -3 加到 A[1] 上之后，数组为 [2,-1,3,4]，偶数值之和为 2 + 4 = 6。
+    将 -4 加到 A[0] 上之后，数组为 [-2,-1,3,4]，偶数值之和为 -2 + 4 = 2。
+    将 2 加到 A[3] 上之后，数组为 [-2,-1,3,6]，偶数值之和为 -2 + 6 = 4。
+    提示：
+    1 <= A.length <= 10000
+    -10000 <= A[i] <= 10000
+    1 <= queries.length <= 10000
+    -10000 <= queries[i][0] <= 10000
+    0 <= queries[i][1] < A.length
+    :param A: List[int]
+    :param queries: List[int]
+    :return: List[int]
+    """
+    """
+    # 680ms
+    l = len(queries)
+    x = sum(filter(lambda x:x%2==0, A))
+    res = [0] * l
+    for i in range(l):
+        cur = A[queries[i][1]] + queries[i][0]
+        if A[queries[i][1]] % 2 == 0 and queries[i][0] % 2 == 0:
+            x += queries[i][0]
+        elif A[queries[i][1]] % 2 == 1 and queries[i][0] % 2 == 1:
+            x += cur
+        elif A[queries[i][1]] % 2 == 0 and queries[i][0] % 2 == 1:
+            x -= A[queries[i][1]]
+        res[i] = x
+        A[queries[i][1]] = cur
+    return res
+    """
+    # 480ms
+    x = sum(x for x in A if x%2==0)
+    res = []
+    for j, i in queries:
+        if A[i] % 2 == 0: x -= A[i]
+        A[i] += x
+        if A[i] % 2 == 0: x += A[i]
+        res.append(x)
+    return res
+
+
+def middleNode(head):
+    """
+    876. 链表的中间结点
+    给定一个带有头结点 head 的非空单链表，返回链表的中间结点。
+    如果有两个中间结点，则返回第二个中间结点。
+    示例 1：
+    输入：[1,2,3,4,5]
+    输出：此列表中的结点 3 (序列化形式：[3,4,5])
+    返回的结点值为 3 。 (测评系统对该结点序列化表述是 [3,4,5])。
+    注意，我们返回了一个 ListNode 类型的对象 ans，这样：
+    ans.val = 3, ans.next.val = 4, ans.next.next.val = 5, 以及 ans.next.next.next = NULL.
+    示例 2：
+    输入：[1,2,3,4,5,6]
+    输出：此列表中的结点 4 (序列化形式：[4,5,6])
+    由于该列表有两个中间结点，值分别为 3 和 4，我们返回第二个结点。
+    提示：
+    给定链表的结点数介于 1 和 100 之间。
+    :param head: ListNode
+    :return: ListNode
+    """
+    if not head: return None
+    fast, slow = head, head
+    while fast:
+        if fast.next:
+            slow = slow.next
+            if fast.next.next:
+                fast = fast.next.next
+            else:
+                fast = None
+        else:
+            fast = None
+    return slow
+
+
+def countPrimeSetBits(L, R):
+    """
+    762. 二进制表示中质数个计算置位
+    给定两个整数 L 和 R ，找到闭区间 [L, R] 范围内，计算置位位数为质数的整数个数。
+    （注意，计算置位代表二进制表示中1的个数。例如 21 的二进制表示 10101 有 3 个计算置位。还有，1 不是质数。）
+    示例 1:
+    输入: L = 6, R = 10
+    输出: 4
+    解释:
+    6 -> 110 (2 个计算置位，2 是质数)
+    7 -> 111 (3 个计算置位，3 是质数)
+    9 -> 1001 (2 个计算置位，2 是质数)
+    10-> 1010 (2 个计算置位，2 是质数)
+    示例 2:
+    输入: L = 10, R = 15
+    输出: 5
+    解释:
+    10 -> 1010 (2 个计算置位, 2 是质数)
+    11 -> 1011 (3 个计算置位, 3 是质数)
+    12 -> 1100 (2 个计算置位, 2 是质数)
+    13 -> 1101 (3 个计算置位, 3 是质数)
+    14 -> 1110 (3 个计算置位, 3 是质数)
+    15 -> 1111 (4 个计算置位, 4 不是质数)
+    注意:
+    L, R 是 L <= R 且在 [1, 10^6] 中的整数。
+    R - L 的最大值为 10000。
+    :param L: int
+    :param R: int
+    :return: int
+    """
+    l = len(bin(R).lstrip('0b'))
+    primes = [1] * (l+1)
+    primes[0] = 0
+    primes[1] = 0
+    res = [0] * (l+1)
+    loc = 1
+    for i in range(2, l+1):
+        if primes[i]:
+            res[loc] = i
+            loc += 1
+        j = 1
+        while j < loc and res[j] * i <= l:
+            primes[res[j] * i] = 0
+            j += 1
+    res = list(filter(lambda x:x>0, res))
+    ans = 0
+    for k in range(L, R+1):
+        if bin(k).count('1') in res:
+            ans += 1
+    return ans
+
+
 if __name__ == '__main__':
+    countPrimeSetBits(10, 15)
     # print(islandPerimeter([[1], [0]]))
     # print(getRow(4))
     # x = construct_tree_node([1,2,2,3,4,4,3])

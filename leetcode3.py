@@ -959,9 +959,80 @@ def detectCycle(head):
     return None
 
 
+def preorderTraversal(root):
+    """
+    144. 二叉树的前序遍历
+    给定一个二叉树，返回它的 前序 遍历。
+    示例:
+    输入: [1,null,2,3]
+       1
+        \
+         2
+        /
+       3
+    输出: [1,2,3]
+    进阶: 递归算法很简单，你可以通过迭代算法完成吗？
+    :param root: TreeNode
+    :return: List[int]
+    """
+    """
+    # 递归
+    def inner(root):
+        if root:
+            res.append(root.val)
+            inner(root.left)
+            inner(root.right)
+
+    res = []
+    inner(root)
+    """
+    # 迭代
+    res = []
+    if root:
+        stk = [root]
+        while stk:
+            p = stk.pop()
+            res.append(p.val)
+            if p.right:
+                stk.append(p.right)
+            if p.left:
+                stk.append(p.left)
+    return res
+
+
+def reconstructQueue(people):
+    """
+    406. 根据身高重建队列
+    假设有打乱顺序的一群人站成一个队列。 每个人由一个整数对(h, k)表示，其中h是这个人的身高，k是排在这个人前面且身高大于或等于h的人数。 编写一个算法来重建这个队列。
+    注意：
+    总人数少于1100人。
+    示例
+    输入:
+    [[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
+    输出:
+    [[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
+    :param people: List[List[int]]
+    :return: List[List[int]]
+    """
+    # 自己写的冒泡排序太慢
+    # people = sorted(people, key=lambda x: (x[0], -x[1]), reverse=True)
+    l = len(people)
+    for i in range(l):
+        for j in range(i):
+            if people[i][0] > people[j][0] or people[i][0] == people[j][0] and people[i][1] < people[j][1]:
+                people[i], people[j] = people[j], people[i]
+    # print(people)
+    res = []
+    for i in range(l):
+        res.insert(people[i][1], people[i])
+    # print(res)
+    return res
+
+
 if __name__ == '__main__':
     pass
-    print(productExceptSelf([1, 2, 3, 4]))
+    reconstructQueue([[9,0],[7,0],[1,9],[3,0],[2,7],[5,3],[6,0],[3,4],[6,2],[5,2]])
+    # print(productExceptSelf([14]))
     # tree = construct_tree_node([3,1,4,None,2])
     # print(kthSmallest(tree, 2))
     # tree = construct_tree_node([1,-2,-3,1,3,-2,None,-1])
@@ -970,7 +1041,7 @@ if __name__ == '__main__':
     # nextPermutation([1,5,1])
     # print(combinationSum([2, 3, 6, 7], 7))
     # print(numberOfArithmeticSlicesv2([1,2,3,5,6,7]))
-    # print(mergeStones([25,68,35,62,52,57,35,83,40,51,30,20,51], 7))
+    # print(mergeStones([25,68,35,62,52,57,35,83,40,51,30,20,51], 7)), 2, 3,
     # print(maxCoins([3,1,5,8]))
     # x = ListNode(1)
     # p = x

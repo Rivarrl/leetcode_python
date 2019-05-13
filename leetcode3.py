@@ -1141,7 +1141,27 @@ def isValidSudoku(board):
     :param board: List[List[str]]
     :return: bool
     """
-    pass
+    """
+    # 大佬写法
+    seen = sum(([(c, i), (j, c), (i // 3, j // 3, c)]
+                for i in range(9) for j in range(9)
+                for c in [board[i][j]] if c != '.'
+                ), [])
+    return len(seen) == len(set(seen))
+    """
+    col = [{} for _ in range(9)]
+    row = [{} for _ in range(9)]
+    blk = [[{} for _ in range(3)] for _ in range(3)]
+    for i in range(9):
+        for j in range(9):
+            if board[i][j] != ".":
+                if board[i][j] in row[i]: return False
+                if board[i][j] in col[j]: return False
+                if board[i][j] in blk[i//3][j//3]: return False
+                row[i][board[i][j]] = 1
+                col[j][board[i][j]] = 1
+                blk[i//3][j//3][board[i][j]] = 1
+    return True
 
 
 def solveSudoku(board):
@@ -1162,11 +1182,46 @@ def solveSudoku(board):
     :param board: List[List[str]]
     :return: None
     """
-    pass
+    def reconstruct_sets(sets, board, row, col, blk):
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] == ".":
+                    sets[i][j] = set.intersection(row[i], col[j], blk[i // 3][j // 3])
+    nm = [str(x) for x in range(1,10)]
+    col = [set(nm) for _ in range(9)]
+    row = [set(nm) for _ in range(9)]
+    blk = [[set(nm) for _ in range(3)] for _ in range(3)]
+    cnt = 81
+    for i in range(9):
+        for j in range(9):
+            if board[i][j] != ".":
+                cnt -= 1
+                row[i].discard(board[i][j])
+                col[j].discard(board[i][j])
+                blk[i//3][j//3].discard(board[i][j])
+    sets = [[set() for _ in range(9)] for _ in range(9)]
+    reconstruct_sets(sets, board, row, col, blk)
+    last = cnt + 1
+    while last > cnt:
+        last = cnt
+        for i in range(9):
+            for j in range(9):
+                if board[i][j] == "." and len(sets[i][j]) == 1:
+                    board[i][j] = sets[i][j].pop()
+                    row[i].discard(board[i][j])
+                    col[j].discard(board[i][j])
+                    blk[i // 3][j // 3].discard(board[i][j])
+                    reconstruct_sets(sets, board, row, col, blk)
+                    cnt -= 1
+                    matrix_pretty_print(board)
+                    print()
 
 
 if __name__ == '__main__':
     pass
+    sudoku = [[".",".","9","7","4","8",".",".","."],["7",".",".",".",".",".",".",".","."],[".","2",".","1",".","9",".",".","."],[".",".","7",".",".",".","2","4","."],[".","6","4",".","1",".","5","9","."],[".","9","8",".",".",".","3",".","."],[".",".",".","8",".","3",".","2","."],[".",".",".",".",".",".",".",".","6"],[".",".",".","2","7","5","9",".","."]]
+    # isValidSudoku(sudoku)
+    solveSudoku(sudoku)
     # print(generateParenthesis(3))
     # reconstructQueue([[9,0],[7,0],[1,9],[3,0],[2,7],[5,3],[6,0],[3,4],[6,2],[5,2]])
     # print(productExceptSelf([14]))

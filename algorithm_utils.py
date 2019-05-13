@@ -136,12 +136,19 @@ def print_tree_node(root):
     print(res)
 
 
+def matrix_pretty_print(matrix):
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            print(matrix[i][j], end=' ')
+        print()
+
 if __name__ == '__main__':
     pass
+    matrix_pretty_print([[1,2,3],[4,5,6]])
     # a = [12, 4, 7, 2]
     # quick_sort(a, 0, 3)
     # print(a)
-    a = construct_list_node([1,2,3,4,5,6])
-    print_list_node(a)
-    b = construct_tree_node([1,2,3,4,5,None,6])
-    print_tree_node(b)
+    # a = construct_list_node([1,2,3,4,5,6])
+    # print_list_node(a)
+    # b = construct_tree_node([1,2,3,4,5,None,6])
+    # print_tree_node(b)

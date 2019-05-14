@@ -1305,7 +1305,7 @@ def firstMissingPositive(nums):
     l = len(nums)
     for i in range(l):
         while 0 < nums[i] <= l and nums[nums[i] - 1] != nums[i]:
-            nums[nums[i]], nums[i] = nums[i], nums[nums[i]]
+            nums[nums[i] - 1], nums[i] = nums[i], nums[nums[i] - 1]
     print(nums)
     i = 0
     while i < l and nums[i] == i + 1:
@@ -1315,7 +1315,7 @@ def firstMissingPositive(nums):
 
 if __name__ == '__main__':
     pass
-    print(firstMissingPositive([1,2,0]))
+    print(firstMissingPositive([3,4,-1,1]))
     # print(combinationSum2([4,4,2,1,4,2,2,1,3], 6))
     # sudoku = [[".",".","9","7","4","8",".",".","."],["7",".",".",".",".",".",".",".","."],[".","2",".","1",".","9",".",".","."],[".",".","7",".",".",".","2","4","."],[".","6","4",".","1",".","5","9","."],[".","9","8",".",".",".","3",".","."],[".",".",".","8",".","3",".","2","."],[".",".",".",".",".",".",".",".","6"],[".",".",".","2","7","5","9",".","."]]
     # isValidSudoku(sudoku)

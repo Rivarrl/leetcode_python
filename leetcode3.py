@@ -1186,11 +1186,11 @@ def solveSudoku(board):
         for i in range(9):
             for j in range(9):
                 if board[i][j] == ".":
-                    sets[i][j] = set.intersection(row[i], col[j], blk[i // 3][j // 3])
+                    sets[i][j] = set.intersection(row[i], col[j], blk[i // 3 * 3 + j // 3])
     nm = [str(x) for x in range(1,10)]
     col = [set(nm) for _ in range(9)]
     row = [set(nm) for _ in range(9)]
-    blk = [[set(nm) for _ in range(3)] for _ in range(3)]
+    blk = [set(nm) for _ in range(9)]
     cnt = 81
     for i in range(9):
         for j in range(9):
@@ -1198,7 +1198,7 @@ def solveSudoku(board):
                 cnt -= 1
                 row[i].discard(board[i][j])
                 col[j].discard(board[i][j])
-                blk[i//3][j//3].discard(board[i][j])
+                blk[i//3 * 3 + j//3].discard(board[i][j])
     sets = [[set() for _ in range(9)] for _ in range(9)]
     reconstruct_sets(sets, board, row, col, blk)
     last = cnt + 1
@@ -1210,18 +1210,116 @@ def solveSudoku(board):
                     board[i][j] = sets[i][j].pop()
                     row[i].discard(board[i][j])
                     col[j].discard(board[i][j])
-                    blk[i // 3][j // 3].discard(board[i][j])
+                    blk[i // 3 * 3 + j // 3].discard(board[i][j])
                     reconstruct_sets(sets, board, row, col, blk)
                     cnt -= 1
-                    matrix_pretty_print(board)
-                    print()
+                    # matrix_pretty_print(board)
+                    # print()
+    def solve2(row, col, blk, sets, i, j, board):
+        while board[i][j] != ".":
+            j += 1
+            if j >= 9:
+                j = 0
+                i += 1
+            if i >= 9:
+                return True
+        if sets[i][j].__len__() == 0: return False
+        for x in sets[i][j]:
+            board[i][j] = x
+            row[i].discard(board[i][j])
+            col[j].discard(board[i][j])
+            blk[i // 3 * 3 + j // 3].discard(board[i][j])
+            reconstruct_sets(sets, board, row, col, blk)
+            if solve2(row, col, blk, sets, i, j, board):
+                return True
+            else:
+                row[i].add(board[i][j])
+                col[j].add(board[i][j])
+                blk[i//3 * 3 + j // 3].add(board[i][j])
+                reconstruct_sets(sets, board, row, col, blk)
+                board[i][j] = '.'
+    solve2(row, col, blk, sets, 0, 0, board)
+    # matrix_pretty_print(board)
+    # 可以改成map去存sets
+
+
+def combinationSum2(candidates, target):
+    """
+    40. 组合总和 II
+    给定一个数组 candidates 和一个目标数 target ，找出 candidates 中所有可以使数字和为 target 的组合。
+    candidates 中的每个数字在每个组合中只能使用一次。
+    说明：
+    所有数字（包括目标数）都是正整数。
+    解集不能包含重复的组合。
+    示例 1:
+    输入: candidates = [10,1,2,7,6,1,5], target = 8,
+    所求解集为:
+    [
+      [1, 7],
+      [1, 2, 5],
+      [2, 6],
+      [1, 1, 6]
+    ]
+    示例 2:
+    输入: candidates = [2,5,2,1,2], target = 5,
+    所求解集为:
+    [
+      [1,2,2],
+      [5]
+    ]
+    :param candidates: List[int]
+    :param target: int
+    :return: List[List[int]]
+    """
+    res = []
+    if target == 0: return [[]]
+    l = len(candidates)
+    if l == 0: return []
+    candidates.sort()
+    while candidates:
+        x = candidates.pop()
+        for e in combinationSum2(list(filter(lambda a:a <= target - x, candidates)), target - x):
+            if e + [x] not in res:
+                res.append(e + [x])
+    return res
+
+
+def firstMissingPositive(nums):
+    """
+    41. 缺失的第一个正数
+    给定一个未排序的整数数组，找出其中没有出现的最小的正整数。
+    示例 1:
+    输入: [1,2,0]
+    输出: 3
+    示例 2:
+    输入: [3,4,-1,1]
+    输出: 2
+    示例 3:
+    输入: [7,8,9,11,12]
+    输出: 1
+    说明:
+    你的算法的时间复杂度应为O(n)，并且只能使用常数级别的空间。
+    :param nums: List[int]
+    :return: int
+    """
+    l = len(nums)
+    for i in range(l):
+        while 0 < nums[i] <= l and nums[nums[i] - 1] != nums[i]:
+            nums[nums[i]], nums[i] = nums[i], nums[nums[i]]
+    print(nums)
+    i = 0
+    while i < l and nums[i] == i + 1:
+        i += 1
+    return i + 1
 
 
 if __name__ == '__main__':
     pass
-    sudoku = [[".",".","9","7","4","8",".",".","."],["7",".",".",".",".",".",".",".","."],[".","2",".","1",".","9",".",".","."],[".",".","7",".",".",".","2","4","."],[".","6","4",".","1",".","5","9","."],[".","9","8",".",".",".","3",".","."],[".",".",".","8",".","3",".","2","."],[".",".",".",".",".",".",".",".","6"],[".",".",".","2","7","5","9",".","."]]
+    print(firstMissingPositive([1,2,0]))
+    # print(combinationSum2([4,4,2,1,4,2,2,1,3], 6))
+    # sudoku = [[".",".","9","7","4","8",".",".","."],["7",".",".",".",".",".",".",".","."],[".","2",".","1",".","9",".",".","."],[".",".","7",".",".",".","2","4","."],[".","6","4",".","1",".","5","9","."],[".","9","8",".",".",".","3",".","."],[".",".",".","8",".","3",".","2","."],[".",".",".",".",".",".",".",".","6"],[".",".",".","2","7","5","9",".","."]]
     # isValidSudoku(sudoku)
-    solveSudoku(sudoku)
+    # solveSudoku(sudoku)
     # print(generateParenthesis(3))
     # reconstructQueue([[9,0],[7,0],[1,9],[3,0],[2,7],[5,3],[6,0],[3,4],[6,2],[5,2]])
     # print(productExceptSelf([14]))

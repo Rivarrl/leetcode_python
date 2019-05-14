@@ -1038,8 +1038,53 @@ def countPrimeSetBits(L, R):
     return ans
 
 
+def findTheDifference(s, t):
+    """
+    389. 找不同
+    给定两个字符串 s 和 t，它们只包含小写字母。
+    字符串 t 由字符串 s 随机重排，然后在随机位置添加一个字母。
+    请找出在 t 中被添加的字母。
+    示例:
+    输入：
+    s = "abcd"
+    t = "abcde"
+    输出：
+    e
+    解释：
+    'e' 是那个被添加的字母。
+    :param s: str
+    :param t: str
+    :return: str
+    """
+    """
+    # replace 内存消耗大
+    ls = len(s)
+    while ls > 0:
+        x = s[0]
+        s = s.replace(x, '')
+        t = t.replace(x, '')
+        ls = len(s)
+        lt = len(t)
+        if lt - ls != 1:
+            return x
+    return t[0]
+    """
+    """
+    # ascii码做减法
+    return sum(ord(x) for x in t) - sum(ord(x) for x in s)
+    """
+    # ascii码亦或
+    i, res = 0, 0
+    while i < len(s):
+        res ^= ord(s[i])
+        res ^= ord(t[i])
+        i += 1
+    return chr(res ^ ord(t[i]))
+
+
 if __name__ == '__main__':
-    countPrimeSetBits(10, 15)
+    findTheDifference("abcd", "abcdb")
+    # countPrimeSetBits(10, 15)
     # print(islandPerimeter([[1], [0]]))
     # print(getRow(4))
     # x = construct_tree_node([1,2,2,3,4,4,3])

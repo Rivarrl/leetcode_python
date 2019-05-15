@@ -33,26 +33,6 @@ def containsNearbyDuplicate(nums, k):
     return False
 
 
-def binaryTreePaths(root):
-    """
-    257. 二叉树的所有路径
-    给定一个二叉树，返回所有从根节点到叶子节点的路径。
-    说明: 叶子节点是指没有子节点的节点。
-    示例:
-    输入:
-       1
-     /   \
-    2     3
-     \
-      5
-    输出: ["1->2->5", "1->3"]
-    解释: 所有根节点到叶子节点的路径为: 1->2->5, 1->3
-    :param root: TreeNode
-    :return: List[str]
-    """
-    pass
-
-
 def firstBadVersion(n):
     """
     278. 第一个错误的版本
@@ -195,9 +175,58 @@ def isPalindrome(head):
     return True
 
 
+def binaryTreePaths(root):
+    """
+    257. 二叉树的所有路径
+    给定一个二叉树，返回所有从根节点到叶子节点的路径。
+    说明: 叶子节点是指没有子节点的节点。
+    示例:
+    输入:
+       1
+     /   \
+    2     3
+     \
+      5
+    输出: ["1->2->5", "1->3"]
+    解释: 所有根节点到叶子节点的路径为: 1->2->5, 1->3
+    :param root: TreeNode
+    :return: List[str]
+    """
+    """
+    # 回溯
+    res = []
+    if root:
+        if not root.left and not root.right:
+            res.append("{}".format(root.val))
+        else:
+            for i in binaryTreePaths(root.left):
+                res.append("{}->{}".format(root.val, i))
+            for i in binaryTreePaths(root.right):
+                res.append("{}->{}".format(root.val, i))
+    return res
+    """
+    # dfs
+    def dfs(root, cur, res):
+        if not root.left and not root.right:
+            cur = "%s%d"%(cur, root.val)
+            res.append(cur)
+        else:
+            cur = "%s%d->"%(cur, root.val)
+            if root.left:
+                dfs(root.left, cur, res)
+            if root.right:
+                dfs(root.right, cur, res)
+    res = []
+    if root:
+        dfs(root, "", res)
+    return res
+
+
 if __name__ == '__main__':
     pass
-    x = construct_list_node([1,2])
-    print(isPalindrome(x))
+    x = construct_tree_node([1,2,3,None,5])
+    print(binaryTreePaths(x))
+    # x = construct_list_node([1,2])
+    # print(isPalindrome(x))
     # moveZeroes([0,1,0,3,13])
     # print(containsNearbyDuplicate([1,2,3,1,2,3], 2))

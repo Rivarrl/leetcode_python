@@ -1,8 +1,6 @@
-
-
-
 from collections import deque
 
+# 146. LRU缓存机制
 # （慢） 优先队列 + 哈希表， get操作时的查找耗时较大
 class LRUCache(object):
 
@@ -112,3 +110,61 @@ class LRUCache2(object):
                 self.tail.next = node
                 node.prev = self.tail
                 self.tail = node
+
+# 232. 用栈实现队列
+class MyQueue:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+
+    def push(self, x: int) -> None:
+        """
+        Push element x to the back of queue.
+        """
+
+    def pop(self) -> int:
+        """
+        Removes the element from in front of queue and returns that element.
+        """
+
+    def peek(self) -> int:
+        """
+        Get the front element.
+        """
+
+    def empty(self) -> bool:
+        """
+        Returns whether the queue is empty.
+        """
+
+
+
+# 225. 用队列实现栈
+class MyStack:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+
+    def push(self, x: int) -> None:
+        """
+        Push element x onto stack.
+        """
+
+    def pop(self) -> int:
+        """
+        Removes the element on top of the stack and returns that element.
+        """
+
+    def top(self) -> int:
+        """
+        Get the top element.
+        """
+
+    def empty(self) -> bool:
+        """
+        Returns whether the stack is empty.
+        """

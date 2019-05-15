@@ -44,6 +44,50 @@ def jump(nums):
     return ans
 
 
+def searchRange(nums, target):
+    """
+    34. 在排序数组中查找元素的第一个和最后一个位置
+    给定一个按照升序排列的整数数组 nums，和一个目标值 target。找出给定目标值在数组中的开始位置和结束位置。
+    你的算法时间复杂度必须是 O(log n) 级别。
+    如果数组中不存在目标值，返回 [-1, -1]。
+    示例 1:
+    输入: nums = [5,7,7,8,8,10], target = 8
+    输出: [3,4]
+    示例 2:
+    输入: nums = [5,7,7,8,8,10], target = 6
+    输出: [-1,-1]
+    :param nums: List[int]
+    :param target: int
+    :return: List[int]
+    """
+    l = len(nums)
+    if l == 0: return [-1, -1]
+    i, j = 0, l - 1
+    while i < j:
+        m = (i + j) >> 1
+        if nums[m] > target:
+            j = m - 1
+        elif nums[m] < target:
+            i = m + 1
+        else:
+            i = j = m
+    # print(i, j)
+    if nums[i] != target and nums[j] != target:
+        return [-1, -1]
+    pi, pj = False, False
+    while i >= 0 and nums[i] == target:
+        i -= 1
+        pi = True
+    while j < l and nums[j] == target:
+        j += 1
+        pj = True
+    i = i + 1 if pi else i
+    j = j - 1 if pj else j
+    # print(i, j)
+    return [i, j]
+
+
 if __name__ == '__main__':
-    print(jump([2, 3, 1, 1, 4]))
+    # print(jump([2, 3, 1, 1, 4]))
+    searchRange([1,1,2], 1)
     pass

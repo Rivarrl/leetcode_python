@@ -222,10 +222,71 @@ def binaryTreePaths(root):
     return res
 
 
+def sumOfLeftLeaves(root):
+    """
+    404. 左叶子之和
+    计算给定二叉树的所有左叶子之和。
+    示例：
+        3
+       / \
+      9  20
+        /  \
+       15   7
+    在这个二叉树中，有两个左叶子，分别是 9 和 15，所以返回 24
+    :param root: TreeNode
+    :return: int
+    """
+    def helper(root, isl):
+        if root:
+            if not root.left and not root.right and isl:
+                ans[-1] += root.val
+            if root.left:
+                helper(root.left, True)
+            if root.right:
+                helper(root.right, False)
+    ans = [0]
+    helper(root, False)
+    return ans[-1]
+
+
+def findNthDigit(n):
+    """
+    400. 第N个数字
+    在无限的整数序列 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...中找到第 n 个数字。
+    注意:
+    n 是正数且在32为整形范围内 ( n < 231)。
+    示例 1:
+    输入:
+    3
+    输出:
+    3
+    示例 2:
+    输入:
+    11
+    输出:
+    0
+    说明:
+    第11个数字在序列 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ... 里是0，它是10的一部分。
+    :param n: int
+    :return: int
+    """
+    x, i, t = 0, 0, 0
+    while n > x:
+        i += 1
+        t, x = x, x + i * 9 * 10 ** (i - 1)
+    n -= (t + 1)
+    # print(n)
+    # print((10**(i-1)) + (n // i))
+    # print((n % i))
+    # print(str((10**(i-1)) + (n // i))[n % i])
+    return int(str((10**(i-1)) + (n // i))[n % i])
+
+
 if __name__ == '__main__':
     pass
-    x = construct_tree_node([1,2,3,None,5])
-    print(binaryTreePaths(x))
+    findNthDigit(10)
+    # x = construct_tree_node([1,2,3,None,5])
+    # print(binaryTreePaths(x))
     # x = construct_list_node([1,2])
     # print(isPalindrome(x))
     # moveZeroes([0,1,0,3,13])

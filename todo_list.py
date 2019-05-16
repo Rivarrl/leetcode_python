@@ -16,7 +16,7 @@
 # 1. leetcode sql做完 x
 # 2. leetcode shell做完
 # 3. leetcode 算法题做到 100 x
-# 4. leetcode 算法题做到 200
+# 4. leetcode 算法题做到 200 x
 # 5. leetcode 算法题做到 300
 # 6. leetcode 算法题做到 400
 # 7. leetcode 算法题做到 500

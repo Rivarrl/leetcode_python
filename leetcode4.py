@@ -103,29 +103,125 @@ def reverseKGroup(head, k):
     :param k: int
     :return: ListNode
     """
-    p, q, cnt = head, head, 0
-    while q.next and q.next.next:
+    """
+    # 头插法
+    if not head or not head.next: return head
+    p, l = head, 0
+    while p:
         p = p.next
-        q = q.next.next
-        cnt += 1
-    l = cnt * 2 if q.next else cnt * 2 - 1
-    p, q = head, head
-    while l > k:
-        x = k - 1
-        while x > 0:
-            r = q
+        l += 1
+    def helper(head, l):
+        if l < k:
+            return head
+        p, r = head, head
+        for i in range(k-1):
             q = p.next
             p.next = None if not p.next.next else p.next.next
             q.next = r
-            x -= 1
-        l -= k
-    return q
+            r = q
+        if l > k:
+            p.next = helper(p.next, l - k)
+        return r
+    return helper(head, l)
+    """
+    # 尾插法
+    if k <= 1: return head
+    dummy = ListNode(0)
+    curr, last = dummy, None
+    count = 0
+    p = head
+    # k组翻转
+    while p:
+        if count == k:
+            count = 0
+            curr = last
+        tmp = curr.next
+        curr.next = p
+        p = p.next
+        curr.next.next = tmp
+        if count == 0:
+            last = curr.next
+        count += 1
+    # 把小于k长的尾部翻回来
+    if count < k:
+        p, q = ListNode(0), curr.next
+        while q:
+            r = p.next
+            p.next = q
+            p.next.next = r
+        curr.next = p.next
+    return dummy.next
+
+
+def findSubstring(s, words):
+    """
+    30. 串联所有单词的子串 (超时)
+    给定一个字符串 s 和一些长度相同的单词 words。找出 s 中恰好可以由 words 中所有单词串联形成的子串的起始位置。
+    注意子串要与 words 中的单词完全匹配，中间不能有其他字符，但不需要考虑 words 中单词串联的顺序。
+    示例 1：
+    输入：
+      s = "barfoothefoobarman",
+      words = ["foo","bar"]
+    输出：[0,9]
+    解释：
+    从索引 0 和 9 开始的子串分别是 "barfoor" 和 "foobar" 。
+    输出的顺序不重要, [9,0] 也是有效答案。
+    示例 2：
+    输入：
+      s = "wordgoodgoodgoodbestword",
+      words = ["word","good","best","word"]
+    输出：[]
+    :param s: str
+    :param words: List[str]
+    :return: List[int]
+    """
+    """
+    # 回溯拼接words所有可能，暴力找，超时
+    l = words.__len__()
+    if l == 0 or s.__len__() == "": return []
+    def helper(words):
+        res = []
+        if words == []: res.append('')
+        for i, word in enumerate(words):
+            for x in helper(words[:i] + words[i+1:]):
+                if not word + x in res:
+                    res.append(word + x)
+        return res
+    res = []
+    for posibility in helper(words):
+        idx = s.find(posibility)
+        while idx >= 0:
+            res.append(idx)
+            idx = s.find(posibility, idx + 1)
+    return res
+    """
+    l = words.__len__()
+    if l == 0 or s.__len__() == "": return []
+    lw = words[0].__len__()
+    d = {}
+    dn = {}
+    for word in words:
+        if not word in dn:
+            dn[word] = 0
+        dn[word] += 1
+        if dn[word] > 1: continue
+        ts = s
+        idx = ts.find(word)
+        while idx >= 0:
+            if not word in d:
+                d[word] = []
+            d[word].append(idx)
+            idx = ts.find(word, idx+lw)
+    print(d)
+    print(dn)
+
 
 
 if __name__ == '__main__':
-    x = construct_list_node([1,2,3,4,5])
-    reverseKGroup(x,2)
-    print_list_node(x)
+    findSubstring("aaaaaaaa",["aa","aa","aa"])
+    # x = construct_list_node([1,2,3,4,5,6,7,8,9])
+    # r = reverseKGroup(x,3)
+    # print_list_node(r)
     # print(jump([2, 3, 1, 1, 4]))
     # searchRange([1,1,2], 1)
     pass

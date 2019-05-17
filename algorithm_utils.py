@@ -74,10 +74,11 @@ def quick_sort(arr, l, r):
     quick_sort(arr, i+1, r)
 
 
-def print_list_node(head):
-    while head.next:
+def print_list_node(head, cnt=20):
+    while head.next and cnt > 0:
         print(head.val, end='->')
         head = head.next
+        cnt -= 1
     print(head.val)
 
 

@@ -195,30 +195,67 @@ def findSubstring(s, words):
             idx = s.find(posibility, idx + 1)
     return res
     """
+    """
+    # 哈希表 + 滑动窗口寻找模式串组合 59%
     l = words.__len__()
-    if l == 0 or s.__len__() == "": return []
+    ls = s.__len__()
+    if l == 0 or ls == 0: return []
     lw = words[0].__len__()
-    d = {}
-    dn = {}
+    lws = l * lw
+    dw = {}
     for word in words:
-        if not word in dn:
-            dn[word] = 0
-        dn[word] += 1
-        if dn[word] > 1: continue
-        ts = s
-        idx = ts.find(word)
-        while idx >= 0:
-            if not word in d:
-                d[word] = []
-            d[word].append(idx)
-            idx = ts.find(word, idx+lw)
-    print(d)
-    print(dn)
+        if not word in dw:
+            dw[word] = 0
+        dw[word] += 1
+    res = []
+    for i in range(ls - lws + 1):
+        tmp = {k: v for k, v in dw.items()}
+        flag = True
+        for j in range(i, i+lws, lw):
+            print(s[j:j+lw])
+            if not s[j:j+lw] in tmp or tmp[s[j:j+lw]] == 0:
+                flag = False
+                break
+            tmp[s[j:j+lw]] -= 1
+        if flag:
+            res.append(i)
+    print(res)
+    return res
+    """
+    # 滑动窗口 + 哈希表 + 双指针 100%
+    if not s or not words:
+        return []
+    lens, len_word, len_subs, times = len(s), len(words[0]), 0, {}
+    times = {}
+    for word in words:
+        len_subs += len_word
+        times[word] = times.get(word) + 1 if times.get(word) else 1
+    res = []
+    for i in range(len_word):
+        start = i
+        cur = {}
+        while i + len_subs <= lens:
+            word = s[start:start + len_word]
+            start += len_word
+            if word not in times:
+                i = start
+                cur.clear()
+            else:
+                if word in cur:
+                    cur[word] += 1
+                else:
+                    cur[word] = 1
+                while cur[word] > times[word]:
+                    cur[s[i:i + len_word]] -= 1
+                    i += len_word
+                if start - i == len_subs:
+                    res.append(i)
+    return res
 
 
 
 if __name__ == '__main__':
-    findSubstring("aaaaaaaa",["aa","aa","aa"])
+    findSubstring("barfoothefoobarman",["foo","bar"])
     # x = construct_list_node([1,2,3,4,5,6,7,8,9])
     # r = reverseKGroup(x,3)
     # print_list_node(r)

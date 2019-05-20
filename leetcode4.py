@@ -576,11 +576,14 @@ def diffWaysToCompute(input):
     :param input: str
     :return: List[int]
     """
-    pass
+    res = []
+
+
 
 
 if __name__ == '__main__':
-    brokenCalc(3,10)
+    diffWaysToCompute("2-1-1")
+    # brokenCalc(3,10)
     # print(eval("14-3//2+2-3*2+15//4"))
     # calculate2("14-3/2+2-3*2+15/4")
     # calculate("1-(3+5-2+(3+19-(3-1-4+(9-4-(4-(1+(3)-2)-5)+8-(3-5)-1)-4)-5)-4+3-9)-4-(3+2-5)-10")

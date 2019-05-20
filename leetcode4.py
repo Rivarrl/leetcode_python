@@ -253,9 +253,100 @@ def findSubstring(s, words):
     return res
 
 
+def fullJustify(words, maxWidth):
+    """
+    68. 文本左右对齐
+    给定一个单词数组和一个长度 maxWidth，重新排版单词，使其成为每行恰好有 maxWidth 个字符，且左右两端对齐的文本。
+    你应该使用“贪心算法”来放置给定的单词；也就是说，尽可能多地往每行中放置单词。必要时可用空格 ' ' 填充，使得每行恰好有 maxWidth 个字符。
+    要求尽可能均匀分配单词间的空格数量。如果某一行单词间的空格不能均匀分配，则左侧放置的空格数要多于右侧的空格数。
+    文本的最后一行应为左对齐，且单词之间不插入额外的空格。
+    说明:
+    单词是指由非空格字符组成的字符序列。
+    每个单词的长度大于 0，小于等于 maxWidth。
+    输入单词数组 words 至少包含一个单词。
+    示例:
+    输入:
+    words = ["This", "is", "an", "example", "of", "text", "justification."]
+    maxWidth = 16
+    输出:
+    [
+       "This    is    an",
+       "example  of text",
+       "justification.  "
+    ]
+    示例 2:
+    输入:
+    words = ["What","must","be","acknowledgment","shall","be"]
+    maxWidth = 16
+    输出:
+    [
+      "What   must   be",
+      "acknowledgment  ",
+      "shall be        "
+    ]
+    解释: 注意最后一行的格式应为 "shall be    " 而不是 "shall     be",
+         因为最后一行应为左对齐，而不是左右两端对齐。
+         第二行同样为左对齐，这是因为这行只包含一个单词。
+    示例 3:
+    输入:
+    words = ["Science","is","what","we","understand","well","enough","to","explain",
+             "to","a","computer.","Art","is","everything","else","we","do"]
+    maxWidth = 20
+    输出:
+    [
+      "Science  is  what we",
+      "understand      well",
+      "enough to explain to",
+      "a  computer.  Art is",
+      "everything  else  we",
+      "do                  "
+    ]
+    :param words: List[str]
+    :param maxWidth: int
+    :return: List[str]
+    """
+    l = len(words)
+    cur = 0
+    res = []
+    i, j = 0, -1
+    while i < l:
+        t = cur + len(words[i])
+        j += 1
+        if t + i - j <= maxWidth:
+            cur = t
+            i += 1
+            j -= 1
+        else:
+            max_blanks = maxWidth - cur
+            s = i - j - 1
+            this_row = ""
+            if s > 0:
+                e = max_blanks // s
+                y = max_blanks % s
+                for k in range(j, i):
+                    p = k - j
+                    if p < y:
+                        this_row += words[k] + " " * (e+1)
+                    else:
+                        if k < i - 1:
+                            this_row += words[k] + " " * e
+                        else:
+                            this_row += words[k]
+            else:
+                this_row = words[j] + " " * max_blanks
+            res.append(this_row)
+            cur = 0
+            j = i - 1
+    last_row = " ".join(words[j + 1:])
+    last_row += " " * (maxWidth - len(last_row))
+    res.append(last_row)
+    print(res)
+    return res
+
 
 if __name__ == '__main__':
-    findSubstring("barfoothefoobarman",["foo","bar"])
+    fullJustify(["This", "is", "an", "example", "of", "text", "justification."], 16)
+    # findSubstring("barfoothefoobarman",["foo","bar"])
     # x = construct_list_node([1,2,3,4,5,6,7,8,9])
     # r = reverseKGroup(x,3)
     # print_list_node(r)

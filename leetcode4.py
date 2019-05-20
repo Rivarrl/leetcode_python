@@ -344,8 +344,247 @@ def fullJustify(words, maxWidth):
     return res
 
 
+def calculate(s):
+    """
+    224. 基本计算器
+    实现一个基本的计算器来计算一个简单的字符串表达式的值。
+    字符串表达式可以包含左括号 ( ，右括号 )，加号 + ，减号 -，非负整数和空格  。
+    示例 1:
+    输入: "1 + 1"
+    输出: 2
+    示例 2:
+    输入: " 2-1 + 2 "
+    输出: 3
+    示例 3:
+    输入: "(1+(4+5+2)-3)+(6+8)"
+    输出: 23
+    说明：
+    你可以假设所给定的表达式都是有效的。
+    请不要使用内置的库函数 eval。
+    :param s: str
+    :return: int
+    """
+    """
+    # 慢，20%
+    s = s.replace(" ", "")
+    n = len(s)
+    num_range = range(ord("0"), ord("0") + 10)
+    opa, opr = [], []
+    cur = 0
+    for i in range(n):
+        if ord(s[i]) in num_range:
+            cur *= 10
+            cur += int(s[i])
+            if i == n - 1 or ord(s[i+1]) not in num_range:
+                opa.append(cur)
+        else:
+            cur = 0
+            if s[i] == ")":
+                print(opa, opr)
+                o = opr.pop()
+                tmp, tmpr = [opa.pop()], []
+                while opa and opr and o != "(":
+                    tmp.append(opa.pop())
+                    tmpr.append(o)
+                    o = opr.pop()
+                l = tmp.pop()
+                while tmp and tmpr:
+                    if tmpr.pop() == "+":
+                        l += tmp.pop()
+                    else:
+                        l -= tmp.pop()
+                opa.append(l)
+            else:
+                opr.append(s[i])
+    print(opa, opr)
+    l = opa[0]
+    for i in range(len(opr)):
+        r = opa[i+1]
+        o = opr[i]
+        if o == "+":
+            l += r
+        if o == "-":
+            l -= r
+    print(l)
+    return l
+    """
+    # 99%
+    stack = []
+    res = 0
+    num = 0
+    sign = 1
+    for c in s:
+        if c.isdigit():
+            num = num * 10 + int(c)
+        elif c == '(':
+            stack.append(res)
+            stack.append(sign)
+            sign, res = 1, 0
+        elif c in '+-':
+            res += sign * num
+            num = 0
+            sign = 1 if c == '+' else -1
+        elif c == ')':
+            res += sign * num
+            res *= stack.pop()
+            res += stack.pop()
+            num = 0
+    return res + sign * num
+
+
+def calculate2(s):
+    """
+    227. 基本计算器 II
+    实现一个基本的计算器来计算一个简单的字符串表达式的值。
+    字符串表达式仅包含非负整数，+， - ，*，/ 四种运算符和空格  。 整数除法仅保留整数部分。
+    示例 1:
+    输入: "3+2*2"
+    输出: 7
+    示例 2:
+    输入: " 3/2 "
+    输出: 1
+    示例 3:
+    输入: " 3+5 / 2 "
+    输出: 5
+    说明：
+    你可以假设所给定的表达式都是有效的。
+    请不要使用内置的库函数 eval。
+    :param s: str
+    :return: int
+    """
+    """
+        # 28%
+    s = s.replace(" ", "")
+    n = len(s)
+    opr, opa = [], []
+    cur = 0
+    sign = 1
+    for i in range(n):
+        if s[i].isdigit():
+            cur *= 10
+            cur += int(s[i]) * sign
+            if i == n - 1 or not s[i+1].isdigit():
+                if opr and opr[-1] in "*/":
+                    if opr[-1] == "*":
+                        opa[-1] *= cur
+                    if opr[-1] == "/":
+                        if opa[-1] // cur < 0:
+                            opa[-1] = -(abs(opa[-1]) // abs(cur))
+                        else:
+                            opa[-1] = opa[-1] // cur
+                else:
+                    opa.append(cur)
+        else:
+            if s[i] == "-":
+                sign = -1
+                opr.append("+")
+            else:
+                sign = 1
+                opr.append(s[i])
+            cur = 0
+    r = opa.pop()
+    while opa:
+        r += opa.pop()
+    print(r)
+    return r
+    """
+    # 100% 用sign保存上一个符号，stk中迭代更新加和值，最终stk中存的是先经过乘除运算后的一轮结果
+    s += '+'
+    n = 0
+    sign = '+'
+    stk = []
+    for c in s:
+        if c.isdigit():
+            n = 10 * n + ord(c) - 48
+        elif c != ' ':
+            if sign == '+':
+                stk.append(n)
+            elif sign == '-':
+                stk.append(-n)
+            elif sign == '*':
+                stk.append(stk.pop() * n)
+            elif sign == '/':
+                stk.append(int(stk.pop() / n))
+            sign = c
+            n = 0
+    print(stk)
+    return sum(stk)
+
+
+def brokenCalc(X, Y):
+    """
+    991. 坏了的计算器
+    在显示着数字的坏计算器上，我们可以执行以下两种操作：
+    双倍（Double）：将显示屏上的数字乘 2；
+    递减（Decrement）：将显示屏上的数字减 1 。
+    最初，计算器显示数字 X。
+    返回显示数字 Y 所需的最小操作数。
+    示例 1：
+    输入：X = 2, Y = 3
+    输出：2
+    解释：先进行双倍运算，然后再进行递减运算 {2 -> 4 -> 3}.
+    示例 2：
+    输入：X = 5, Y = 8
+    输出：2
+    解释：先递减，再双倍 {5 -> 4 -> 8}.
+    示例 3：
+    输入：X = 3, Y = 10
+    输出：3
+    解释：先双倍，然后递减，再双倍 {3 -> 6 -> 5 -> 10}.
+    示例 4：
+    输入：X = 1024, Y = 1
+    输出：1023
+    解释：执行递减运算 1023 次
+    提示：
+    1 <= X <= 10^9
+    1 <= Y <= 10^9
+    :param X: int
+    :param Y: int
+    :return: int
+    """
+    ans = 0
+    while X < Y:
+        if Y % 2 == 0:
+            Y //= 2
+            ans += 1
+        else:
+            Y = (Y + 1) // 2
+            ans += 2
+    print(ans + X - Y)
+    return ans + X - Y
+
+
+def diffWaysToCompute(input):
+    """
+    241. 为运算表达式设计优先级
+    给定一个含有数字和运算符的字符串，为表达式添加括号，改变其运算优先级以求出不同的结果。你需要给出所有可能的组合的结果。有效的运算符号包含 +, - 以及 * 。
+    示例 1:
+    输入: "2-1-1"
+    输出: [0, 2]
+    解释:
+    ((2-1)-1) = 0
+    (2-(1-1)) = 2
+    示例 2:
+    输入: "2*3-4*5"
+    输出: [-34, -14, -10, -10, 10]
+    解释:
+    (2*(3-(4*5))) = -34
+    ((2*3)-(4*5)) = -14
+    ((2*(3-4))*5) = -10
+    (2*((3-4)*5)) = -10
+    (((2*3)-4)*5) = 10
+    :param input: str
+    :return: List[int]
+    """
+    pass
+
+
 if __name__ == '__main__':
-    fullJustify(["This", "is", "an", "example", "of", "text", "justification."], 16)
+    brokenCalc(3,10)
+    # print(eval("14-3//2+2-3*2+15//4"))
+    # calculate2("14-3/2+2-3*2+15/4")
+    # calculate("1-(3+5-2+(3+19-(3-1-4+(9-4-(4-(1+(3)-2)-5)+8-(3-5)-1)-4)-5)-4+3-9)-4-(3+2-5)-10")
+    # fullJustify(["This", "is", "an", "example", "of", "text", "justification."], 16)
     # findSubstring("barfoothefoobarman",["foo","bar"])
     # x = construct_list_node([1,2,3,4,5,6,7,8,9])
     # r = reverseKGroup(x,3)

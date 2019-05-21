@@ -576,9 +576,41 @@ def diffWaysToCompute(input):
     :param input: str
     :return: List[int]
     """
-    res = []
-
-
+    opr = []
+    cur = 0
+    for x in input:
+        if x.isdigit():
+            cur = cur * 10 + int(x)
+        else:
+            opr.append(cur)
+            cur = 0
+            opr.append(x)
+    opr.append(cur)
+    print(opr)
+    def helper(opr):
+        res = []
+        if opr:
+            n = len(opr)
+            if n == 1:
+                return res.append(n)
+            else:
+                for i in range(0, n-2, 2):
+                    l = opr[i]
+                    o = opr[i+1]
+                    r = opr[i+2]
+                    if o == "+":
+                        s = l + r
+                    elif o == "-":
+                        s = l - r
+                    else:
+                        s = l * r
+                    print(opr[:i] + opr[i + 4:])
+                    for each in helper(opr[:i] + opr[i+3:]):
+                        res.append(s + each)
+        return res
+    res = helper(opr)
+    print(res)
+    return res
 
 
 if __name__ == '__main__':

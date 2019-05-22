@@ -593,8 +593,41 @@ def diffWaysToCompute(input):
     return res
 
 
+def restoreIpAddresses(s):
+    """
+    93. 复原IP地址
+    给定一个只包含数字的字符串，复原它并返回所有可能的 IP 地址格式。
+    示例:
+    输入: "25525511135"
+    输出: ["255.255.11.135", "255.255.111.35"]
+    :param s: str
+    :return: List[str]
+    """
+    def helper(s, dot):
+        res = []
+        n = len(s)
+        if n == 0 and dot > 0: return []
+        if dot == 0:
+            if n == 0 or n > 3 or (2 <= n <= 3 and s[0] == '0') or int(s) > 255:
+                return []
+            if int(s) <= 255:
+                res.append(s)
+        else:
+            for i in range(3):
+                for x in helper(s[i+1:], dot - 1):
+                    if int(s[:i+1]) <= 255 and len(x) > 0:
+                        res += [s[:i+1] + '.' + x]
+                if s[0] == '0':
+                    break
+        return res
+    res = helper(s, 3)
+    print(res)
+    return res
+
+
 if __name__ == '__main__':
-    print(diffWaysToCompute("2*3-4*5"))
+    restoreIpAddresses("010010")
+    # print(diffWaysToCompute("2*3-4*5"))
     # brokenCalc(3,10)
     # print(eval("14-3//2+2-3*2+15//4"))
     # calculate2("14-3/2+2-3*2+15/4")

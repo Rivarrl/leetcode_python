@@ -625,8 +625,74 @@ def restoreIpAddresses(s):
     return res
 
 
+def combine(n, k):
+    """
+    77. 组合
+    给定两个整数 n 和 k，返回 1 ... n 中所有可能的 k 个数的组合。
+    示例:
+    输入: n = 4, k = 2
+    输出:
+    [
+      [2,4],
+      [3,4],
+      [2,3],
+      [1,2],
+      [1,3],
+      [1,4],
+    ]
+    :param n: int
+    :param k: int
+    :return: List[List[int]]
+    """
+    res = []
+    if k == 1:
+        for x in range(n):
+            res.append([x+1])
+    else:
+        for i in range(n, 1, -1):
+            for x in combine(i-1, k-1):
+                res += [x + [i]]
+    return res
+
+
+def combinationSum3(k, n):
+    """
+    216. 组合总和 III
+    找出所有相加之和为 n 的 k 个数的组合。组合中只允许含有 1 - 9 的正整数，并且每种组合中不存在重复的数字。
+    说明：
+    所有数字都是正整数。
+    解集不能包含重复的组合。
+    示例 1:
+    输入: k = 3, n = 7
+    输出: [[1,2,4]]
+    示例 2:
+    输入: k = 3, n = 9
+    输出: [[1,2,6], [1,3,5], [2,3,4]]
+    :param k: int
+    :param n: int
+    :return: List[List[int]]
+    """
+    if k > 9 or k < 1: return []
+    if n > 45 or n < 1: return []
+    def helper(j, n, k):
+        if n < k: return []
+        res = []
+        if k == 1 and 0 < n < 10:
+            res.append([n])
+        for i in range(j, min(10, n+1)):
+            for x in helper(i + 1, n - i, k - 1):
+                sx = sorted([i] + x)
+                if not i in x and not sx in res:
+                    res.append(sx)
+        return res
+    res = helper(1, n, k)
+    return res
+
+
 if __name__ == '__main__':
-    restoreIpAddresses("010010")
+    print(combinationSum3(2, 10))
+    # print(combine(4, 2))
+    # restoreIpAddresses("010010")
     # print(diffWaysToCompute("2*3-4*5"))
     # brokenCalc(3,10)
     # print(eval("14-3//2+2-3*2+15//4"))

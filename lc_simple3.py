@@ -348,9 +348,71 @@ def findDisappearedNumbers(nums):
     return res
 
 
+def pathSum(root, sum):
+    """
+    437. 路径总和 III
+    给定一个二叉树，它的每个结点都存放着一个整数值。
+    找出路径和等于给定数值的路径总数。
+    路径不需要从根节点开始，也不需要在叶子节点结束，但是路径方向必须是向下的（只能从父节点到子节点）。
+    二叉树不超过1000个节点，且节点数值范围是 [-1000000,1000000] 的整数。
+    示例：
+    root = [10,5,-3,3,2,null,11,3,-2,null,1], sum = 8
+          10
+         /  \
+        5   -3
+       / \    \
+      3   2   11
+     / \   \
+    3  -2   1
+    返回 3。和等于 8 的路径有:
+    1.  5 -> 3
+    2.  5 -> 2 -> 1
+    3.  -3 -> 11
+    :param root: TreeNode
+    :param sum: int
+    :return: int
+    """
+    """
+    # 5%
+    def helper(root, sum):
+        ans = 0
+        if root:
+            left = helper(root.left, sum - root.val)
+            right = helper(root.right, sum - root.val)
+            ans = left + right + (root.val == sum)
+        return ans
+    def tree_walk(root, sum):
+        if root:
+            ans[0] += helper(root, sum)
+            tree_walk(root.left, sum)
+            tree_walk(root.right, sum)
+    ans = [0]
+    tree_walk(root, sum)
+    return ans[0]
+    """
+    # 100% 用字典记录每个节点的结果
+    from collections import defaultdict
+    def helper(node, s):
+        if not node:
+            return
+        s += node.val
+        ans[0] += lookup[s - sum]
+        lookup[s] += 1
+        helper(node.left, s)
+        helper(node.right, s)
+        lookup[s] -= 1
+    lookup = defaultdict(int)
+    lookup[0] = 1
+    ans = [0]
+    helper(root, 0)
+    return ans[0]
+
 if __name__ == '__main__':
     pass
-    findDisappearedNumbers([4,3,2,7,8,2,3,1])
+    x = construct_tree_node([10,5,-3,3,2,None,11,3,-2,None,1])
+    ans = pathSum(x, 8)
+    print(ans)
+    # findDisappearedNumbers([4,3,2,7,8,2,3,1])
     # findNthDigit(10)
     # x = construct_tree_node([1,2,3,None,5])
     # print(binaryTreePaths(x))

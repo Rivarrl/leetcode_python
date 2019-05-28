@@ -727,6 +727,44 @@ def countArrangement(N):
     return ans[0]
 
 
+def canJump(nums):
+    """
+    55. 跳跃游戏
+    给定一个非负整数数组，你最初位于数组的第一个位置。
+    数组中的每个元素代表你在该位置可以跳跃的最大长度。
+    判断你是否能够到达最后一个位置。
+    示例 1:
+    输入: [2,3,1,1,4]
+    输出: true
+    解释: 从位置 0 到 1 跳 1 步, 然后跳 3 步到达最后一个位置。
+    示例 2:
+    输入: [3,2,1,0,4]
+    输出: false
+    解释: 无论怎样，你总会到达索引为 3 的位置。但该位置的最大跳跃长度是 0 ， 所以你永远不可能到达最后一个位置。
+    :param nums: List[int]
+    :return: bool
+    """
+    """
+    # 方法一: 倒着走
+    n = len(nums)
+    if n <= 1: return 0
+    i, r = n - 2, n - 1
+    while i >= 0:
+        if nums[i] >= r - i:
+            r = i
+        i -= 1
+    return r == 0
+    """
+    # 方法二: 记录当前还可以走的最大步数
+    n = len(nums)
+    step = 0
+    for i in range(n - 1):
+        step = max(nums[i], step)
+        if step == 0: return False
+        step -= 1
+    return True
+
+
 def canFinish(numCourses, prerequisites):
     """
     207. 课程表
@@ -755,28 +793,64 @@ def canFinish(numCourses, prerequisites):
     pass
 
 
-def canJump(nums):
+def sortColors(nums):
     """
-    55. 跳跃游戏
-    给定一个非负整数数组，你最初位于数组的第一个位置。
-    数组中的每个元素代表你在该位置可以跳跃的最大长度。
-    判断你是否能够到达最后一个位置。
-    示例 1:
-    输入: [2,3,1,1,4]
-    输出: true
-    解释: 从位置 0 到 1 跳 1 步, 然后跳 3 步到达最后一个位置。
-    示例 2:
-    输入: [3,2,1,0,4]
-    输出: false
-    解释: 无论怎样，你总会到达索引为 3 的位置。但该位置的最大跳跃长度是 0 ， 所以你永远不可能到达最后一个位置。
+    75. 颜色分类
+    给定一个包含红色、白色和蓝色，一共 n 个元素的数组，原地对它们进行排序，使得相同颜色的元素相邻，并按照红色、白色、蓝色顺序排列。
+    此题中，我们使用整数 0、 1 和 2 分别表示红色、白色和蓝色。
+    注意:
+    不能使用代码库中的排序函数来解决这道题。
+    示例:
+    输入: [2,0,2,1,1,0]
+    输出: [0,0,1,1,2,2]
+    进阶：
+    一个直观的解决方案是使用计数排序的两趟扫描算法。
+    首先，迭代计算出0、1 和 2 元素的个数，然后按照0、1、2的排序，重写当前数组。
+    你能想出一个仅使用常数空间的一趟扫描算法吗？
     :param nums: List[int]
-    :return: bool
+    :return: None
     """
-    pass
+    """
+    # 把0放左边2放右边
+    i, j = 0, len(nums) - 1
+    while i < j:
+        while i<j and nums[i] != 2:
+            i += 1
+        while i<j and nums[j] == 2:
+            j -= 1
+        nums[i], nums[j] = nums[j], nums[i]
+        i += 1
+        j -= 1
+    i, j = 0, len(nums) - 1
+    while i < j:
+        while i<j and nums[j] != 0:
+            j -= 1
+        while i<j and nums[i] == 0:
+            i += 1
+        nums[i], nums[j] = nums[j], nums[i]
+        i += 1
+        j -= 1
+    print(nums)
+    """
+    # 简化版，三路快排
+    i, j, k = 0, len(nums) - 1, 0
+    while i <= j:
+        if nums[i] < 1:
+            nums[i], nums[k] = nums[k], nums[i]
+            i += 1
+            k += 1
+        elif nums[i] > 1:
+            nums[i], nums[j] = nums[j], nums[i]
+            j -= 1
+        else:
+            i += 1
+    print(nums)
 
 
 if __name__ == '__main__':
-    countArrangement(5)
+    sortColors([1,2,0])
+    # canJump([0])
+    # countArrangement(5)
     # print(combinationSum3(2, 10))
     # print(combine(4, 2))
     # restoreIpAddresses("010010")

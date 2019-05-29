@@ -867,10 +867,39 @@ def totalNQueens(n):
       "...Q",
       ".Q.."]
     ]
+    思路: 每行有且仅有一个Q，所以可以使用一维数组，下标代表行号，数值代表列号，那么判断第k行的Q在第几列时，不符合条件即为a[i] == a[k] (列) 或者 abs(a[i] - a[k]) = k - i (斜线)
     :param n: int
     :return: int
     """
-    pass
+    # 迭代
+    def check(a, k):
+        for i in range(1, k):
+            if abs(a[i] - a[k]) == k - i or a[i] == a[k]:
+                return False
+        return True
+
+    ctr = 0
+    a = [0] * (n + 1)
+    k = 1
+    while k > 0:
+        a[k] += 1
+        # 第k行的摆放
+        while a[k] <= n and not check(a, k):
+            a[k] += 1
+        # 可以摆放
+        if a[k] <= n:
+            # 是最后一行，说明是一种情况
+            if k == n:
+                ctr += 1
+            else:
+                # 继续搜索下一行
+                k += 1
+                # 从1开始搜索
+                a[k] = 0
+        # 不可摆放，回溯到上一行，继续进行下一列的迭代
+        else:
+            k -= 1
+    return ctr
 
 
 def solveNQueens(n):
@@ -892,14 +921,52 @@ def solveNQueens(n):
       ".Q.."]
     ]
     解释: 4 皇后问题存在两个不同的解法。
+    思路: 每行有且仅有一个Q，所以可以使用一维数组
     :param n: int
     :return: List[List[str]]
     """
+    # 递归
+    def construct(a):
+        queens = []
+        for x in a:
+            tmp = ""
+            for i in range(1, n+1):
+                if i == x:
+                    tmp += "Q"
+                else:
+                    tmp += "."
+            queens.append(tmp)
+        return queens
 
+
+    def check(a, k):
+        for i in range(1, k):
+            if abs(a[i] - a[k]) == k - i or a[i] == a[k]:
+                return False
+        return True
+
+    def solve(r):
+        if r > n:
+            res.append(construct(a[1:]))
+        else:
+            for i in range(1, n+1):
+                a[r] = i
+                if check(a, r):
+                    solve(r+1)
+
+    a = [0] * (n + 1)
+    res = []
+    solve(1)
+    for each in res:
+        for x in each:
+            print(x)
+        print()
+    return res
 
 
 if __name__ == '__main__':
-    sortColors([1,2,0])
+    solveNQueens(4)
+    # sortColors([1,2,0])
     # canJump([0])
     # countArrangement(5)
     # print(combinationSum3(2, 10))

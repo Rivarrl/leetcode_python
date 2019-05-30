@@ -31,17 +31,14 @@
 
 ############################
 
-# 1. leetcode sql做完 x
-# 2. leetcode shell做完
-# 3. leetcode 算法题做到 100 x
-# 4. leetcode 算法题做到 200 x
-# 5. leetcode 算法题做到 300
-# 6. leetcode 算法题做到 400
-# 7. leetcode 算法题做到 500
-# 8. leetcode 算法题做到 600
-# 9. leetcode 算法题做到 700
-# 10. leetcode 算法题做到 800
-# 11. leetcode 算法题做到 900
-# 12. leetcode 算法题做到 1000
+# 1. leetcode sql x
+# 2. leetcode shell
+# 3. leetcode 100 x
+# 4. leetcode 200 x
+# 5. leetcode 300
+# 6. leetcode 400
+# 7. leetcode 500
+# 8. leetcode 600
+# 9. leetcode 700
+# 10. leetcode 800
 """
-

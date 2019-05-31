@@ -145,10 +145,10 @@ def matrix_pretty_print(matrix):
 
 if __name__ == '__main__':
     pass
-    matrix_pretty_print([[1,2,3],[4,5,6]])
-    # a = [12, 4, 7, 2]
-    # quick_sort(a, 0, 3)
-    # print(a)
+    # matrix_pretty_print([[1,2,3],[4,5,6]])
+    a = [5,4,2,3,6,1,7,9]
+    quick_sort(a, 0, len(a) - 1)
+    print(a)
     # a = construct_list_node([1,2,3,4,5,6])
     # print_list_node(a)
     # b = construct_tree_node([1,2,3,4,5,None,6])

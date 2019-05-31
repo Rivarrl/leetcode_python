@@ -936,34 +936,6 @@ def solveNQueens(n):
     return res
 
 
-def canFinish(numCourses, prerequisites):
-    """
-    207. 课程表
-    现在你总共有 n 门课需要选，记为 0 到 n-1。
-    在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们: [0,1]
-    给定课程总量以及它们的先决条件，判断是否可能完成所有课程的学习？
-    示例 1:
-    输入: 2, [[1,0]]
-    输出: true
-    解释: 总共有 2 门课程。学习课程 1 之前，你需要完成课程 0。所以这是可能的。
-    示例 2:
-    输入: 2, [[1,0],[0,1]]
-    输出: false
-    解释: 总共有 2 门课程。学习课程 1 之前，你需要先完成​课程 0；并且学习课程 0 之前，你还应先完成课程 1。这是不可能的。
-    说明:
-    输入的先决条件是由边缘列表表示的图形，而不是邻接矩阵。详情请参见图的表示法。
-    你可以假定输入的先决条件中没有重复的边。
-    提示:
-    这个问题相当于查找一个循环是否存在于有向图中。如果存在循环，则不存在拓扑排序，因此不可能选取所有课程进行学习。
-    通过 DFS 进行拓扑排序 - 一个关于Coursera的精彩视频教程（21分钟），介绍拓扑排序的基本概念。
-    拓扑排序也可以通过 BFS 完成。
-    :param numCourses:
-    :param prerequisites:
-    :return:
-    """
-    pass
-
-
 def merge(intervals):
     """
     56. 合并区间
@@ -999,8 +971,82 @@ def merge(intervals):
     return res
 
 
+def canFinish(numCourses, prerequisites):
+    """
+    207. 课程表
+    现在你总共有 n 门课需要选，记为 0 到 n-1。
+    在选修某些课程之前需要一些先修课程。 例如，想要学习课程 0 ，你需要先完成课程 1 ，我们用一个匹配来表示他们: [0,1]
+    给定课程总量以及它们的先决条件，判断是否可能完成所有课程的学习？
+    示例 1:
+    输入: 2, [[1,0]]
+    输出: true
+    解释: 总共有 2 门课程。学习课程 1 之前，你需要完成课程 0。所以这是可能的。
+    示例 2:
+    输入: 2, [[1,0],[0,1]]
+    输出: false
+    解释: 总共有 2 门课程。学习课程 1 之前，你需要先完成​课程 0；并且学习课程 0 之前，你还应先完成课程 1。这是不可能的。
+    说明:
+    输入的先决条件是由边缘列表表示的图形，而不是邻接矩阵。详情请参见图的表示法。
+    你可以假定输入的先决条件中没有重复的边。
+    提示:
+    这个问题相当于查找一个循环是否存在于有向图中。如果存在循环，则不存在拓扑排序，因此不可能选取所有课程进行学习。
+    通过 DFS 进行拓扑排序 - 一个关于Coursera的精彩视频教程（21分钟），介绍拓扑排序的基本概念。
+    拓扑排序也可以通过 BFS 完成。
+    a[0]: 入度, a[1]: 出度
+    :param numCourses: int
+    :param prerequisites: List[List[int]]
+    :return: bool
+    """
+    """
+    # 拓扑排序，用邻接表代替遍历整个数组
+    d_in = [0] * numCourses
+    adj = [[] for _ in range(numCourses)]
+    for tail, head in prerequisites:
+        d_in[tail] += 1
+        adj[head].append(tail)
+    stk = []
+    for i in range(numCourses):
+        if d_in[i] == 0:
+            stk.append(i)
+    ctr = 0
+    while stk:
+        i = stk.pop()
+        ctr += 1
+        d_in[i] -= 1
+        for j in adj[i]:
+            d_in[j] -= 1
+            if d_in[j] == 0:
+                stk.append(j)
+    return ctr == numCourses
+    """
+    # 深度优先搜索，visited记录节点访问状态，0是未访问，1是正在被本次dfs中访问，2是已访问
+    def is_cycle(cur):
+        if visited[cur] == 1:
+            return True
+        if visited[cur] == 2:
+            return False
+        visited[cur] = 1
+        for sub in adj[cur]:
+            if is_cycle(sub):
+                return True
+        visited[cur] = 2
+        return False
+
+    if len(prerequisites) <= 1: return True
+    d_in = [0] * numCourses
+    adj = [[] for _ in range(numCourses)]
+    visited = [0] * numCourses
+    for tail, head in prerequisites:
+        d_in[tail] += 1
+        adj[head].append(tail)
+    for i in range(numCourses):
+        if is_cycle(i): return False
+    return True
+
+
 if __name__ == '__main__':
-    merge([[1,3],[2,6],[15,18],[8,10]])
+    print(canFinish(8, [[1,0],[2,6],[1,7],[5,1],[6,4],[7,0],[0,5]]))
+    # merge([[1,3],[2,6],[15,18],[8,10]])
     # solveNQueens(4)
     # sortColors([1,2,0])
     # canJump([0])

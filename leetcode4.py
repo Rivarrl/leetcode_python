@@ -1044,8 +1044,59 @@ def canFinish(numCourses, prerequisites):
     return True
 
 
+def getPermutation(n, k):
+    """
+    60. 第k个排列
+    给出集合 [1,2,3,...,n]，其所有元素共有 n! 种排列。
+    按大小顺序列出所有排列情况，并一一标记，当 n = 3 时, 所有排列如下：
+    "123"
+    "132"
+    "213"
+    "231"
+    "312"
+    "321"
+    给定 n 和 k，返回第 k 个排列。
+    说明：
+    给定 n 的范围是 [1, 9]。
+    给定 k 的范围是[1,  n!]。
+    示例 1:
+    输入: n = 3, k = 3
+    输出: "213"
+    示例 2:
+    输入: n = 4, k = 9
+    输出: "2314"
+    :param n: int
+    :param k: int
+    :return: str
+    """
+    pass
+
+
+def subsetsWithDup(nums):
+    """
+    90. 子集 II
+    给定一个可能包含重复元素的整数数组 nums，返回该数组所有可能的子集（幂集）。
+    说明：解集不能包含重复的子集。
+    示例:
+    输入: [1,2,2]
+    输出:
+    [
+      [2],
+      [1],
+      [1,2,2],
+      [2,2],
+      [1,2],
+      []
+    ]
+    :param nums: List[int]
+    :return: List[List[int]]
+    """
+    pass
+
+
 if __name__ == '__main__':
-    print(canFinish(8, [[1,0],[2,6],[1,7],[5,1],[6,4],[7,0],[0,5]]))
+    print(subsetsWithDup([1, 2, 2]))
+    # print(canFinish(8, [[1,0],[2,6],[1,7],[5,1],[6,4],[7,0],[0,5]]))
     # merge([[1,3],[2,6],[15,18],[8,10]])
     # solveNQueens(4)
     # sortColors([1,2,0])

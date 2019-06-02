@@ -469,9 +469,40 @@ def addDigits(num):
     return num if num < 10 else (num - 10) % 9 + 1
 
 
+def reverseVowels(s):
+    """
+    345. 反转字符串中的元音字母
+    编写一个函数，以字符串作为输入，反转该字符串中的元音字母。
+    示例 1:
+    输入: "hello"
+    输出: "holle"
+    示例 2:
+    输入: "leetcode"
+    输出: "leotcede"
+    说明:
+    元音字母不包含字母"y"。
+    :param s: str
+    :return: str
+    """
+    i, j = 0, len(s) - 1
+    uan = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U']
+    ls = [x for x in s]
+    while i < j:
+        while i < j and ls[i] not in uan:
+            i += 1
+        while i < j and ls[j] not in uan:
+            j -= 1
+        if i < j:
+            ls[i], ls[j] = ls[j], ls[i]
+        i += 1
+        j -= 1
+    return ''.join(ls)
+
+
 if __name__ == '__main__':
-    for i in range(10, 201):
-        addDigits(i)
+    # for i in range(10, 201):
+    #     addDigits(i)
+    print(reverseVowels('leetcode'))
     pass
     # print(isUgly(14))
     # x = construct_tree_node([10,5,-3,3,2,None,11,3,-2,None,1])

@@ -1069,7 +1069,37 @@ def getPermutation(n, k):
     :param k: int
     :return: str
     """
-    pass
+    """
+    # 回溯 官方标签误导人，血妈超时
+    def helper(cur, flag):
+        if len(res) == k:
+            return False
+        if len(cur) == n:
+            res.append(cur)
+        for i in range(n):
+            if not flag[i]:
+                flag[i] = True
+                if not helper(cur + str(i+1), flag):
+                    break
+                flag[i] = False
+        return True
+    res = []
+    flag = [False] * n
+    helper("", flag)
+    return res[-1]
+    """
+    # 找规律
+    a = [str(x + 1) for x in range(n)]
+    t = [1] * (n + 1)
+    for i in range(1, n + 1):
+        t[i] = t[i - 1] * i
+    res = ""
+    for i in range(n - 1, -1, -1):
+        p = (k - 1) // t[i]
+        x = a.pop(p)
+        res += x
+        k %= t[i]
+    return res
 
 
 def subsetsWithDup(nums):
@@ -1095,7 +1125,8 @@ def subsetsWithDup(nums):
 
 
 if __name__ == '__main__':
-    print(subsetsWithDup([1, 2, 2]))
+    getPermutation(4, 9)
+    # print(subsetsWithDup([1, 2, 2]))
     # print(canFinish(8, [[1,0],[2,6],[1,7],[5,1],[6,4],[7,0],[0,5]]))
     # merge([[1,3],[2,6],[15,18],[8,10]])
     # solveNQueens(4)

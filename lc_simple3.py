@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 from algorithm_utils import *
+import re
 
 # leetcode 简单题 3
 
@@ -499,10 +500,42 @@ def reverseVowels(s):
     return ''.join(ls)
 
 
+def isPowerOfFour(num):
+    """
+    342. 4的幂
+    给定一个整数 (32 位有符号整数)，请编写一个函数来判断它是否是 4 的幂次方。
+    示例 1:
+    输入: 16
+    输出: true
+    示例 2:
+    输入: 5
+    输出: false
+    进阶：
+    你能不使用循环或者递归来完成本题吗？
+    :param num: int
+    :return: bool
+    """
+    """
+    # 正则
+    x = bin(num).lstrip('0b')
+    return re.match("^10*$", x) is not None and x.count('0') % 2 == 0
+    """
+    # 位运算
+    # 判断是否为2的幂
+    if num < 0 or num & (num - 1):
+        return False
+    # 判断是否为4的幂
+    # 0x5 = 0b0101, 校验奇数位是否为0
+    # return num & 0x55555555
+    # 所有2的幂中, 符合num % 3 == 1的就是4的幂, 如4, 16, 64, ...
+    return num % 3 == 1
+
+
 if __name__ == '__main__':
+    print(isPowerOfFour(16))
     # for i in range(10, 201):
     #     addDigits(i)
-    print(reverseVowels('leetcode'))
+    # print(reverseVowels('leetcode'))
     pass
     # print(isUgly(14))
     # x = construct_tree_node([10,5,-3,3,2,None,11,3,-2,None,1])

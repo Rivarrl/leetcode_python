@@ -1121,12 +1121,38 @@ def subsetsWithDup(nums):
     :param nums: List[int]
     :return: List[List[int]]
     """
-    pass
+    """
+    # 回溯 慢
+    nums.sort()
+    n = len(nums)
+    res = [[]]
+    for i in range(n):
+        for x in subsetsWithDup(nums[i+1:]):
+            if not [nums[i]] in res:
+                res.append([nums[i]])
+            sx = [nums[i]] + x
+            if not sx in res:
+                res.append(sx)
+    return res
+    """
+    # dfs
+    nums.sort()
+    res, n = list(), len(nums)
+    def subsets_dfs(lst, pos):
+        num = None
+        res.append(lst[:])
+        for i in range(pos, n):
+            if nums[i] != num:
+                lst.append(nums[i])
+                subsets_dfs(lst, i + 1)
+                num = lst.pop()
+    subsets_dfs([], 0)
+    return res
 
 
 if __name__ == '__main__':
-    getPermutation(4, 9)
-    # print(subsetsWithDup([1, 2, 2]))
+    # getPermutation(4, 9)
+    print(subsetsWithDup([2, 1, 2]))
     # print(canFinish(8, [[1,0],[2,6],[1,7],[5,1],[6,4],[7,0],[0,5]]))
     # merge([[1,3],[2,6],[15,18],[8,10]])
     # solveNQueens(4)

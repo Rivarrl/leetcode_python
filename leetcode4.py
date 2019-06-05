@@ -910,7 +910,6 @@ def solveNQueens(n):
             queens.append(tmp)
         return queens
 
-
     def check(a, k):
         for i in range(1, k):
             if abs(a[i] - a[k]) == k - i or a[i] == a[k]:

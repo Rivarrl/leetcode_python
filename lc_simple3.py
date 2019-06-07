@@ -668,16 +668,22 @@ def merge(nums1, m, nums2, n):
     :param n: int
     :return: None
     """
-    if m == 0:
-        for i in range(n):
-            nums1[i] = nums2[i]
-    while m + n > 0:
-        if nums1[m-1] > nums2[n-1]:
-            nums1[m+n-1] = nums1[m-1]
-            m -= 1
+    i, j, k = m, n, m + n
+    while k > 0:
+        if i == 0:
+            nums1[k - 1] = nums2[j - 1]
+            j -= 1
+        elif j == 0:
+            nums1[k - 1] = nums1[i - 1]
+            i -= 1
         else:
-            nums1[m+n-1] = nums2[n-1]
-            n -= 1
+            if nums1[i - 1] > nums2[j - 1]:
+                nums1[k-1] = nums1[i-1]
+                i -= 1
+            else:
+                nums1[k-1] = nums2[j-1]
+                j -= 1
+        k -= 1
     print(nums1)
 
 

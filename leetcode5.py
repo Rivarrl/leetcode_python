@@ -1,5 +1,7 @@
 # -*- coding:utf-8 -*-
 
+from algorithm_utils import *
+
 # leetcode5
 
 def canCompleteCircuit(gas, cost):
@@ -72,7 +74,68 @@ def canCompleteCircuit(gas, cost):
     return -1 if rs < 0 else res + 1
 
 
+def levelOrder(root):
+    """
+    102. 二叉树的层次遍历
+    给定一个二叉树，返回其按层次遍历的节点值。 （即逐层地，从左到右访问所有节点）。
+    例如:
+    给定二叉树: [3,9,20,null,null,15,7],
+        3
+       / \
+      9  20
+        /  \
+       15   7
+    返回其层次遍历结果：
+    [
+      [3],
+      [9,20],
+      [15,7]
+    ]
+    :param root: TreeNode
+    :return: List[List[int]]
+    """
+    """
+    # 迭代 栈
+    res = []
+    if root:
+        res.append([root.val])
+        stk = [root]
+        while stk:
+            cur = []
+            for each in stk:
+                if each.right:
+                    cur.append(each.right)
+                if each.left:
+                    cur.append(each.left)
+            if cur != []:
+                res.append([x.val for x in cur][::-1])
+            stk = [x for x in cur]
+    print(res)
+    return res
+    """
+    # 迭代 队列
+    from collections import deque
+    res = []
+    if root:
+        q = deque()
+        q.append(root)
+        level = 0
+        while q:
+            n = len(q)
+            res.append([])
+            for i in range(n):
+                p = q.popleft()
+                res[level].append(p.val)
+                if p.left:
+                    q.append(p.left)
+                if p.right:
+                    q.append(p.right)
+            level += 1
+    return res
+
 
 if __name__ == '__main__':
-    print(canCompleteCircuit([3,3,4],[3,4,4]))
+    x = construct_tree_node([3,9,20,None,None,15,7])
+    levelOrder(x)
+    # print(canCompleteCircuit([3,3,4],[3,4,4]))
     pass

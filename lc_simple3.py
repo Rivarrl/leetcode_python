@@ -687,8 +687,52 @@ def merge(nums1, m, nums2, n):
     print(nums1)
 
 
+def missingNumber(nums):
+    """
+    268. 缺失数字
+    给定一个包含 0, 1, 2, ..., n 中 n 个数的序列，找出 0 .. n 中没有出现在序列中的那个数。
+    示例 1:
+    输入: [3,0,1]
+    输出: 2
+    示例 2:
+    输入: [9,6,4,2,3,5,7,0,1]
+    输出: 8
+    说明:
+    你的算法应具有线性时间复杂度。你能否仅使用额外常数空间来实现?
+    :param nums: List[int]
+    :return: int
+    """
+    """
+    # 桶排序 43%
+    nums.append(-1)
+    n = len(nums)
+    for i in range(n):
+        while nums[i] >= 0 and nums[i] != i:
+            nums[nums[i]], nums[i] = nums[i], nums[nums[i]]
+    return nums.index(-1)
+    """
+    """
+    # 求和
+    cur = 0
+    total = 0
+    n = len(nums)
+    for i in range(n):
+        cur += nums[i]
+        total += i
+    return total + n - cur
+    """
+    # 异或 a^a^b^b^c=c
+    n = len(nums)
+    ans = n
+    for i in range(n):
+        ans ^= nums[i]
+        ans ^= i
+    return ans
+
+
 if __name__ == '__main__':
-    merge([2,0], 1, [1], 1)
+    print(missingNumber([3, 0, 1]))
+    # merge([2,0], 1, [1], 1)
     # print(gcdOfStrings("AAAAAAAA", "AAAAAAAA"))
     # findContentChildren([1,2], [1,2,3])
     # print(canPlaceFlowers([0], 1))

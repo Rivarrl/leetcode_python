@@ -188,11 +188,61 @@ def setZeroes(matrix):
                 matrix[i][j] = 0
 
 
+def exist(board, word):
+    """
+    79. 单词搜索
+    给定一个二维网格和一个单词，找出该单词是否存在于网格中。
+    单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
+    示例:
+    board =
+    [
+      ['A','B','C','E'],
+      ['S','F','C','S'],
+      ['A','D','E','E']
+    ]
+    给定 word = "ABCCED", 返回 true.
+    给定 word = "SEE", 返回 true.
+    给定 word = "ABCB", 返回 false.
+    :param board: List[List[str]]
+    :param word: str
+    :return: bool
+    """
+    def dfs(i, j, k):
+        if k == w: return True
+        res = False
+        visited[i][j] = True
+        if i > 0 and board[i-1][j] == word[k] and not visited[i-1][j]:
+            res = dfs(i-1, j, k + 1)
+        if j > 0 and board[i][j-1] == word[k] and not visited[i][j-1]:
+            res = dfs(i, j-1, k + 1)
+        if i < n - 1 and board[i+1][j] == word[k] and not visited[i+1][j]:
+            res = dfs(i+1, j, k + 1)
+        if j < m - 1 and board[i][j+1] == word[k] and not visited[i][j+1]:
+            res = dfs(i, j+1, k + 1)
+        visited[i][j] = False
+        return res
+
+    n = len(board)
+    m = len(board[0])
+    w = len(word)
+    visited = [[False] * m for _ in range(n)]
+    for i in range(n):
+        for j in range(m):
+            if board[i][j] == word[0]:
+                if dfs(i, j, 1):
+                    return True
+    return False
+
+
 if __name__ == '__main__':
-    x = [[0,1,2,0],
-         [3,4,5,2],
-         [1,3,1,5]]
-    setZeroes(x)
+    board = [["C","A","A"],
+             ["A","A","A"],
+             ["B","C","D"]]
+    print(exist(board,"AAB"))
+    # x = [[0,1,2,0],
+    #      [3,4,5,2],
+    #      [1,3,1,5]]
+    # setZeroes(x)
     # x = construct_tree_node([3,9,20,None,None,15,7])
     # levelOrder(x)
     # print(canCompleteCircuit([3,3,4],[3,4,4]))

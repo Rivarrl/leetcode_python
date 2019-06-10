@@ -211,14 +211,14 @@ def exist(board, word):
         if k == w: return True
         res = False
         visited[i][j] = True
-        if i > 0 and board[i-1][j] == word[k] and not visited[i-1][j]:
-            res = dfs(i-1, j, k + 1)
-        if j > 0 and board[i][j-1] == word[k] and not visited[i][j-1]:
-            res = dfs(i, j-1, k + 1)
-        if i < n - 1 and board[i+1][j] == word[k] and not visited[i+1][j]:
-            res = dfs(i+1, j, k + 1)
-        if j < m - 1 and board[i][j+1] == word[k] and not visited[i][j+1]:
-            res = dfs(i, j+1, k + 1)
+        if not res and i > 0 and board[i-1][j] == word[k] and not visited[i-1][j]:
+            res |= dfs(i-1, j, k + 1)
+        if not res and j > 0 and board[i][j-1] == word[k] and not visited[i][j-1]:
+            res |= dfs(i, j-1, k + 1)
+        if not res and i < n - 1 and board[i+1][j] == word[k] and not visited[i+1][j]:
+            res |= dfs(i+1, j, k + 1)
+        if not res and j < m - 1 and board[i][j+1] == word[k] and not visited[i][j+1]:
+            res |= dfs(i, j+1, k + 1)
         visited[i][j] = False
         return res
 
@@ -234,11 +234,92 @@ def exist(board, word):
     return False
 
 
+def simplifyPath(path):
+    """
+    71. 简化路径
+    以 Unix 风格给出一个文件的绝对路径，你需要简化它。或者换句话说，将其转换为规范路径。
+    在 Unix 风格的文件系统中，一个点（.）表示当前目录本身；此外，两个点 （..） 表示将目录切换到上一级（指向父目录）；两者都可以是复杂相对路径的组成部分。更多信息请参阅：Linux / Unix中的绝对路径 vs 相对路径
+    请注意，返回的规范路径必须始终以斜杠 / 开头，并且两个目录名之间必须只有一个斜杠 /。最后一个目录名（如果存在）不能以 / 结尾。此外，规范路径必须是表示绝对路径的最短字符串。
+    示例 1：
+    输入："/home/"
+    输出："/home"
+    解释：注意，最后一个目录名后面没有斜杠。
+    示例 2：
+    输入："/../"
+    输出："/"
+    解释：从根目录向上一级是不可行的，因为根是你可以到达的最高级。
+    示例 3：
+    输入："/home//foo/"
+    输出："/home/foo"
+    解释：在规范路径中，多个连续斜杠需要用一个斜杠替换。
+    示例 4：
+    输入："/a/./b/../../c/"
+    输出："/c"
+    示例 5：
+    输入："/a/../../b/../c//.//"
+    输出："/c"
+    示例 6：
+    输入："/a//b////c/d//././/.."
+    输出："/a/b/c"
+    :param path: str
+    :return: str
+    """
+    elements = list(filter(lambda x: x and x != '.', path.split('/')))
+    print(elements)
+    res = []
+    for e in elements:
+        if e == '..':
+            if res:
+                res.pop()
+        else:
+            res.append(e)
+    print(res)
+    return '/' + '/'.join(res)
+
+
+def isNumber(s):
+    """
+    65. 有效数字
+    验证给定的字符串是否可以解释为十进制数字。
+    例如:
+    "0" => true
+    " 0.1 " => true
+    "abc" => false
+    "1 a" => false
+    "2e10" => true
+    " -90e3   " => true
+    " 1e" => false
+    "e3" => false
+    " 6e-1" => true
+    " 99e2.5 " => false
+    "53.5e93" => true
+    " --6 " => false
+    "-+3" => false
+    "95a54e53" => false
+    说明: 我们有意将问题陈述地比较模糊。在实现代码之前，你应当事先思考所有可能的情况。这里给出一份可能存在于有效十进制数字中的字符列表：
+    数字 0-9
+    指数 - "e"
+    正/负号 - "+"/"-"
+    小数点 - "."
+    当然，在输入中，这些字符的上下文也很重要。
+    :param s: str
+    :return: bool
+    """
+    # 鸡贼写法，正经做法得用DFA，不会，先mark
+    try:
+        x = float(s.strip())
+        return True
+    except:
+        return False
+
+
 if __name__ == '__main__':
-    board = [["C","A","A"],
-             ["A","A","A"],
-             ["B","C","D"]]
-    print(exist(board,"AAB"))
+    # print(isNumber("95a54e53"))
+    simplifyPath("/a//b////c/d//././/..")
+    # board = [["C","A","A"],
+    #          ["A","A","A"],
+    #          ["B","C","D"]]
+    # print(exist(board,"AAB"))
     # x = [[0,1,2,0],
     #      [3,4,5,2],
     #      [1,3,1,5]]

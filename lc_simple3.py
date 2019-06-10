@@ -765,8 +765,49 @@ def intersection(nums1, nums2):
     return res
 
 
+def isPerfectSquare(num):
+    """
+    给定一个正整数 num，编写一个函数，如果 num 是一个完全平方数，则返回 True，否则返回 False。
+    说明：不要使用任何内置的库函数，如  sqrt。
+    示例 1：
+    输入：16
+    输出：True
+    示例 2：
+    输入：14
+    输出：False
+    :param num: int
+    :return: bool
+    """
+    """
+    # 暴力
+    i = 0
+    while i ** 2 < num:
+        i += 1
+    return i ** 2 == num
+    """
+    """
+    # 等差数列公式 1+3+5+...+(2n-1) = n^2
+    ans, i = 0, 1
+    while ans < num:
+        ans += i
+        i += 2
+    return ans == num
+    """
+    # 牛顿迭代公式
+    n = num
+    while True:
+        if (n - 1) ** 2 <= num and (n + 1) ** 2 >= num:
+            break
+        n = n - ((n ** 2) - num) // (2 * n)
+    for i in range(3):
+        if (n + i - 1) ** 2 == num:
+            return True
+    return False
+
+
 if __name__ == '__main__':
-    print(missingNumber([3, 0, 1]))
+    print(isPerfectSquare(16))
+    # print(missingNumber([3, 0, 1]))
     # merge([2,0], 1, [1], 1)
     # print(gcdOfStrings("AAAAAAAA", "AAAAAAAA"))
     # findContentChildren([1,2], [1,2,3])

@@ -313,9 +313,61 @@ def isNumber(s):
         return False
 
 
+def maximalRectangle(matrix):
+    """
+    85. 最大矩形
+    给定一个仅包含 0 和 1 的二维二进制矩阵，找出只包含 1 的最大矩形，并返回其面积。
+    示例:
+    输入:
+    [
+      ["1","0","1","0","0"],
+      ["1","0","1","1","1"],
+      ["1","1","1","1","1"],
+      ["1","0","0","1","0"]
+    ]
+    输出: 6
+    :param matrix: List[List[str]]
+    :return: int
+    """
+    # 合并两行求最长连续1长度
+    def count1(row):
+        res, cur = 0, 0
+        for each in row:
+            if each == 1:
+                cur += 1
+            else:
+                cur = 0
+            if cur > res:
+                res = cur
+        return res
+    res = 0
+    n = len(matrix)
+    if n > 0:
+        m = len(matrix[0])
+        for i in range(n):
+            for j in range(m):
+                matrix[i][j] = int(matrix[i][j])
+        row_multiply = lambda row1, row2: [x * y for x, y in zip(row1, row2)]
+        for i in range(n):
+            join_row = [1 for _ in range(m)]
+            for j in range(i, n):
+                cols = j - i + 1
+                join_row = row_multiply(join_row, matrix[j])
+                cur = cols * count1(join_row)
+                if cur > res:
+                    res = cur
+    return res
+
+
 if __name__ == '__main__':
+    maximalRectangle([
+      ["1","0","1","0","0"],
+      ["1","0","1","1","1"],
+      ["1","1","1","1","1"],
+      ["1","0","0","1","0"]
+    ])
     # print(isNumber("95a54e53"))
-    simplifyPath("/a//b////c/d//././/..")
+    # simplifyPath("/a//b////c/d//././/..")
     # board = [["C","A","A"],
     #          ["A","A","A"],
     #          ["B","C","D"]]

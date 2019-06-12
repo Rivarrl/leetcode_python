@@ -359,13 +359,42 @@ def maximalRectangle(matrix):
     return res
 
 
+def largestRectangleArea(heights):
+    """
+    84. 柱状图中最大的矩形
+    给定 n 个非负整数，用来表示柱状图中各个柱子的高度。每个柱子彼此相邻，且宽度为 1 。
+    求在该柱状图中，能够勾勒出来的矩形的最大面积。
+    示例:
+    输入: [2,1,5,6,2,3]
+    输出: 10
+    :param heights: List[int]
+    :return: int
+    """
+    # 超时
+    n = len(heights)
+    l_min = [float("inf")] * n
+    for i in range(n):
+        l_min[i] = min(heights[i], l_min[i])
+    ans = 0
+    for i in range(n):
+        cur_min = heights[i]
+        for j in range(i, n):
+            if heights[j] < cur_min:
+                cur_min = heights[j]
+            cur = (j - i + 1) * cur_min
+            if cur > ans:
+                ans = cur
+    return ans
+
+
 if __name__ == '__main__':
-    maximalRectangle([
-      ["1","0","1","0","0"],
-      ["1","0","1","1","1"],
-      ["1","1","1","1","1"],
-      ["1","0","0","1","0"]
-    ])
+    largestRectangleArea([2,1,5,6,2,3])
+    # maximalRectangle([
+    #   ["1","0","1","0","0"],
+    #   ["1","0","1","1","1"],
+    #   ["1","1","1","1","1"],
+    #   ["1","0","0","1","0"]
+    # ])
     # print(isNumber("95a54e53"))
     # simplifyPath("/a//b////c/d//././/..")
     # board = [["C","A","A"],

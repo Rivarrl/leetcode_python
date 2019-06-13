@@ -864,8 +864,74 @@ def convertToBase7(num):
     return flag + ("".join(res[::-1]))
 
 
+def heightChecker(heights):
+    """
+    1051. 高度检查器
+    学校在拍年度纪念照时，一般要求学生按照 非递减 的高度顺序排列。
+    请你返回至少有多少个学生没有站在正确位置数量。该人数指的是：能让所有学生以 非递减 高度排列的必要移动人数。
+    示例：
+    输入：[1,1,4,2,1,3]
+    输出：3
+    解释：
+    高度为 4、3 和最后一个 1 的学生，没有站在正确的位置。
+    提示：
+    1 <= heights.length <= 100
+    1 <= heights[i] <= 100
+    :param heights: List[int]
+    :return: int
+    """
+    def quick_sort(arr, l, r):
+        if l >= r: return
+        i, j, base = l, r, arr[l]
+        while i < j:
+            while i < j and arr[j] >= base:
+                j -= 1
+            while i < j and arr[i] <= base:
+                i += 1
+            arr[i], arr[j] = arr[j], arr[i]
+        arr[i], arr[l] = arr[l], arr[i]
+        quick_sort(arr, l, i - 1)
+        quick_sort(arr, i + 1, r)
+    arr = [x for x in heights]
+    n = len(arr)
+    quick_sort(arr, 0, n - 1)
+    ans = 0
+    for x, y in zip(heights, arr):
+        if x != y:
+            ans += 1
+    return ans
+
+
+def isRectangleOverlap(rec1, rec2):
+    """
+    836. 矩形重叠
+    矩形以列表 [x1, y1, x2, y2] 的形式表示，其中 (x1, y1) 为左下角的坐标，(x2, y2) 是右上角的坐标。
+    如果相交的面积为正，则称两矩形重叠。需要明确的是，只在角或边接触的两个矩形不构成重叠。
+    给出两个矩形，判断它们是否重叠并返回结果。
+    示例 1：
+    输入：rec1 = [0,0,2,2], rec2 = [1,1,3,3]
+    输出：true
+    示例 2：
+    输入：rec1 = [0,0,1,1], rec2 = [1,0,2,1]
+    输出：false
+    说明：
+    两个矩形 rec1 和 rec2 都以含有四个整数的列表的形式给出。
+    矩形中的所有坐标都处于 -10^9 和 10^9 之间。
+    :param rec1: List[int]
+    :param rec2: List[int]
+    :return: bool
+    """
+    if rec1[0] > rec2[0]:
+        rec1, rec2 = rec2, rec1
+    if (rec1[0] <= rec2[0] <= rec1[2] <= rec2[2] and rec1[1] <= rec2[1] <= rec1[3] <= rec2[3]) or (rec1[0] <= rec2[0] <= rec1[2] <= rec2[2] and rec1[1] >= rec2[1] >= rec1[3] >= rec2[3]):
+        return True
+    return False
+
+
 if __name__ == '__main__':
-    convertToBase7(7)
+    print(isRectangleOverlap([7,8,13,15], [10,8,12,20]))
+    # heightChecker([1,1,4,2,1,3])
+    # convertToBase7(7)
     # print(guessNumber(1))
     # print(isPerfectSquare(16))
     # print(missingNumber([3, 0, 1]))

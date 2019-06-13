@@ -370,7 +370,8 @@ def largestRectangleArea(heights):
     :param heights: List[int]
     :return: int
     """
-    # 超时
+    """
+    # 暴力O(n^2)超时
     n = len(heights)
     l_min = [float("inf")] * n
     for i in range(n):
@@ -385,10 +386,46 @@ def largestRectangleArea(heights):
             if cur > ans:
                 ans = cur
     return ans
+    """
+    """
+    # 单调栈
+    heights.append(0)
+    stk = []
+    ans = 0
+    for i in range(len(heights)):
+        while stk and heights[i] < heights[stk[-1]]:
+            x = stk.pop()
+            width = i if not stk else i - stk[-1] - 1
+            ans = max(ans, heights[x] * width)
+        stk.append(i)
+    # print(ans)
+    return ans
+    """
+    # 分治
+    def helper(l, r):
+        if l == r: return heights[l]
+        m, flag = l, True
+        for i in range(l+1, r+1):
+            if heights[i] < heights[i - 1]:
+                flag = False
+            if heights[i] < heights[m]:
+                m = i
+        if flag:
+            cur = 0
+            for i in range(l, r + 1):
+                cur = max(cur, heights[i] * (r - i + 1))
+            return cur
+        left = 0 if m == l else helper(l, m - 1)
+        right = 0 if m == r else helper(m + 1, r)
+        cur = heights[m] * (r - l + 1)
+        return max(left, right, cur)
+    n = len(heights)
+    if n == 0: return 0
+    return helper(0, n-1)
 
 
 if __name__ == '__main__':
-    largestRectangleArea([2,1,5,6,2,3])
+    print(largestRectangleArea([2,1,4,5,1,3,3]))
     # maximalRectangle([
     #   ["1","0","1","0","0"],
     #   ["1","0","1","1","1"],

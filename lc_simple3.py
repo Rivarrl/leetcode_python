@@ -902,6 +902,42 @@ def heightChecker(heights):
     return ans
 
 
+def arrangeCoins(n):
+    """
+    441. 排列硬币
+    你总共有 n 枚硬币，你需要将它们摆成一个阶梯形状，第 k 行就必须正好有 k 枚硬币。
+    给定一个数字 n，找出可形成完整阶梯行的总行数。
+    n 是一个非负整数，并且在32位有符号整型的范围内。
+    示例 1:
+    n = 5
+    硬币可排列成以下几行:
+    ¤
+    ¤ ¤
+    ¤ ¤
+    因为第三行不完整，所以返回2.
+    示例 2:
+    n = 8
+    硬币可排列成以下几行:
+    ¤
+    ¤ ¤
+    ¤ ¤ ¤
+    ¤ ¤
+    因为第四行不完整，所以返回3.
+    :param n: int
+    :return: int
+    """
+    """
+    # 常规解法
+    x, ans = 0, 0
+    while x <= n:
+        ans += 1
+        x += ans
+    return ans - 1
+    """
+    # 等差数列公式 (m + 1) * m / 2 <= n  ->  m <= (2n + 1/4)^0.5 - 1/2
+    return int((2 * n + 0.25) ** 0.5 - 0.5)
+
+
 def isRectangleOverlap(rec1, rec2):
     """
     836. 矩形重叠
@@ -921,15 +957,77 @@ def isRectangleOverlap(rec1, rec2):
     :param rec2: List[int]
     :return: bool
     """
-    if rec1[0] > rec2[0]:
+    if rec2[0] < rec1[0]:
         rec1, rec2 = rec2, rec1
-    if (rec1[0] <= rec2[0] <= rec1[2] <= rec2[2] and rec1[1] <= rec2[1] <= rec1[3] <= rec2[3]) or (rec1[0] <= rec2[0] <= rec1[2] <= rec2[2] and rec1[1] >= rec2[1] >= rec1[3] >= rec2[3]):
+    x = abs(rec2[2] - rec1[0]) - (rec1[2] - rec1[0] + (rec2[2] - rec2[0]))
+    y = abs(rec2[3] - rec1[1]) - (rec1[3] - rec1[1] + (rec2[3] - rec2[1]))
+    if x < 0 and y < 0:
         return True
     return False
 
 
+def compress(chars):
+    """
+    443. 压缩字符串
+    给定一组字符，使用原地算法将其压缩。
+    压缩后的长度必须始终小于或等于原数组长度。
+    数组的每个元素应该是长度为1 的字符（不是 int 整数类型）。
+    在完成原地修改输入数组后，返回数组的新长度。
+    进阶：
+    你能否仅使用O(1) 空间解决问题？
+    示例 1：
+    输入：
+    ["a","a","b","b","c","c","c"]
+    输出：
+    返回6，输入数组的前6个字符应该是：["a","2","b","2","c","3"]
+    说明：
+    "aa"被"a2"替代。"bb"被"b2"替代。"ccc"被"c3"替代。
+    示例 2：
+    输入：
+    ["a"]
+    输出：
+    返回1，输入数组的前1个字符应该是：["a"]
+    说明：
+    没有任何字符串被替代。
+    示例 3：
+    输入：
+    ["a","b","b","b","b","b","b","b","b","b","b","b","b"]
+    输出：
+    返回4，输入数组的前4个字符应该是：["a","b","1","2"]。
+    说明：
+    由于字符"a"不重复，所以不会被压缩。"bbbbbbbbbbbb"被“b12”替代。
+    注意每个数字在数组中都有它自己的位置。
+    注意：
+    所有字符都有一个ASCII值在[35, 126]区间内。
+    1 <= len(chars) <= 1000。
+    :param chars: List[str]
+    :return: int
+    """
+    chars.append(chr(127))
+    i, ctr, last = 0, 1, -1
+    while i < len(chars):
+        if i - 1 > last and chars[i] == chars[i-1]:
+            ctr += 1
+            chars.pop(i)
+        else:
+            if ctr == 1:
+                i += 1
+            else:
+                n = len(str(ctr))
+                for x in str(ctr)[::-1]:
+                    chars.insert(i, x)
+                i += n
+                last = i - 1
+            ctr = 1
+    chars.pop()
+    print(chars)
+    return len(chars)
+
+
 if __name__ == '__main__':
-    print(isRectangleOverlap([7,8,13,15], [10,8,12,20]))
+    print(compress(["a","a","2","2","2","3","b"]))
+    # print(arrangeCoins(1))
+    # print(isRectangleOverlap([5,15,8,18],[0,3,7,9]))
     # heightChecker([1,1,4,2,1,3])
     # convertToBase7(7)
     # print(guessNumber(1))

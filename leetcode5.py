@@ -480,33 +480,40 @@ def insert(intervals, newInterval):
     :param newInterval: List[int]
     :return: List[List[int]]
     """
-    def cross(p1, p2):
-        p = [p1[0], p1[1], p2[0], p2[1]]
-        return sorted(p) == p
+    intervals = [[1,5]]
+    newInterval = [0,0]
 
-    res = []
-    b = [x for x in newInterval]
     n = len(intervals)
-    i, x, y = 0, -1, n
-    while i < n:
-        if cross(intervals[i], newInterval):
-            if y >= n:
-                y = i
-            res.append(intervals[i])
-        else:
-            if x < 0:
-                x = i
-            b.extend(intervals[i])
+    res = []
+    i = 0
+    x, y = newInterval
+    while i < n and intervals[i][1] < x:
+        res.append(intervals[i])
         i += 1
-    print(res)
-    b.sort()
-    res.insert(x, [b[0], b[-1]])
+    if i == n:
+        res.append(newInterval)
+        return res
+    while i < n and intervals[i][0] <= y:
+        cur = [min(intervals[i][0], x), max(intervals[i][1], y)]
+        if res:
+            if res[-1][1] < intervals[i][0]:
+                res.append(cur)
+            else:
+                res[-1] = [res[-1][0], max(intervals[i][1], y)]
+        else:
+            res.append(cur)
+        i += 1
+    if not res or res[-1][1] < x:
+        res.append(newInterval)
+    while i < n and intervals[i][0] > y:
+        res.append(intervals[i])
+        i += 1
     print(res)
     return res
 
 
 if __name__ == '__main__':
-    print(insert(intervals=[[1,3],[6,9]], newInterval=[2,5]))
+    insert([[1,3], [6,9]],[2,5])
     # print(largestRectangleArea([2,1,4,5,1,3,3]))
     # maximalRectangle([
     #   ["1","0","1","0","0"],

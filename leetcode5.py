@@ -424,8 +424,90 @@ def largestRectangleArea(heights):
     return helper(0, n-1)
 
 
+def recoverTree(root):
+    """
+    99. 恢复二叉搜索树
+    二叉搜索树中的两个节点被错误地交换。
+    请在不改变其结构的情况下，恢复这棵树。
+    示例 1:
+    输入: [1,3,null,null,2]
+       1
+      /
+     3
+      \
+       2
+    输出: [3,1,null,null,2]
+       3
+      /
+     1
+      \
+       2
+    示例 2:
+    输入: [3,1,4,null,null,2]
+      3
+     / \
+    1   4
+       /
+      2
+    输出: [2,1,4,null,null,3]
+      2
+     / \
+    1   4
+       /
+      3
+    进阶:
+    使用 O(n) 空间复杂度的解法很容易实现。
+    你能想出一个只使用常数空间的解决方案吗？
+    :param root: TreeNode
+    :return: None
+    """
+    pass
+
+
+def insert(intervals, newInterval):
+    """
+    57. 插入区间
+    给出一个无重叠的 ，按照区间起始端点排序的区间列表。
+    在列表中插入一个新的区间，你需要确保列表中的区间仍然有序且不重叠（如果有必要的话，可以合并区间）。
+    示例 1:
+    输入: intervals = [[1,3],[6,9]], newInterval = [2,5]
+    输出: [[1,5],[6,9]]
+    示例 2:
+    输入: intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
+    输出: [[1,2],[3,10],[12,16]]
+    解释: 这是因为新的区间 [4,8] 与 [3,5],[6,7],[8,10] 重叠。
+    :param intervals: List[List[int]]
+    :param newInterval: List[int]
+    :return: List[List[int]]
+    """
+    def cross(p1, p2):
+        p = [p1[0], p1[1], p2[0], p2[1]]
+        return sorted(p) == p
+
+    res = []
+    b = [x for x in newInterval]
+    n = len(intervals)
+    i, x, y = 0, -1, n
+    while i < n:
+        if cross(intervals[i], newInterval):
+            if y >= n:
+                y = i
+            res.append(intervals[i])
+        else:
+            if x < 0:
+                x = i
+            b.extend(intervals[i])
+        i += 1
+    print(res)
+    b.sort()
+    res.insert(x, [b[0], b[-1]])
+    print(res)
+    return res
+
+
 if __name__ == '__main__':
-    print(largestRectangleArea([2,1,4,5,1,3,3]))
+    print(insert(intervals=[[1,3],[6,9]], newInterval=[2,5]))
+    # print(largestRectangleArea([2,1,4,5,1,3,3]))
     # maximalRectangle([
     #   ["1","0","1","0","0"],
     #   ["1","0","1","1","1"],

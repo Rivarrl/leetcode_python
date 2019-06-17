@@ -561,6 +561,7 @@ def countSmaller(nums):
     print(ans)
     return ans
     """
+    # 二分查找 + 栈 超时
     def binary_search_append(x):
         i, j = 0, len(stk) - 1
         y = nums[x]

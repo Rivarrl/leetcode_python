@@ -424,46 +424,6 @@ def largestRectangleArea(heights):
     return helper(0, n-1)
 
 
-def recoverTree(root):
-    """
-    99. 恢复二叉搜索树
-    二叉搜索树中的两个节点被错误地交换。
-    请在不改变其结构的情况下，恢复这棵树。
-    示例 1:
-    输入: [1,3,null,null,2]
-       1
-      /
-     3
-      \
-       2
-    输出: [3,1,null,null,2]
-       3
-      /
-     1
-      \
-       2
-    示例 2:
-    输入: [3,1,4,null,null,2]
-      3
-     / \
-    1   4
-       /
-      2
-    输出: [2,1,4,null,null,3]
-      2
-     / \
-    1   4
-       /
-      3
-    进阶:
-    使用 O(n) 空间复杂度的解法很容易实现。
-    你能想出一个只使用常数空间的解决方案吗？
-    :param root: TreeNode
-    :return: None
-    """
-    pass
-
-
 def insert(intervals, newInterval):
     """
     57. 插入区间
@@ -578,6 +538,64 @@ def findRepeatedDnaSequences(s):
         if d[cur] == 2:
             res.append(cur)
     return res
+
+
+def partition(s):
+    """
+    131. 分割回文串
+    给定一个字符串 s，将 s 分割成一些子串，使每个子串都是回文串。
+    返回 s 所有可能的分割方案。
+    示例:
+    输入: "aab"
+    输出:
+    [
+      ["aa","b"],
+      ["a","a","b"]
+    ]
+    :param s: str
+    :return: List[List[str]
+    """
+    pass
+
+
+def recoverTree(root):
+    """
+    99. 恢复二叉搜索树
+    二叉搜索树中的两个节点被错误地交换。
+    请在不改变其结构的情况下，恢复这棵树。
+    示例 1:
+    输入: [1,3,null,null,2]
+       1
+      /
+     3
+      \
+       2
+    输出: [3,1,null,null,2]
+       3
+      /
+     1
+      \
+       2
+    示例 2:
+    输入: [3,1,4,null,null,2]
+      3
+     / \
+    1   4
+       /
+      2
+    输出: [2,1,4,null,null,3]
+      2
+     / \
+    1   4
+       /
+      3
+    进阶:
+    使用 O(n) 空间复杂度的解法很容易实现。
+    你能想出一个只使用常数空间的解决方案吗？
+    :param root: TreeNode
+    :return: None
+    """
+    pass
 
 
 if __name__ == '__main__':

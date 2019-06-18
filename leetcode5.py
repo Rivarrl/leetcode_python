@@ -540,24 +540,6 @@ def findRepeatedDnaSequences(s):
     return res
 
 
-def partition(s):
-    """
-    131. 分割回文串
-    给定一个字符串 s，将 s 分割成一些子串，使每个子串都是回文串。
-    返回 s 所有可能的分割方案。
-    示例:
-    输入: "aab"
-    输出:
-    [
-      ["aa","b"],
-      ["a","a","b"]
-    ]
-    :param s: str
-    :return: List[List[str]
-    """
-    pass
-
-
 def recoverTree(root):
     """
     99. 恢复二叉搜索树
@@ -598,9 +580,71 @@ def recoverTree(root):
     pass
 
 
+def partition(s):
+    """
+    131. 分割回文串
+    给定一个字符串 s，将 s 分割成一些子串，使每个子串都是回文串。
+    返回 s 所有可能的分割方案。
+    示例:
+    输入: "aab"
+    输出:
+    [
+      ["aa","b"],
+      ["a","a","b"]
+    ]
+    :param s: str
+    :return: List[List[str]
+    """
+    """
+    # dfs 回溯 40%
+    n = len(s)
+    if n == 0: return []
+    if n == 1: return [[s]]
+    def dfs(i):
+        if i == n - 1: return [[s[i]]]
+        cur = []
+        if s[i:] == s[i:][::-1]: cur.append([s[i:]])
+        for j in range(i + 1, n):
+            if s[i:j] == s[i:j][::-1]:
+                for x in dfs(j):
+                    if not [s[i:j]] + x in cur:
+                        cur.append([s[i:j]] + x)
+        return cur
+    res = dfs(0)
+    return res
+    """
+    # 优化: 事先将以s[i]为开头的字符串的所有回文串截止位计算出来存入g[i], 避免重复计算 98%
+    n = len(s)
+    g = [[] for _ in range(n)]
+    for i in range(n):
+        for k in range(0, min(n - i, i + 1)):
+            if s[i + k] != s[i - k]:
+                break
+            g[i - k].append(2 * k + 1)
+        for k in range(1, min(n - i, i + 2)):
+            if s[i + k] != s[i - k + 1]:
+                break
+            g[i - k + 1].append(2 * k)
+    res = []
+    tmp = []
+    print(g)
+    def dfs(i):
+        if i == n:
+            res.append(tmp[:])
+            return
+        for x in g[i]:
+            tmp.append(s[i: i + x])
+            dfs(i + x)
+            tmp.pop()
+    dfs(0)
+    return res
+
+
 if __name__ == '__main__':
-    s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"
-    findRepeatedDnaSequences(s)
+    r = partition("ababa")
+    print(r)
+    # s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"
+    # findRepeatedDnaSequences(s)
     # countSmaller([26,78,27,100,33,67,90,23,66,5,38,7,35,23,52,22,83,51,98,69,81,32,78,28,94,13,2,97,3,76,99,51,9,21,84,66,65,36,100,41])
     # insert([[1,3], [6,9]],[2,5])
     # print(largestRectangleArea([2,1,4,5,1,3,3]))

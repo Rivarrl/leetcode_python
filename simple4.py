@@ -133,8 +133,92 @@ def longestPalindrome(s):
     return ans
 
 
+def firstUniqChar(s):
+    """
+    387. 字符串中的第一个唯一字符
+    给定一个字符串，找到它的第一个不重复的字符，并返回它的索引。如果不存在，则返回 -1。
+    案例:
+    s = "leetcode"
+    返回 0.
+    s = "loveleetcode",
+    返回 2.
+    注意事项：您可以假定该字符串只包含小写字母。
+    :param s: str
+    :return: int
+    """
+    """
+    # 哈希表存字符对应位置，重复值置-1 30%
+    d = {}
+    n = len(s)
+    for i in range(n):
+        if not s[i] in d:
+            d[s[i]] = i
+        else:
+            d[s[i]] = -1
+    for v in d.values():
+        if v >= 0: return v
+    return -1
+    """
+    # 按小写字母顺序遍历，用左查找 = 右查找且查找值不为-1来确定有且只有一个该字符 88%
+    n = len(s)
+    m = n
+    for i in range(26):
+        x = chr(ord('a') + i)
+        if s.find(x) >= 0 and s.find(x) == s.rfind(x):
+            j = s.index(x)
+            if j < m: m = j
+    return -1 if m == n else m
+
+
+def toHex(num):
+    """
+    405. 数字转换为十六进制数
+    给定一个整数，编写一个算法将这个数转换为十六进制数。对于负整数，我们通常使用 补码运算 方法。
+    注意:
+    十六进制中所有字母(a-f)都必须是小写。
+    十六进制字符串中不能包含多余的前导零。如果要转化的数为0，那么以单个字符'0'来表示；对于其他情况，十六进制字符串中的第一个字符将不会是0字符。 
+    给定的数确保在32位有符号整数范围内。
+    不能使用任何由库提供的将数字直接转换或格式化为十六进制的方法。
+    示例 1：
+    输入:
+    26
+    输出:
+    "1a"
+    示例 2：
+    输入:
+    -1
+    输出:
+    "ffffffff"
+    :param num: int
+    :return: str
+    """
+    """
+    # 利用python的数字取值范围64位，加2^32不会越界 73%
+    if num == 0: return "0"
+    hexs = "0123456789abcdef"
+    res = []
+    if num < 0: num += 2**32
+    while num > 0:
+        cur = num % 16
+        res.append(hexs[cur])
+        num //= 16
+    return ''.join(res[::-1])
+    """
+    # 利用位运算, 用0xf从低到高4位4位与取值, 右移左边补位: 正数补0，负数补1 27%
+    if num == 0: return "0"
+    hexs = "0123456789abcdef"
+    res = []
+    while num and len(res) < 8:
+        res.append(hexs[num & 0xf])
+        num >>= 4
+    return ''.join(res[::-1])
+
+
 if __name__ == '__main__':
-    a = "aabbccd"
-    longestPalindrome(a)
+    x = -1
+    toHex(x)
+    # a = "leetcode"
+    # firstUniqChar(a)
+    # longestPalindrome(a)
     # numberOfBoomerangs([[0,0],[1,0],[-1,0],[0,1],[0,-1]])
     pass

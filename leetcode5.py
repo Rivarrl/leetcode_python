@@ -600,6 +600,67 @@ def partition(s):
     return res
 
 
+def rightSideView(root):
+    """
+    199. 二叉树的右视图
+    给定一棵二叉树，想象自己站在它的右侧，按照从顶部到底部的顺序，返回从右侧所能看到的节点值。
+    示例:
+    输入: [1,2,3,null,5,null,4]
+    输出: [1, 3, 4]
+    解释:
+       1            <---
+     /   \
+    2     3         <---
+     \     \
+      5     4       <---
+    :param root: TreeNode
+    :return: List[int]
+    """
+    res = []
+    if root:
+        stk = [root]
+        res.append(root.val)
+        while stk:
+            cur = []
+            flag = True
+            for x in stk:
+                if x.right:
+                    if flag:
+                        res.append(x.right.val)
+                        flag = False
+                    cur.append(x.right)
+                if x.left:
+                    if flag:
+                        res.append(x.left.val)
+                        flag = False
+                    cur.append(x.left)
+                stk = cur[:]
+    return res
+
+
+def isAdditiveNumber(num):
+    """
+    306. 累加数
+    累加数是一个字符串，组成它的数字可以形成累加序列。
+    一个有效的累加序列必须至少包含 3 个数。除了最开始的两个数以外，字符串中的其他数都等于它之前两个数相加的和。
+    给定一个只包含数字 '0'-'9' 的字符串，编写一个算法来判断给定输入是否是累加数。
+    说明: 累加序列里的数不会以 0 开头，所以不会出现 1, 2, 03 或者 1, 02, 3 的情况。
+    示例 1:
+    输入: "112358"
+    输出: true
+    解释: 累加序列为: 1, 1, 2, 3, 5, 8 。1 + 1 = 2, 1 + 2 = 3, 2 + 3 = 5, 3 + 5 = 8
+    示例 2:
+    输入: "199100199"
+    输出: true
+    解释: 累加序列为: 1, 99, 100, 199。1 + 99 = 100, 99 + 100 = 199
+    进阶:
+    你如何处理一个溢出的过大的整数输入?
+    :param num: str
+    :return: bool
+    """
+    pass
+
+
 def recoverTree(root):
     """
     99. 恢复二叉搜索树
@@ -655,28 +716,11 @@ def recoverTree(root):
         print(res)
 
 
-def rightSideView(root):
-    """
-    199. 二叉树的右视图
-    给定一棵二叉树，想象自己站在它的右侧，按照从顶部到底部的顺序，返回从右侧所能看到的节点值。
-    示例:
-    输入: [1,2,3,null,5,null,4]
-    输出: [1, 3, 4]
-    解释:
-       1            <---
-     /   \
-    2     3         <---
-     \     \
-      5     4       <---
-    :param root: TreeNode
-    :return: List[int]
-    """
-    pass
-
-
 if __name__ == '__main__':
     x = construct_tree_node([1,3,null,null,2])
     recoverTree(x)
+    # x = construct_tree_node([1,2,3,null,5,null,4])
+    # rightSideView(x)
     # r = partition("ababa")
     # print(r)
     # s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"

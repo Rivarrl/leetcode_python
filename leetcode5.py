@@ -637,12 +637,48 @@ def recoverTree(root):
     :param root: TreeNode
     :return: None
     """
+    if root:
+        stk = [root]
+        res = [root.val]
+        while stk:
+            cur = stk.pop()
+            if cur.left:
+                stk.append(cur.left)
+                res.append(cur.left.val)
+            else:
+                res.append(null)
+            if cur.right:
+                stk.append(cur.right)
+                res.append(cur.right.val)
+            else:
+                res.append(null)
+        print(res)
+
+
+def rightSideView(root):
+    """
+    199. 二叉树的右视图
+    给定一棵二叉树，想象自己站在它的右侧，按照从顶部到底部的顺序，返回从右侧所能看到的节点值。
+    示例:
+    输入: [1,2,3,null,5,null,4]
+    输出: [1, 3, 4]
+    解释:
+       1            <---
+     /   \
+    2     3         <---
+     \     \
+      5     4       <---
+    :param root: TreeNode
+    :return: List[int]
+    """
     pass
 
 
 if __name__ == '__main__':
-    r = partition("ababa")
-    print(r)
+    x = construct_tree_node([1,3,null,null,2])
+    recoverTree(x)
+    # r = partition("ababa")
+    # print(r)
     # s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"
     # findRepeatedDnaSequences(s)
     # countSmaller([26,78,27,100,33,67,90,23,66,5,38,7,35,23,52,22,83,51,98,69,81,32,78,28,94,13,2,97,3,76,99,51,9,21,84,66,65,36,100,41])

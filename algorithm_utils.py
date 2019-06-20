@@ -1,6 +1,8 @@
 # -*- coding:utf-8 -*-
 # 算法辅助类
 
+null = None
+
 class Trie:
     def __init__(self, x):
         self.val = x

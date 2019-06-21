@@ -540,12 +540,8 @@ def isSameTree(p, q):
     :param q: TreeNode
     :return: bool
     """
-    if p and q:
-        return isSameTree(p.left, q.left) & isSameTree(p.right, q.right) & (p.val == q.val)
-    elif not p and not q:
-        return True
-    else:
-        return False
+    if p and q: return isSameTree(p.left, q.left) & isSameTree(p.right, q.right) & (p.val == q.val)
+    return not p and not q
 
 
 def isSymmetric(root):

@@ -638,27 +638,82 @@ def rightSideView(root):
     return res
 
 
-def isAdditiveNumber(num):
+def isValidBST(root):
     """
-    306. 累加数
-    累加数是一个字符串，组成它的数字可以形成累加序列。
-    一个有效的累加序列必须至少包含 3 个数。除了最开始的两个数以外，字符串中的其他数都等于它之前两个数相加的和。
-    给定一个只包含数字 '0'-'9' 的字符串，编写一个算法来判断给定输入是否是累加数。
-    说明: 累加序列里的数不会以 0 开头，所以不会出现 1, 2, 03 或者 1, 02, 3 的情况。
-    示例 1:
-    输入: "112358"
+    98. 验证二叉搜索树
+    给定一个二叉树，判断其是否是一个有效的二叉搜索树。
+    假设一个二叉搜索树具有如下特征：
+    节点的左子树只包含小于当前节点的数。
+    节点的右子树只包含大于当前节点的数。
+    所有左子树和右子树自身必须也是二叉搜索树。
+    示例 1:
+    输入:
+        2
+       / \
+      1   3
     输出: true
-    解释: 累加序列为: 1, 1, 2, 3, 5, 8 。1 + 1 = 2, 1 + 2 = 3, 2 + 3 = 5, 3 + 5 = 8
     示例 2:
-    输入: "199100199"
-    输出: true
-    解释: 累加序列为: 1, 99, 100, 199。1 + 99 = 100, 99 + 100 = 199
-    进阶:
-    你如何处理一个溢出的过大的整数输入?
-    :param num: str
+    输入:
+        5
+       / \
+      1   4
+         / \
+        3   6
+    输出: false
+    解释: 输入为: [5,1,4,null,null,3,6]。
+         根节点的值为 5 ，但是其右子节点值为 4 。
+    :param root: TreeNode
     :return: bool
     """
-    pass
+    """
+    # 中序遍历 16%
+    def helper(root):
+        if ans[0] == False: return
+        if root.left:
+            helper(root.left)
+        if root.val <= res[-1]:
+            ans[0] = False
+        else:
+            res[-1] = root.val
+        if root.right:
+            helper(root.right)
+    ans = [True]
+    res = [-float("inf")]
+    if root:
+        helper(root)
+    print(ans)
+    print(res)
+    return ans[0]
+    """
+    """
+    # 中序遍历 解2 12%
+    def helper(root):
+        if not root: return True
+        if helper(root.left):
+            if root.val > res[-1]:
+                res[-1] = root.val
+                if helper(root.right):
+                    return True
+        return False
+    res = [-float("inf")]
+    return helper(root)
+    """
+    # 中序遍历 非递归 90%
+    def helper(root):
+        stk, res = [], -float("inf")
+        while stk or root:
+            while root:
+                stk.append(root)
+                root = root.left
+            if stk:
+                root = stk.pop()
+                if root.val > res:
+                    res = root.val
+                else:
+                    return False
+                root = root.right
+        return True
+    return helper(root)
 
 
 def recoverTree(root):
@@ -698,27 +753,89 @@ def recoverTree(root):
     :param root: TreeNode
     :return: None
     """
-    if root:
-        stk = [root]
-        res = [root.val]
-        while stk:
-            cur = stk.pop()
-            if cur.left:
-                stk.append(cur.left)
-                res.append(cur.left.val)
+    """
+    # 中序遍历  没看到只有两个节点位置不对，整体遍历排序了  6%
+    stk = []
+    res = []
+    while stk or root:
+        while root:
+            stk.append(root)
+            root = root.left
+        root = stk.pop()
+        res.append(root)
+        for i in range(len(res) - 1, -1, -1):
+            if i > 0 and res[i - 1].val >= res[i].val:
+                res[i - 1].val, res[i].val = res[i].val, res[i - 1].val
+        root = root.right
+    print([x.val for x in res])
+    """
+    stk = []
+    x = root
+    p, q, pre = None, None, TreeNode(-float("inf"))
+    while stk or root:
+        while root:
+            stk.append(root)
+            root = root.left
+        root = stk.pop()
+        if root.val < pre.val:
+            p = root
+            if not q: q = pre
+        pre = root
+        root = root.right
+    p.val, q.val = q.val, p.val
+    print_tree_node(x)
+
+
+def isAdditiveNumber(num):
+    """
+    306. 累加数
+    累加数是一个字符串，组成它的数字可以形成累加序列。
+    一个有效的累加序列必须至少包含 3 个数。除了最开始的两个数以外，字符串中的其他数都等于它之前两个数相加的和。
+    给定一个只包含数字 '0'-'9' 的字符串，编写一个算法来判断给定输入是否是累加数。
+    说明: 累加序列里的数不会以 0 开头，所以不会出现 1, 2, 03 或者 1, 02, 3 的情况。
+    示例 1:
+    输入: "112358"
+    输出: true
+    解释: 累加序列为: 1, 1, 2, 3, 5, 8 。1 + 1 = 2, 1 + 2 = 3, 2 + 3 = 5, 3 + 5 = 8
+    示例 2:
+    输入: "199100199"
+    输出: true
+    解释: 累加序列为: 1, 99, 100, 199。1 + 99 = 100, 99 + 100 = 199
+    进阶:
+    你如何处理一个溢出的过大的整数输入?
+    :param num: str
+    :return: bool
+    """
+    def helper(s1, s2, cur):
+        s3 = str(int(s1) + int(s2))
+        if cur.startswith(s3):
+            if cur == s3:
+                return True
             else:
-                res.append(null)
-            if cur.right:
-                stk.append(cur.right)
-                res.append(cur.right.val)
-            else:
-                res.append(null)
-        print(res)
+                return helper(s2, s3, cur[len(s3):])
+        return False
+    n = len(num)
+    if n <= 2: return False
+    k = 1 if num.startswith("0") else n//2
+    for i in range(1, k + 1):
+        for j in range(1, k + 1):
+            if j > 1 and num[i:i+j].startswith("0"):
+                break
+            print(num[:i], num[i:i+j], i+j)
+            if helper(num[:i], num[i:i+j], num[i+j:]):
+                return True
+    return False
 
 
 if __name__ == '__main__':
-    x = construct_tree_node([1,3,null,null,2])
-    recoverTree(x)
+    print(isAdditiveNumber("112358"))
+    print(isAdditiveNumber("199100199"))
+    print(isAdditiveNumber("1023"))
+    print(isAdditiveNumber("0235813"))
+    # y = construct_tree_node([5,1,4,null,null,3,6])
+    # isValidBST(y)
+    # x = construct_tree_node([3,1,4,null,null,2])
+    # recoverTree(x)
     # x = construct_tree_node([1,2,3,null,5,null,4])
     # rightSideView(x)
     # r = partition("ababa")

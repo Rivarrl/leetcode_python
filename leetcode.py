@@ -749,7 +749,22 @@ class Solution:
         :type root: TreeNode
         :rtype: int
         """
+        """
+        # 逆向思维
         return max(self.maxDepth(root.left), self.maxDepth(root.right)) + 1 if root != None else 0
+        """
+        # 正向思维
+        def helper(node, level):
+            if level > ans[0]: ans[0] = level
+            if node.left:
+                helper(node.left, level + 1)
+            if node.right:
+                helper(node.right, level + 1)
+        ans = [0]
+        if root:
+            helper(root, 1)
+        return ans[0]
+
 
     def maxProfit2(self, prices):
         """

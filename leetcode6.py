@@ -15,7 +15,22 @@ def partition(head, x):
     :param x: int
     :return: ListNode
     """
-    pass
+    p = ListNode(-float("inf"))
+    p.next = head
+    p2 = p
+    q = p
+    while p and p.val < x:
+        q = p
+        p = p.next
+    while p and p.next:
+        if p.next.val >= x:
+            p = p.next
+            continue
+        r = p.next
+        p.next = r.next if r.next else None
+        r.next, q.next = q.next, r
+        q = q.next if q.next else None
+    return p2.next
 
 
 def kthSmallest(matrix, k):
@@ -37,8 +52,51 @@ def kthSmallest(matrix, k):
     :param k: int
     :return: int
     """
-    pass
+    """
+    # 暴力超时
+    n = len(matrix)
+    pos = [0] * n
+    res = 0
+    while k > 0:
+        cur, p = float("inf"), 0
+        for i, x in enumerate(pos):
+            if x < n and matrix[i][x] < cur:
+                cur = matrix[i][x]
+                p = i
+        pos[p] += 1
+        k -= 1
+        res = cur
+    return res
+    """
+    # 二分查找
+    def helper(cur):
+        ctr, j = 0, n-1
+        for i in range(n):
+            while j >= 0 and matrix[i][j] > cur:
+                j -= 1
+            ctr += j + 1
+        return ctr
+
+    if not matrix or len(matrix) == 0 or len(matrix[0]) == 0: return -1
+    n = len(matrix)
+    l, r = matrix[0][0], matrix[-1][-1]
+    while l < r:
+        m = l + (r - l >> 1)
+        ctr = helper(m)
+        if ctr < k:
+            l = m + 1
+        else:
+            r = m
+    return l
 
 
 if __name__ == '__main__':
+    x = construct_list_node([-8,-7,7,5,3,-7,-8,-1,9,-2,4,6,-4,-1,3,0,4,-8,-8,-8,8,6,-4,-4])
+    partition(x, 0)
+    kthSmallest(matrix = [
+       [ 1,  5,  9],
+       [10, 11, 13],
+       [12, 13, 15]
+    ],
+    k = 8)
     pass

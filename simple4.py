@@ -231,13 +231,53 @@ def diameterOfBinaryTree(root):
     :return: int
     """
     def helper(p):
+        if not p: return -1
         left = helper(p.left)
+        right = helper(p.right)
+        cur = left + right + 2
+        if cur > ans[0]:
+            ans[0] = cur
+        return max(left, right) + 1
+
+    ans = [0]
+    helper(root)
+    return ans[0]
+
+
+def isUnivalTree(root):
+    """
+    965. 单值二叉树
+    如果二叉树每个节点都具有相同的值，那么该二叉树就是单值二叉树。
+    只有给定的树是单值二叉树时，才返回 true；否则返回 false。
+    示例 1：
+    输入：[1,1,1,1,1,null,1]
+    输出：true
+    示例 2：
+    输入：[2,2,2,5,2]
+    输出：false
+    提示：
+    给定树的节点数范围是 [1, 100]。
+    每个节点的值都是整数，范围为 [0, 99] 。
+    :param root: TreeNode
+    :return: bool
+    """
+    def helper(p):
+        if not p: return
+        helper(p.left)
         helper(p.right)
+        s.add(p.val)
+    s = set()
+    helper(root)
+    return len(s) == 1
 
 
 if __name__ == '__main__':
-    x = -1
-    toHex(x)
+    x = construct_tree_node([1, 1, 1, 1, 1, null, null])
+    print(isUnivalTree(x))
+    # x = construct_tree_node([1, 2, 3, 4, 5, null, null])
+    # print(diameterOfBinaryTree(x))
+    # x = -1
+    # toHex(x)
     # a = "leetcode"
     # firstUniqChar(a)
     # longestPalindrome(a)

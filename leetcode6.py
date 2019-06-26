@@ -90,13 +90,77 @@ def kthSmallest(matrix, k):
     return l
 
 
+def postorderTraversal(root):
+    """
+    145. 二叉树的后序遍历
+    给定一个二叉树，返回它的 后序 遍历。
+    示例:
+    输入: [1,null,2,3]
+       1
+        \
+         2
+        /
+       3
+    输出: [3,2,1]
+    进阶: 递归算法很简单，你可以通过迭代算法完成吗？
+    :param root: TreeNode
+    :return: List[int]
+    """
+    """
+    # 递归
+    def helper(p):
+        if p:
+            helper(p.p)
+            helper(p.right)
+            res.append(p.val)
+    res = []
+    helper(root)
+    return res
+    """
+    """
+    # 迭代 倒排
+    res = []
+    if root:
+        stk = [root]
+        while stk:
+            root = stk.pop()
+            if root.left:
+                stk.append(root.left)
+            if root.right:
+                stk.append(root.right)
+            res.append(root.val)
+    return res[::-1]
+    """
+    # 迭代 记录访问位置
+    res = []
+    if root:
+        stk = []
+        p, q = root, None
+        while stk or p:
+            if p:
+                stk.append(p)
+                p = p.left
+            else:
+                p = stk[-1]
+                if not p.right or p.right == q:
+                    res.append(p.val)
+                    q = p
+                    stk.pop()
+                    p = None
+                else:
+                    p = p.right
+    return res
+
+
 if __name__ == '__main__':
-    x = construct_list_node([-8,-7,7,5,3,-7,-8,-1,9,-2,4,6,-4,-1,3,0,4,-8,-8,-8,8,6,-4,-4])
-    partition(x, 0)
-    kthSmallest(matrix = [
-       [ 1,  5,  9],
-       [10, 11, 13],
-       [12, 13, 15]
-    ],
-    k = 8)
+    x = construct_tree_node([1,null, 2, null, null, 3, null])
+    print(postorderTraversal(x))
+    # x = construct_list_node([-8,-7,7,5,3,-7,-8,-1,9,-2,4,6,-4,-1,3,0,4,-8,-8,-8,8,6,-4,-4])
+    # partition(x, 0)
+    # kthSmallest(matrix = [
+    #    [ 1,  5,  9],
+    #    [10, 11, 13],
+    #    [12, 13, 15]
+    # ],
+    # k = 8)
     pass

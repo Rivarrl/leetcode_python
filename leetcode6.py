@@ -152,9 +152,36 @@ def postorderTraversal(root):
     return res
 
 
+def findDuplicate(nums):
+    """
+    287. 寻找重复数
+    给定一个包含 n + 1 个整数的数组 nums，其数字都在 1 到 n 之间（包括 1 和 n），可知至少存在一个重复的整数。假设只有一个重复的整数，找出这个重复的数。
+    示例 1:
+    输入: [1,3,4,2,2]
+    输出: 2
+    示例 2:
+    输入: [3,1,3,4,2]
+    输出: 3
+    说明：
+    不能更改原数组（假设数组是只读的）。
+    只能使用额外的 O(1) 的空间。
+    时间复杂度小于 O(n^2) 。
+    数组中只有一个重复的数字，但它可能不止重复出现一次。
+    :param nums: List[int]
+    :return: int
+    """
+    # 犯规操作，排序数组了
+    n = len(nums)
+    for i in range(n):
+        while nums[i] < n and nums[i] != nums[nums[i] - 1]:
+            nums[nums[i] - 1], nums[i] = nums[i], nums[nums[i] - 1]
+    return nums[-1]
+
+
 if __name__ == '__main__':
-    x = construct_tree_node([1,null, 2, null, null, 3, null])
-    print(postorderTraversal(x))
+    findDuplicate([1,3,4,2,2])
+    # x = construct_tree_node([1,null, 2, null, null, 3, null])
+    # print(postorderTraversal(x))
     # x = construct_list_node([-8,-7,7,5,3,-7,-8,-1,9,-2,4,6,-4,-1,3,0,4,-8,-8,-8,8,6,-4,-4])
     # partition(x, 0)
     # kthSmallest(matrix = [

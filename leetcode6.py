@@ -170,16 +170,101 @@ def findDuplicate(nums):
     :param nums: List[int]
     :return: int
     """
+    """
     # 犯规操作，排序数组了
     n = len(nums)
     for i in range(n):
         while nums[i] < n and nums[i] != nums[nums[i] - 1]:
             nums[nums[i] - 1], nums[i] = nums[i], nums[nums[i] - 1]
     return nums[-1]
+    """
+    # 类比找循环链表的循环位的题
+    res, fast, c = 0, 0, 0
+    # 快慢指针找相遇点
+    while fast != res or fast == 0:
+        res = nums[res]
+        fast = nums[nums[fast]]
+    # c从起点出发，res从相遇点出发，最终会在循环入口相遇
+    while res != c:
+        res = nums[res]
+        c = nums[c]
+    return res
+
+
+def bstFromPreorder(preorder):
+    """
+    1008. 先序遍历构造二叉树
+    返回与给定先序遍历 preorder 相匹配的二叉搜索树（binary search tree）的根结点。
+    (回想一下，二叉搜索树是二叉树的一种，其每个节点都满足以下规则，对于 node.left 的任何后代，值总 < node.val，而 node.right 的任何后代，值总 > node.val。此外，先序遍历首先显示节点的值，然后遍历 node.left，接着遍历 node.right。）
+    示例：
+    输入：[8,5,1,7,10,12]
+    输出：[8,5,10,1,7,null,12]
+    :param preorder: List[int]
+    :return: TreeNode
+    """
+    n = len(preorder)
+    if n == 0: return None
+    base = preorder[0]
+    root = TreeNode(base)
+    i = 1
+    while i < n and preorder[i] < base:
+        i += 1
+    left = bstFromPreorder(preorder[1:i])
+    right = bstFromPreorder(preorder[i:])
+    if left: root.left = left
+    if right: root.right = right
+    return root
+
+
+def inorderTraversal(root):
+    """
+    94. 二叉树的中序遍历
+    给定一个二叉树，返回它的中序 遍历。
+    示例:
+    输入: [1,null,2,3]
+       1
+        \
+         2
+        /
+       3
+    输出: [1,3,2]
+    进阶: 递归算法很简单，你可以通过迭代算法完成吗？
+    :param root: TreeNode
+    :return: List[int]
+    """
+    """
+    # 递归
+    def helper(p):
+        if p:
+            helper(p.left)
+            res.append(p.val)
+            helper(p.right)
+    res = []
+    helper(root)
+    print(res)
+    return res
+    """
+    # 迭代
+    res = []
+    if root:
+        stk, p = [], root
+        while stk or p:
+            if p:
+                stk.append(p)
+                p = p.left
+            else:
+                p = stk.pop()
+                res.append(p.val)
+                p = p.right
+    print(res)
+    return res
+
 
 
 if __name__ == '__main__':
-    findDuplicate([1,3,4,2,2])
+    x = construct_tree_node([1, null, 2, null, null, 3, null])
+    inorderTraversal(x)
+    # findDuplicate([1,3,4,2,2])
     # x = construct_tree_node([1,null, 2, null, null, 3, null])
     # print(postorderTraversal(x))
     # x = construct_list_node([-8,-7,7,5,3,-7,-8,-1,9,-2,4,6,-4,-1,3,0,4,-8,-8,-8,8,6,-4,-4])

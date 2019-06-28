@@ -300,19 +300,31 @@ def findAnagrams(s, p):
     :param p: str
     :return: List[int]
     """
-    ns = len(s)
+    def helper(d):
+        for k, v in d.items():
+            if v != 0: return False
+        return True
     n = len(p)
-    sp = sorted(p)
+    ns = len(s)
+    if ns < n: return []
     res = []
-    for i in range(ns-n):
-        j = i + n
-        if sorted(s[i:j]) == sp:
-            res.append(i)
+    d = {chr(i+ord('a')):0 for i in range(26)}
+    for i in range(n):
+        d[s[i]] += 1
+        d[p[i]] -= 1
+    if helper(d):
+        res.append(0)
+    for i in range(n, len(s)):
+        d[s[i]] += 1
+        d[s[i-n]] -= 1
+        if helper(d):
+            res.append(i-n+1)
     return res
 
 
 if __name__ == '__main__':
     findAnagrams("cbaebabacd", "abc")
+    findAnagrams("abaacbabc", "abc")
     # x = construct_tree_node([1, 1, 1, 1, 1, null, null])
     # print(isUnivalTree(x))
     # x = construct_tree_node([1, 2, 3, 4, 5, null, null])

@@ -260,10 +260,219 @@ def inorderTraversal(root):
     return res
 
 
+def flatten(root):
+    """
+    114. 二叉树展开为链表
+    给定一个二叉树，原地将它展开为链表。
+    例如，给定二叉树
+        1
+       / \
+      2   5
+     / \   \
+    3   4   6
+    将其展开为：
+    1
+     \
+      2
+       \
+        3
+         \
+          4
+           \
+            5
+             \
+              6
+    :param root: TreeNode
+    :return: None
+    """
+    pass
+
+
+def containsNearbyAlmostDuplicate(nums, k, t):
+    """
+    220. 存在重复元素 III
+    给定一个整数数组，判断数组中是否有两个不同的索引 i 和 j，使得 nums [i] 和 nums [j] 的差的绝对值最大为 t，并且 i 和 j 之间的差的绝对值最大为 ķ。
+    示例 1:
+    输入: nums = [1,2,3,1], k = 3, t = 0
+    输出: true
+    示例 2:
+    输入: nums = [1,0,1,1], k = 1, t = 2
+    输出: true
+    示例 3:
+    输入: nums = [1,5,9,1,5,9], k = 2, t = 3
+    输出: false
+    :param nums: List[int]
+    :param k: int
+    :param t: int
+    :return: bool
+    """
+    pass
+
+
+def nthUglyNumber(n):
+    """
+    264. 丑数 II
+    编写一个程序，找出第 n 个丑数。
+    丑数就是只包含质因数 2, 3, 5 的正整数。
+    示例:
+    输入: n = 10
+    输出: 12
+    解释: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 是前 10 个丑数。
+    说明:  
+    1 是丑数。
+    n 不超过1690。
+    :param n: int
+    :return: int
+    """
+    pass
+
+
+def bulbSwitch(n):
+    """
+    319. 灯泡开关
+    初始时有 n 个灯泡关闭。 第 1 轮，你打开所有的灯泡。 第 2 轮，每两个灯泡你关闭一次。 第 3 轮，每三个灯泡切换一次开关（如果关闭则开启，如果开启则关闭）。第 i 轮，每 i 个灯泡切换一次开关。 对于第 n 轮，你只切换最后一个灯泡的开关。 找出 n 轮后有多少个亮着的灯泡。
+    示例:
+    输入: 3
+    输出: 1
+    解释:
+    初始时, 灯泡状态 [关闭, 关闭, 关闭].
+    第一轮后, 灯泡状态 [开启, 开启, 开启].
+    第二轮后, 灯泡状态 [开启, 关闭, 开启].
+    第三轮后, 灯泡状态 [开启, 关闭, 关闭].
+    你应该返回 1，因为只有一个灯泡还亮着。
+    :param n: int
+    :return: int
+    """
+    pass
+
+
+def maximalSquare(matrix):
+    """
+    221. 最大正方形
+    在一个由 0 和 1 组成的二维矩阵内，找到只包含 1 的最大正方形，并返回其面积。
+    示例:
+    输入:
+    1 0 1 0 0
+    1 0 1 1 1
+    1 1 1 1 1
+    1 0 0 1 0
+    输出: 4
+    :param matrix: List[List[str]]
+    :return: int
+    """
+    """
+    # 暴力迭代 5%
+    a = 0
+    n = len(matrix)
+    if n == 0: return 0
+    m = len(matrix[0])
+    for i in range(n):
+        for j in range(m):
+            matrix[i][j] = int(matrix[i][j])
+            if matrix[i][j] == 1:
+                a = 1
+    if a == 0: return 0
+    flag = True
+    while flag:
+        flag = False
+        for i in range(n-a):
+            for j in range(m-a):
+                matrix[i][j] *= (matrix[i+1][j] * matrix[i][j+1] * matrix[i+1][j+1])
+                if matrix[i][j] == 1:
+                    flag = True
+        a += 1
+    return (a-1) ** 2
+    """
+    # 动态规划
+    n = len(matrix)
+    if n == 0: return 0
+    m = len(matrix[0])
+    dp = [[0] * m for _ in range(n)]
+    ans = 0
+    for i in range(n):
+        for j in range(m):
+            if matrix[i][j] == '1':
+                dp[i][j] = 1
+                ans = 1
+            else:
+                dp[i][j] = 0
+    for i in range(1, n):
+        for j in range(1, m):
+            if matrix[i][j] == '1':
+                dp[i][j] = min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) + 1
+                ans = max(ans,  dp[i][j])
+    print(ans)
+    return ans ** 2
+
+
+def allPossibleFBT(N):
+    """
+    894. 所有可能的满二叉树
+    满二叉树是一类二叉树，其中每个结点恰好有 0 或 2 个子结点。
+    返回包含 N 个结点的所有可能满二叉树的列表。 答案的每个元素都是一个可能树的根结点。
+    答案中每个树的每个结点都必须有 node.val=0。
+    你可以按任何顺序返回树的最终列表。
+    示例：
+    输入：7
+    输出：[[0,0,0,null,null,0,0,null,null,0,0],[0,0,0,null,null,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,null,null,null,null,0,0],[0,0,0,0,0,null,null,0,0]]
+    :param N: int
+    :return: List[TreeNode]
+    """
+    """
+    # 暴力解法，超时
+    def deep_copy_tree(root):
+        res = None
+        if root:
+            res = TreeNode(root.val)
+            res.left = deep_copy_tree(root.left)
+            res.right = deep_copy_tree(root.right)
+        return res
+
+    def helper(root):
+        res = []
+        rec = root
+        if root:
+            stk = [root]
+            while stk:
+                p = stk.pop()
+                if p.right:
+                    stk.append(p.right)
+                if p.left:
+                    stk.append(p.left)
+                if not p.left and not p.right:
+                    p.left = TreeNode(0)
+                    p.right = TreeNode(0)
+                    res.append(deep_copy_tree(rec))
+                    p.left = None
+                    p.right = None
+        return res
+
+    def dfs(N):
+        if N % 2 == 0: return []
+        if N == 1: return [TreeNode(0)]
+        res = []
+        for root in dfs(N - 2):
+            for x in helper(root):
+                res.append(x)
+        return res
+    res = dfs(N)
+    for x in res:
+        print(deconstruct_tree_node(x))
+    return res
+    """
+    # 动态规划 T(7) = [left(5) + right(1)] + [left(3) + right(3)]
+    # 由题意，N<=20
+    res = [0] * 21
+
 
 if __name__ == '__main__':
-    x = construct_tree_node([1, null, 2, null, null, 3, null])
-    inorderTraversal(x)
+    allPossibleFBT(7)
+    # maximalSquare([["1", "1", "1", "1", "0"],
+    #                ["1", "1", "1", "1", "1"],
+    #                ["1", "1", "1", "1", "1"],
+    #                ["1", "1", "1", "1", "1"]])
+    # x = construct_tree_node([1, null, 2, null, null, 3, null])
+    # inorderTraversal(x)
     # findDuplicate([1,3,4,2,2])
     # x = construct_tree_node([1,null, 2, null, null, 3, null])
     # print(postorderTraversal(x))

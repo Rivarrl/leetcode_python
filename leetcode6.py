@@ -419,50 +419,48 @@ def allPossibleFBT(N):
     :return: List[TreeNode]
     """
     """
-    # 暴力解法，超时
-    def deep_copy_tree(root):
-        res = None
-        if root:
-            res = TreeNode(root.val)
-            res.left = deep_copy_tree(root.left)
-            res.right = deep_copy_tree(root.right)
-        return res
-
-    def helper(root):
-        res = []
-        rec = root
-        if root:
-            stk = [root]
-            while stk:
-                p = stk.pop()
-                if p.right:
-                    stk.append(p.right)
-                if p.left:
-                    stk.append(p.left)
-                if not p.left and not p.right:
-                    p.left = TreeNode(0)
-                    p.right = TreeNode(0)
-                    res.append(deep_copy_tree(rec))
-                    p.left = None
-                    p.right = None
-        return res
-
+    # 回溯法 较慢 36%
     def dfs(N):
         if N % 2 == 0: return []
         if N == 1: return [TreeNode(0)]
         res = []
-        for root in dfs(N - 2):
-            for x in helper(root):
-                res.append(x)
+        for i in range(1, N):
+            if i % 2 == 1:
+                j = N - i - 1
+                for l in dfs(i):
+                    for r in dfs(j):
+                        root = TreeNode(0)
+                        root.left = l
+                        root.right = r
+                        res.append(root)
         return res
-    res = dfs(N)
-    for x in res:
-        print(deconstruct_tree_node(x))
-    return res
+    return dfs(N)
     """
     # 动态规划 T(7) = [left(5) + right(1)] + [left(3) + right(3)]
     # 由题意，N<=20
+    def dfs(N):
+        if res[N]:
+            return res[N]
+        if N == 1:
+            root = TreeNode(0)
+            res[N] = [root]
+        elif N % 2 == 1:
+            for l in range(1, N):
+                if l % 2 == 1:
+                    r = N - l - 1
+                    for left in dfs(l):
+                        for right in dfs(r):
+                            root = TreeNode(0)
+                            root.left = left
+                            root.right = right
+                            if res[N] == 0:
+                                res[N] = []
+                            res[N].append(root)
+        return res[N]
+    if N % 2 == 0: return []
     res = [0] * 21
+    dfs(N)
+    return res[N]
 
 
 if __name__ == '__main__':

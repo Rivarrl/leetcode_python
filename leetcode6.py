@@ -260,34 +260,6 @@ def inorderTraversal(root):
     return res
 
 
-def flatten(root):
-    """
-    114. 二叉树展开为链表
-    给定一个二叉树，原地将它展开为链表。
-    例如，给定二叉树
-        1
-       / \
-      2   5
-     / \   \
-    3   4   6
-    将其展开为：
-    1
-     \
-      2
-       \
-        3
-         \
-          4
-           \
-            5
-             \
-              6
-    :param root: TreeNode
-    :return: None
-    """
-    pass
-
-
 def containsNearbyAlmostDuplicate(nums, k, t):
     """
     220. 存在重复元素 III
@@ -463,8 +435,47 @@ def allPossibleFBT(N):
     return res[N]
 
 
+def flatten(root):
+    """
+    114. 二叉树展开为链表
+    给定一个二叉树，原地将它展开为链表。
+    例如，给定二叉树
+        1
+       / \
+      2   5
+     / \   \
+    3   4   6
+    将其展开为：
+    1
+     \
+      2
+       \
+        3
+         \
+          4
+           \
+            5
+             \
+              6
+    :param root: TreeNode
+    :return: None
+    """
+    if root:
+        temp = root.right
+        flatten(root.left)
+        flatten(root.right)
+        root.right, root.left = root.left, None
+        if temp:
+            while root.right:
+                root = root.right
+            root.right = temp
+
+
 if __name__ == '__main__':
-    allPossibleFBT(7)
+    x = construct_tree_node([1,null,2,null,null,3])
+    flatten(x)
+    print(deconstruct_tree_node(x))
+    # allPossibleFBT(7)
     # maximalSquare([["1", "1", "1", "1", "0"],
     #                ["1", "1", "1", "1", "1"],
     #                ["1", "1", "1", "1", "1"],

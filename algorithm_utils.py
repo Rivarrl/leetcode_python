@@ -37,7 +37,7 @@ class Node:
         self.val = val
         self.children = children
 
-class PerfectNode:
+class NextNode:
     def __init__(self, val, left, right, next):
         self.val = val
         self.left = left

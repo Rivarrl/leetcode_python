@@ -483,17 +483,17 @@ def connect(root):
     }
     填充它的每个 next 指针，让这个指针指向其下一个右侧节点。如果找不到下一个右侧节点，则将 next 指针设置为 NULL。
     初始状态下，所有 next 指针都被设置为 NULL。
-    :param root: PerfectNode
-    :return: PerfectNode
+    :param root: NextNode
+    :return: NextNode
     """
     """
-    # 层序遍历
+    # 层序遍历 慢 适用于Ⅱ
     if root:
         stk = [root]
         while stk:
             cur = []
             stk.append(None)
-            for i in range(len(stk)-1):
+            for i in range(len(stk)-2, -1, -1):
                 stk[i].next = stk[i+1]
                 if stk[i].right:
                     cur.insert(0, stk[i].right)
@@ -502,8 +502,25 @@ def connect(root):
             stk = cur[:]
     return root
     """
+    """
+    # 非递归
+    if not root:
+        return None
+    cur = root
+    next = cur.left
+    while cur.left:
+        cur.left.next = cur.right
+        if cur.next:
+            cur.right.next = cur.next.left
+            cur = cur.next
+        else:
+            cur = next
+            next = cur.left
+    return root
+    """
     # 利用完美二叉树的数据结构
     def helper(root):
+        # 完全二叉树没有左子就一定没有右子
         if not root or not root.left:
             return
         root.left.next = root.right
@@ -511,6 +528,32 @@ def connect(root):
             root.right.next = root.next.left
         helper(root.left)
         helper(root.right)
+    helper(root)
+    return root
+
+
+def connect2(root):
+    """
+    117. 填充每个节点的下一个右侧节点指针 II
+    接上题，完全二叉树变为普通二叉树
+    :param root: NextNode
+    :return: NextNode
+    """
+
+    def helper(root):
+        if not root or not (root.left or root.right):
+            return
+        last = root.right if root.right else root.left
+        if last:
+            if last == root.right and root.left:
+                root.left.next = root.right
+            p = root.next
+            while p and not (p.left or p.right):
+                p = p.next
+            if p:
+                last.next = p.left if p.left else p.right
+        helper(root.right)
+        helper(root.left)
     helper(root)
     return root
 

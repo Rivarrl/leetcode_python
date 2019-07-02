@@ -471,10 +471,54 @@ def flatten(root):
             root.right = temp
 
 
+def connect(root):
+    """
+    116. 填充每个节点的下一个右侧节点指针
+    给定一个完美二叉树，其所有叶子节点都在同一层，每个父节点都有两个子节点。二叉树定义如下：
+    struct Node {
+      int val;
+      Node *left;
+      Node *right;
+      Node *next;
+    }
+    填充它的每个 next 指针，让这个指针指向其下一个右侧节点。如果找不到下一个右侧节点，则将 next 指针设置为 NULL。
+    初始状态下，所有 next 指针都被设置为 NULL。
+    :param root: PerfectNode
+    :return: PerfectNode
+    """
+    """
+    # 层序遍历
+    if root:
+        stk = [root]
+        while stk:
+            cur = []
+            stk.append(None)
+            for i in range(len(stk)-1):
+                stk[i].next = stk[i+1]
+                if stk[i].right:
+                    cur.insert(0, stk[i].right)
+                if stk[i].left:
+                    cur.insert(0, stk[i].left)
+            stk = cur[:]
+    return root
+    """
+    # 利用完美二叉树的数据结构
+    def helper(root):
+        if not root or not root.left:
+            return
+        root.left.next = root.right
+        if root.next:
+            root.right.next = root.next.left
+        helper(root.left)
+        helper(root.right)
+    helper(root)
+    return root
+
+
 if __name__ == '__main__':
-    x = construct_tree_node([1,null,2,null,null,3])
-    flatten(x)
-    print(deconstruct_tree_node(x))
+    # x = construct_tree_node([1,null,2,null,null,3])
+    # flatten(x)
+    # print(deconstruct_tree_node(x))
     # allPossibleFBT(7)
     # maximalSquare([["1", "1", "1", "1", "0"],
     #                ["1", "1", "1", "1", "1"],

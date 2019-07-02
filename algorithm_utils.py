@@ -37,6 +37,13 @@ class Node:
         self.val = val
         self.children = children
 
+class PerfectNode:
+    def __init__(self, val, left, right, next):
+        self.val = val
+        self.left = left
+        self.right = right
+        self.next = next
+
 def binary_search(bs, b, e, x):
     """
     二分查找返回位置，查不到则返回大于x的第一个值的位置

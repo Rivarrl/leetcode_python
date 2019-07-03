@@ -260,64 +260,6 @@ def inorderTraversal(root):
     return res
 
 
-def containsNearbyAlmostDuplicate(nums, k, t):
-    """
-    220. 存在重复元素 III
-    给定一个整数数组，判断数组中是否有两个不同的索引 i 和 j，使得 nums [i] 和 nums [j] 的差的绝对值最大为 t，并且 i 和 j 之间的差的绝对值最大为 ķ。
-    示例 1:
-    输入: nums = [1,2,3,1], k = 3, t = 0
-    输出: true
-    示例 2:
-    输入: nums = [1,0,1,1], k = 1, t = 2
-    输出: true
-    示例 3:
-    输入: nums = [1,5,9,1,5,9], k = 2, t = 3
-    输出: false
-    :param nums: List[int]
-    :param k: int
-    :param t: int
-    :return: bool
-    """
-    pass
-
-
-def nthUglyNumber(n):
-    """
-    264. 丑数 II
-    编写一个程序，找出第 n 个丑数。
-    丑数就是只包含质因数 2, 3, 5 的正整数。
-    示例:
-    输入: n = 10
-    输出: 12
-    解释: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 是前 10 个丑数。
-    说明:  
-    1 是丑数。
-    n 不超过1690。
-    :param n: int
-    :return: int
-    """
-    pass
-
-
-def bulbSwitch(n):
-    """
-    319. 灯泡开关
-    初始时有 n 个灯泡关闭。 第 1 轮，你打开所有的灯泡。 第 2 轮，每两个灯泡你关闭一次。 第 3 轮，每三个灯泡切换一次开关（如果关闭则开启，如果开启则关闭）。第 i 轮，每 i 个灯泡切换一次开关。 对于第 n 轮，你只切换最后一个灯泡的开关。 找出 n 轮后有多少个亮着的灯泡。
-    示例:
-    输入: 3
-    输出: 1
-    解释:
-    初始时, 灯泡状态 [关闭, 关闭, 关闭].
-    第一轮后, 灯泡状态 [开启, 开启, 开启].
-    第二轮后, 灯泡状态 [开启, 关闭, 开启].
-    第三轮后, 灯泡状态 [开启, 关闭, 关闭].
-    你应该返回 1，因为只有一个灯泡还亮着。
-    :param n: int
-    :return: int
-    """
-    pass
-
-
 def maximalSquare(matrix):
     """
     221. 最大正方形
@@ -558,7 +500,99 @@ def connect2(root):
     return root
 
 
+def nthUglyNumber(n):
+    """
+    264. 丑数 II
+    编写一个程序，找出第 n 个丑数。
+    丑数就是只包含质因数 2, 3, 5 的正整数。
+    示例:
+    输入: n = 10
+    输出: 12
+    解释: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 是前 10 个丑数。
+    说明:  
+    1 是丑数。
+    n 不超过1690。
+    :param n: int
+    :return: int
+    """
+    # 三指针法
+    res = [1]
+    i2, i3, i5 = 0, 0, 0
+    for i in range(n - 1):
+        res.append(min(res[i2] * 2, res[i3] * 3, res[i5] * 5))
+        if res[-1] == res[i2] * 2:
+            i2 += 1
+        if res[-1] == res[i3] * 3:
+            i3 += 1
+        if res[-1] == res[i5] * 5:
+            i5 += 1
+    return res[-1]
+
+
+def bulbSwitch(n):
+    """
+    319. 灯泡开关
+    初始时有 n 个灯泡关闭。 第 1 轮，你打开所有的灯泡。 第 2 轮，每两个灯泡你关闭一次。 第 3 轮，每三个灯泡切换一次开关（如果关闭则开启，如果开启则关闭）。第 i 轮，每 i 个灯泡切换一次开关。 对于第 n 轮，你只切换最后一个灯泡的开关。 找出 n 轮后有多少个亮着的灯泡。
+    示例:
+    输入: 3
+    输出: 1
+    解释:
+    初始时, 灯泡状态 [关闭, 关闭, 关闭].
+    第一轮后, 灯泡状态 [开启, 开启, 开启].
+    第二轮后, 灯泡状态 [开启, 关闭, 开启].
+    第三轮后, 灯泡状态 [开启, 关闭, 关闭].
+    你应该返回 1，因为只有一个灯泡还亮着。
+    :param n: int
+    :return: int
+    """
+    """
+    # 找规律的过程
+    for i in range(1, 1001):
+        dp = [0] * i
+        for j in range(1, i+1):
+            if j == 1:
+                dp = [1] * i
+            else:
+                for k in range(i):
+                    if (k + 1) % j == 0:
+                        dp[k] = int(not dp[k])
+        print(i, dp.count(1))
+    """
+    return int(n**0.5)
+
+
+def containsNearbyAlmostDuplicate(nums, k, t):
+    """
+    220. 存在重复元素 III
+    给定一个整数数组，判断数组中是否有两个不同的索引 i 和 j，使得 nums [i] 和 nums [j] 的差的绝对值最大为 t，并且 i 和 j 之间的差的绝对值最大为 ķ。
+    示例 1:
+    输入: nums = [1,2,3,1], k = 3, t = 0
+    输出: true
+    示例 2:
+    输入: nums = [1,0,1,1], k = 1, t = 2
+    输出: true
+    示例 3:
+    输入: nums = [1,5,9,1,5,9], k = 2, t = 3
+    输出: false
+    :param nums: List[int]
+    :param k: int
+    :param t: int
+    :return: bool
+    """
+    # 超时，用BST
+    n = len(nums)
+    if n < 2: return False
+    for j in range(1, k+1):
+        for i in range(n-j):
+            if abs(nums[i] - nums[i+j]) <= t:
+                return True
+    return False
+
+
 if __name__ == '__main__':
+    print(containsNearbyAlmostDuplicate(nums = [1,5,9,1,5,9], k = 2, t = 3))
+    # bulbSwitch(3)
+    # nthUglyNumber(10)
     # x = construct_tree_node([1,null,2,null,null,3])
     # flatten(x)
     # print(deconstruct_tree_node(x))

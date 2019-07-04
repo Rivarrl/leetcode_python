@@ -558,7 +558,7 @@ def bulbSwitch(n):
                         dp[k] = int(not dp[k])
         print(i, dp.count(1))
     """
-    return int(n**0.5)
+    # return int(n**0.5)
 
 
 def containsNearbyAlmostDuplicate(nums, k, t):
@@ -589,8 +589,162 @@ def containsNearbyAlmostDuplicate(nums, k, t):
     return False
 
 
+def canTransform(start, end):
+    """
+    777. 在LR字符串中交换相邻字符
+    在一个由 'L' , 'R' 和 'X' 三个字符组成的字符串（例如"RXXLRXRXL"）中进行移动操作。一次移动操作指用一个"LX"替换一个"XL"，或者用一个"XR"替换一个"RX"。现给定起始字符串start和结束字符串end，请编写代码，当且仅当存在一系列移动操作使得start可以转换成end时， 返回True。
+    示例 :
+    输入: start = "RXXLRXRXL", end = "XRLXXRRLX"
+    输出: True
+    解释:
+    我们可以通过以下几步将start转换成end:
+    RXXLRXRXL ->
+    XRXLRXRXL ->
+    XRLXRXRXL ->
+    XRLXXRRXL ->
+    XRLXXRRLX
+    注意:
+    1 <= len(start) = len(end) <= 10000。
+    start和end中的字符串仅限于'L', 'R'和'X'。
+    :param start: str
+    :param end: str
+    :return: bool
+    """
+    pass
+
+
+def findRotateSteps(ring, key):
+    """
+    514. 自由之路
+    视频游戏“辐射4”中，任务“通向自由”要求玩家到达名为“Freedom Trail Ring”的金属表盘，并使用表盘拼写特定关键词才能开门。
+    给定一个字符串 ring，表示刻在外环上的编码；给定另一个字符串 key，表示需要拼写的关键词。您需要算出能够拼写关键词中所有字符的最少步数。
+    最初，ring 的第一个字符与12:00方向对齐。您需要顺时针或逆时针旋转 ring 以使 key 的一个字符在 12:00 方向对齐，然后按下中心按钮，以此逐个拼写完 key 中的所有字符。
+    旋转 ring 拼出 key 字符 key[i] 的阶段中：
+    您可以将 ring 顺时针或逆时针旋转一个位置，计为1步。旋转的最终目的是将字符串 ring 的一个字符与 12:00 方向对齐，并且这个字符必须等于字符 key[i] 。
+    如果字符 key[i] 已经对齐到12:00方向，您需要按下中心按钮进行拼写，这也将算作 1 步。按完之后，您可以开始拼写 key 的下一个字符（下一阶段）, 直至完成所有拼写。
+    示例：
+    输入: ring = "godding", key = "gd"
+    输出: 4
+    解释:
+     对于 key 的第一个字符 'g'，已经在正确的位置, 我们只需要1步来拼写这个字符。
+     对于 key 的第二个字符 'd'，我们需要逆时针旋转 ring "godding" 2步使它变成 "ddinggo"。
+     当然, 我们还需要1步进行拼写。
+     因此最终的输出是 4。
+    提示：
+    ring 和 key 的字符串长度取值范围均为 1 至 100；
+    两个字符串中都只有小写字符，并且均可能存在重复字符；
+    字符串 key 一定可以由字符串 ring 旋转拼出。
+    :param ring: str
+    :param key: str
+    :return: int
+    """
+    pass
+
+
+def maxSlidingWindow(nums, k):
+    """
+    239. 滑动窗口最大值
+    给定一个数组 nums，有一个大小为 k 的滑动窗口从数组的最左侧移动到数组的最右侧。你只可以看到在滑动窗口 k 内的数字。滑动窗口每次只向右移动一位。
+    返回滑动窗口最大值。
+    示例:
+    输入: nums = [1,3,-1,-3,5,3,6,7], 和 k = 3
+    输出: [3,3,5,5,6,7]
+    解释:
+      滑动窗口的位置                最大值
+    ---------------               -----
+    [1  3  -1] -3  5  3  6  7       3
+     1 [3  -1  -3] 5  3  6  7       3
+     1  3 [-1  -3  5] 3  6  7       5
+     1  3  -1 [-3  5  3] 6  7       5
+     1  3  -1  -3 [5  3  6] 7       6
+     1  3  -1  -3  5 [3  6  7]      7
+    注意：
+    你可以假设 k 总是有效的，1 ≤ k ≤ 输入数组的大小，且输入数组不为空。
+    进阶：
+    你能在线性时间复杂度内解决此题吗？
+    :param nums: List[int]
+    :param k: int
+    :return: List[int]
+    """
+    """
+    # 使用cur当作窗口，内部排序 O(k*n) 18%
+    n = len(nums)
+    res = []
+    if n == 0: return res
+    cur = sorted(nums[:k])
+    res.append(cur[-1])
+    for i in range(n-k):
+        j = i + k
+        cur.remove(nums[i])
+        cur.append(nums[j])
+        cur.sort()
+        res.append(cur[-1])
+    print(res)
+    return res
+    """
+    """
+    # 使用双向队列的思想，每次队列中只保留对下一步有意义的数(不大于当前值的数) 56%
+    n = len(nums)
+    if n == 0: return []
+    cur, res = [], [0] * (n - k + 1)
+    for i in range(n):
+        while cur and nums[cur[-1]] <= nums[i]:
+            cur.pop()
+        cur.append(i)
+        if cur[0] <= i - k:
+            cur = cur[1:]
+        if i - k + 1 >= 0:
+            res[i-k+1] = nums[cur[0]]
+    return res
+    """
+    # 直接用max函数 94%
+    n = len(nums)
+    res = []
+    if n == 0: return res
+    m = max(nums[:k])
+    res.append(m)
+    for i in range(n - k):
+        j = i + k
+        if nums[i] == m:
+            m = max(nums[i + 1:j + 1])
+        else:
+            m = max(m, nums[j])
+        res.append(m)
+    return res
+
+
+def longestIncreasingPath(matrix):
+    """
+    329. 矩阵中的最长递增路径
+    给定一个整数矩阵，找出最长递增路径的长度。
+    对于每个单元格，你可以往上，下，左，右四个方向移动。 你不能在对角线方向上移动或移动到边界外（即不允许环绕）。
+    示例 1:
+    输入: nums =
+    [
+      [9,9,4],
+      [6,6,8],
+      [2,1,1]
+    ]
+    输出: 4
+    解释: 最长递增路径为 [1, 2, 6, 9]。
+    示例 2:
+    输入: nums =
+    [
+      [3,4,5],
+      [3,2,6],
+      [2,2,1]
+    ]
+    输出: 4
+    解释: 最长递增路径是 [3, 4, 5, 6]。注意不允许在对角线方向上移动。
+    :param matrix: List[List[int]]
+    :return: int
+    """
+    pass
+
+
 if __name__ == '__main__':
-    print(containsNearbyAlmostDuplicate(nums = [1,5,9,1,5,9], k = 2, t = 3))
+    maxSlidingWindow(nums = [1,3,-1,-3,5,3,6,7], k = 3)
+    # print(containsNearbyAlmostDuplicate(nums = [1,5,9,1,5,9], k = 2, t = 3))
     # bulbSwitch(3)
     # nthUglyNumber(10)
     # x = construct_tree_node([1,null,2,null,null,3])

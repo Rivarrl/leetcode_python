@@ -169,15 +169,47 @@ def matrix_pretty_print(matrix):
             print(matrix[i][j], end=' ')
         print()
 
+def build_max_heap(arr):
+    for i in range(len(arr)//2, -1, -1):
+        heapify(arr, i)
+
+def heapify(arr, i):
+    left = 2 * i + 1
+    right = left + 1
+    root = i
+    if left < arr_size and arr[left] > arr[root]:
+        root = left
+    if right < arr_size and arr[right] > arr[root]:
+        root = right
+    if root != i:
+        swap(arr, i, root)
+        heapify(arr, root)
+
+def swap(arr, i, j):
+    arr[i], arr[j] = arr[j], arr[i]
+
+def heap_sort(arr):
+    global arr_size
+    arr_size = len(arr)
+    build_max_heap(arr)
+    for i in range(len(arr)-1, 0, -1):
+        swap(arr, 0, i)
+        arr_size -= 1
+        heapify(arr, 0)
+
+
 if __name__ == '__main__':
-    pass
+    x = [4,1,6,3,5,2]
+    heap_sort(x)
+    print(x)
     # matrix_pretty_print([[1,2,3],[4,5,6]])
     # a = [5,4,2,3,6,1,7,9]
     # quick_sort(a, 0, len(a) - 1)
     # print(a)
     # a = construct_list_node([1,2,3,4,5,6])
     # print_list_node(a)
-    b = construct_tree_node([8,12,2,None,None,6,4,None,None,None,None])
-    print_tree_node(b)
-    c = deconstruct_tree_node(b)
-    print(c)
+    # b = construct_tree_node([8,12,2,None,None,6,4,None,None,None,None])
+    # print_tree_node(b)
+    # c = deconstruct_tree_node(b)
+    # print(c)
+    pass

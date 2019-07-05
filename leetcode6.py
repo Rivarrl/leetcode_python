@@ -589,30 +589,6 @@ def containsNearbyAlmostDuplicate(nums, k, t):
     return False
 
 
-def canTransform(start, end):
-    """
-    777. 在LR字符串中交换相邻字符
-    在一个由 'L' , 'R' 和 'X' 三个字符组成的字符串（例如"RXXLRXRXL"）中进行移动操作。一次移动操作指用一个"LX"替换一个"XL"，或者用一个"XR"替换一个"RX"。现给定起始字符串start和结束字符串end，请编写代码，当且仅当存在一系列移动操作使得start可以转换成end时， 返回True。
-    示例 :
-    输入: start = "RXXLRXRXL", end = "XRLXXRRLX"
-    输出: True
-    解释:
-    我们可以通过以下几步将start转换成end:
-    RXXLRXRXL ->
-    XRXLRXRXL ->
-    XRLXRXRXL ->
-    XRLXXRRXL ->
-    XRLXXRRLX
-    注意:
-    1 <= len(start) = len(end) <= 10000。
-    start和end中的字符串仅限于'L', 'R'和'X'。
-    :param start: str
-    :param end: str
-    :return: bool
-    """
-    pass
-
-
 def findRotateSteps(ring, key):
     """
     514. 自由之路
@@ -713,6 +689,49 @@ def maxSlidingWindow(nums, k):
     return res
 
 
+def canTransform(start, end):
+    """
+    777. 在LR字符串中交换相邻字符
+    在一个由 'L' , 'R' 和 'X' 三个字符组成的字符串（例如"RXXLRXRXL"）中进行移动操作。一次移动操作指用一个"LX"替换一个"XL"，或者用一个"XR"替换一个"RX"。现给定起始字符串start和结束字符串end，请编写代码，当且仅当存在一系列移动操作使得start可以转换成end时， 返回True。
+    示例 :
+    输入: start = "RXXLRXRXL", end = "XRLXXRRLX"
+    输出: True
+    解释:
+    我们可以通过以下几步将start转换成end:
+    RXXLRXRXL ->
+    XRXLRXRXL ->
+    XRLXRXRXL ->
+    XRLXXRRXL ->
+    XRLXXRRLX
+    注意:
+    1 <= len(start) = len(end) <= 10000。
+    start和end中的字符串仅限于'L', 'R'和'X'。
+    :param start: str
+    :param end: str
+    :return: bool
+    """
+    ns, ne = len(start), len(end)
+    if ns != ne: return False
+    for x in ["R", "L", "X"]:
+        if start.count(x) != end.count(x):
+            return False
+    if start.replace("X", "") != end.replace("X", ""):
+        return False
+    s, e = 0, 0
+    while s < ns and e < ne:
+        while s < ns and start[s] == 'X':
+            s += 1
+        while e < ne and end[e] == 'X':
+            e += 1
+        if s == ns and e == ne:
+            break
+        if (start[s] == 'L' and s < e) or (start[s] == 'R' and s > e):
+            return False
+        s += 1
+        e += 1
+    return True
+
+
 def longestIncreasingPath(matrix):
     """
     329. 矩阵中的最长递增路径
@@ -739,11 +758,68 @@ def longestIncreasingPath(matrix):
     :param matrix: List[List[int]]
     :return: int
     """
-    pass
+    """
+    # 带记录的dfs 90%
+    n = len(matrix)
+    if n == 0: return 0
+    m = len(matrix[0])
+    visited = [[0] * m for _ in range(n)]
+    xy = ((0, 1), (1, 0), (0, -1), (-1, 0))
+
+    def dfs(i, j):
+        if visited[i][j] > 0:
+            return visited[i][j]
+        cur = 0
+        for x, y in xy:
+            ni, nj = i + x, j + y
+            if 0 <= ni < n and 0 <= nj < m and matrix[ni][nj] > matrix[i][j]:
+                cur = max(cur, dfs(ni, nj))
+        visited[i][j] = cur + 1
+        return visited[i][j]
+
+    ans = 1
+    for i in range(n):
+        for j in range(m):
+            ans = max(ans, dfs(i, j))
+    print(ans)
+    return ans
+    """
+    """
+    # 大佬简化版
+    matrix = {i + j * 1j: val
+              for i, row in enumerate(matrix)
+              for j, val in enumerate(row)}
+    length = {}
+
+    for z in sorted(matrix, key=matrix.get):
+        length[z] = 1 + max([length[Z]
+                             for Z in [z + 1, z - 1, z + 1j, z - 1j]
+                             if Z in matrix and matrix[z] > matrix[Z]]
+                            or [0])
+    return max(length.values() or [0])
+    """
+    # 先排序再动态规划 57%
+    if not matrix or not matrix[0]:
+        return 0
+    n, m = len(matrix), len(matrix[0])
+    arr = sorted([[matrix[i][j], i, j] for j in range(m) for i in range(n)], key=lambda x:x[0])
+    xy = ((0, 1), (1, 0), (0, -1), (-1, 0))
+    dp = [[1] * m for _ in range(n)]
+    ans = 1
+    for val, i, j in arr:
+        for di, dj in xy:
+            x, y = i + di, j + dj
+            # 这里要用大于，因为从小到大遍历
+            if 0 <= x < n and 0 <= y < m and val > matrix[x][y]:
+                dp[i][j] = max(dp[x][y] + 1, dp[i][j])
+                ans = max(dp[i][j], ans)
+    return ans
 
 
 if __name__ == '__main__':
-    maxSlidingWindow(nums = [1,3,-1,-3,5,3,6,7], k = 3)
+    longestIncreasingPath([[9,9,4],[6,6,8],[2,1,1]])
+    # print(canTransform("XXXXXLXXXX", "LXXXXXXXXX"))
+    # maxSlidingWindow(nums = [1,3,-1,-3,5,3,6,7], k = 3)
     # print(containsNearbyAlmostDuplicate(nums = [1,5,9,1,5,9], k = 2, t = 3))
     # bulbSwitch(3)
     # nthUglyNumber(10)

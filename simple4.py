@@ -364,20 +364,19 @@ def numMovesStones(a, b, c):
     :param c: int
     :return: List[int]
     """
-    p = sorted([a, b ,c])
-    if p[2] - p[0] == 2:
-        return [0, 0]
+    x, y, z = sorted([a,b,c])
+    xy = y - x - 1
+    yz = z - y - 1
+    M = xy + yz
     m = 2
-    for i in range(1, 3):
-        if p[i] - p[i-1] == 1:
+    if x == y - 2 or z == y + 2:
+        m -= 1
+    else:
+        if x == y - 1:
             m -= 1
-    ba = abs(b - a) - 1
-    bc = abs(b - c) - 1
-    M = ba + bc
-    if ba == bc:
-        M += 1
-    print(m, M)
-    return [m, M]
+        if z == y + 1:
+            m -= 1
+    return [m,M]
 
 
 if __name__ == '__main__':

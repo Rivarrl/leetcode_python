@@ -379,11 +379,152 @@ def numMovesStones(a, b, c):
     return [m,M]
 
 
+def search(nums, target):
+    """
+    704. 二分查找
+    给定一个 n 个元素有序的（升序）整型数组 nums 和一个目标值 target  ，写一个函数搜索 nums 中的 target，如果目标值存在返回下标，否则返回 -1。
+    示例 1:
+    输入: nums = [-1,0,3,5,9,12], target = 9
+    输出: 4
+    解释: 9 出现在 nums 中并且下标为 4
+    示例 2:
+    输入: nums = [-1,0,3,5,9,12], target = 2
+    输出: -1
+    解释: 2 不存在 nums 中因此返回 -1
+    提示：
+    你可以假设 nums 中的所有元素是不重复的。
+    n 将在 [1, 10000]之间。
+    nums 的每个元素都将在 [-9999, 9999]之间。
+    :param nums: List[int]
+    :param target: int
+    :return: int
+    """
+    ans = -1
+    i, j = 0, len(nums) - 1
+    while i <= j:
+        m = i + (j - i >> 1)
+        if nums[m] < target:
+            i = m + 1
+        elif nums[m] > target:
+            j = m - 1
+        else:
+            ans = m
+            break
+    return ans
+
+
+def findMaxConsecutiveOnes(nums):
+    """
+    485. 最大连续1的个数
+    给定一个二进制数组， 计算其中最大连续1的个数。
+    示例 1:
+    输入: [1,1,0,1,1,1]
+    输出: 3
+    解释: 开头的两位和最后的三位都是连续1，所以最大连续1的个数是 3.
+    注意：
+    输入的数组只包含 0 和1。
+    输入数组的长度是正整数，且不超过 10,000。
+    :param nums: List[int]
+    :return: int
+    """
+    ans, cur = 0, 0
+    for i in range(len(nums)):
+        if nums[i] == 1:
+            cur += 1
+        else:
+            ans = max(cur, ans)
+            cur = 0
+    return ans
+
+
+def checkPerfectNumber(num):
+    """
+    507. 完美数
+    对于一个 正整数，如果它和除了它自身以外的所有正因子之和相等，我们称它为“完美数”。
+    给定一个 正整数 n， 如果他是完美数，返回 True，否则返回 False
+    示例：
+    输入: 28
+    输出: True
+    解释: 28 = 1 + 2 + 4 + 7 + 14
+    注意:
+    输入的数字 n 不会超过 100,000,000. (1e8)
+    :param num: int
+    :return: bool
+    """
+    if num <= 1: return False
+    x = 1
+    for i in range(2, int(num ** 0.5) + 1):
+        if num % i == 0:
+            x += i + num // i
+    return x == num
+
+
+def findRelativeRanks(nums):
+    """
+    506. 相对名次
+    给出 N 名运动员的成绩，找出他们的相对名次并授予前三名对应的奖牌。前三名运动员将会被分别授予 “金牌”，“银牌” 和“ 铜牌”（"Gold Medal", "Silver Medal", "Bronze Medal"）。
+    (注：分数越高的选手，排名越靠前。)
+    示例 1:
+    输入: [5, 4, 3, 2, 1]
+    输出: ["Gold Medal", "Silver Medal", "Bronze Medal", "4", "5"]
+    解释: 前三名运动员的成绩为前三高的，因此将会分别被授予 “金牌”，“银牌”和“铜牌” ("Gold Medal", "Silver Medal" and "Bronze Medal").
+    余下的两名运动员，我们只需要通过他们的成绩计算将其相对名次即可。
+    提示:
+    N 是一个正整数并且不会超过 10000。
+    所有运动员的成绩都不相同。
+    :param nums: List[int]
+    :return: List[str]
+    """
+    n = len(nums)
+    res = ["1"] * n
+    d = {"1":"Gold Medal", "2":"Silver Medal", "3":"Bronze Medal"}
+    idx_nums = sorted([(nums[i], i) for i in range(n)], reverse=True)
+    rk = 1
+    for x, i in idx_nums:
+        res[i] = str(rk) if not str(rk) in d else d[str(rk)]
+        rk += 1
+    return res
+
+
+def findRadius(houses, heaters):
+    """
+    475. 供暖器
+    冬季已经来临。 你的任务是设计一个有固定加热半径的供暖器向所有房屋供暖。
+    现在，给出位于一条水平线上的房屋和供暖器的位置，找到可以覆盖所有房屋的最小加热半径。
+    所以，你的输入将会是房屋和供暖器的位置。你将输出供暖器的最小加热半径。
+    说明:
+    给出的房屋和供暖器的数目是非负数且不会超过 25000。
+    给出的房屋和供暖器的位置均是非负数且不会超过10^9。
+    只要房屋位于供暖器的半径内(包括在边缘上)，它就可以得到供暖。
+    所有供暖器都遵循你的半径标准，加热的半径也一样。
+    示例 1:
+    输入: [1,2,3],[2]
+    输出: 1
+    解释: 仅在位置2上有一个供暖器。如果我们将加热半径设为1，那么所有房屋就都能得到供暖。
+    示例 2:
+    输入: [1,2,3,4],[1,4]
+    输出: 1
+    解释: 在位置1, 4上有两个供暖器。我们需要将加热半径设为1，这样所有房屋就都能得到供暖。
+    :param houses: List[int]
+    :param heaters: List[int]
+    :return: int
+    """
+    n = len(houses)
+    m = len(heaters)
+    houses.sort()
+    heaters.sort()
+    i, j = 0, 0
+    ans = 0
+    cur = float("inf")
+    while i < n and j < m:
+        while houses[i] > heaters[j]:
+
+
 if __name__ == '__main__':
-    numMovesStones(1,2,5)
-    numMovesStones(1,3,5)
-    numMovesStones(1,5,3)
-    numMovesStones(1,5,2)
+    findRadius([9,5,0,4,7], [5,4])
+    # findRelativeRanks([10,3,8,9,4])
+    # checkPerfectNumber(28)
+    # numMovesStones(1,5,2)
     # print(rotateString("abcde", "cdeab"))
     # findAnagrams("abaacbabc", "abc")
     # x = construct_tree_node([1, 1, 1, 1, 1, null, null])

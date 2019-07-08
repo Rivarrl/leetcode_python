@@ -509,19 +509,46 @@ def findRadius(houses, heaters):
     :param heaters: List[int]
     :return: int
     """
+    """
+    # 相关标签提到的二分查找，思路是预设答案的上下界0，和max(houses)，二分查找着正确答案，如果当前x值满足供暖需求，正确答案就在0~x之间，否则在x~max之间 5%
+    def can_heat(x):
+        i, j = 0, 0
+        while i < n and j < m:
+            l, r = heaters[j] - x, heaters[j] + x
+            while i < n and l <= houses[i] <= r:
+                i += 1
+            j += 1
+        return i == n
+
     n = len(houses)
     m = len(heaters)
     houses.sort()
     heaters.sort()
-    i, j = 0, 0
+    i, j = 0, max(max(houses), max(heaters))
+    while i<j:
+        mid = i + (j - i >> 1)
+        if can_heat(mid):
+            j = mid
+        else:
+            i = mid + 1
+    return j
+    """
+    # 在暴力的基础上优化，heaters用指针 74%
     ans = 0
-    cur = float("inf")
-    while i < n and j < m:
-        while houses[i] > heaters[j]:
+    j = 0
+    houses.sort()
+    heaters.sort()
+    for i in range(len(houses)):
+        cur = abs(houses[i] - heaters[j])
+        while j < len(heaters) - 1 and abs(heaters[j + 1] - houses[i]) <= cur:
+            cur = abs(heaters[j+1] - houses[i])
+            j += 1
+        ans = max(cur, ans)
+    return ans
 
 
 if __name__ == '__main__':
-    findRadius([9,5,0,4,7], [5,4])
+    findRadius([1,5], [10])
     # findRelativeRanks([10,3,8,9,4])
     # checkPerfectNumber(28)
     # numMovesStones(1,5,2)

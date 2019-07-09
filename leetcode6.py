@@ -821,19 +821,147 @@ def candy(ratings):
     :param ratings: List[int]
     :return: int
     """
+    """
+    # 贪心，正反遍历两次，正序找单增序列，反序找单减序列 20%
     n = len(ratings)
-    res = [1] * n
+    dp = [1] * n
     for i in range(1, n):
-        j = i
-        while ratings[j] < ratings[j-1]:
-            res[j-1] += 1
-            j -= 1
-        res[i] = res[i-1] + 1
+        if ratings[i] > ratings[i-1]:
+            dp[i] = dp[i-1] + 1
+    for i in range(n-2, -1, -1):
+        if ratings[i] > ratings[i+1]:
+            dp[i] = max(dp[i], dp[i+1] + 1)
+    return sum(dp)
+    """
+    """
+    # 利用等差数列求和，保存上一个峰值 94%
+    if not ratings:
+        return 0
+    ratings.append(999999)
+    state=1
+    start=end=0
+    result=1
+    last=1
+    for i in range(1,len(ratings)):
+        if ratings[i]>=ratings[i-1]:
+            if state==-1:
+                if start !=end:
+                    if end-start+1>last:
+                        result-=last
+                        result+=end-start+1
+                    result+=int((end-start+1)*(end-start)/2)
+                    last=1
+            if ratings[i]>ratings[i-1]:
+                result+=last+1
+                last+=1
+            else:
+                result+=1
+                last=1
+            start=end=i
+            state=1
+        else:
+            end=i
+            state=-1
+    return result-last
+    """
+    # 100% 升序累加，降序单独累加，到再次变为升序处加到结果中
+    if not ratings:
+        return 0
+    result = 0
+    decreasing_length = 0
+    prev_candies = 2
+    prev_rating = ratings[0]
+    peak_candies = -1
+    second_candies = 0
+    for rating in ratings:
+        if rating < prev_rating:
+            if peak_candies == -1:
+                peak_candies = prev_candies
+            if prev_candies > 1:
+                result += 1
+                decreasing_length = 1
+            else:
+                result += decreasing_length + 1
+                decreasing_length += 1
+            second_candies += 1
+            if peak_candies == second_candies + 1:
+                decreasing_length += 1
+            prev_rating = rating
+            prev_candies = 1
+        elif rating > prev_rating:
+            peak_candies = -1
+            second_candies = 0
+            result += prev_candies + 1
+            prev_candies += 1
+            decreasing_length = 1
+            prev_rating = rating
+        else:
+            peak_candies = -1
+            second_candies = 0
+            result += 1
+            prev_candies = 1
+            decreasing_length = 1
+            prev_rating = rating
+    return result
 
+
+def maximumGap(nums):
+    """
+    164. 最大间距
+    给定一个无序的数组，找出数组在排序之后，相邻元素之间最大的差值。
+    如果数组元素个数小于 2，则返回 0。
+    示例 1:
+    输入: [3,6,9,1]
+    输出: 3
+    解释: 排序后的数组是 [1,3,6,9], 其中相邻元素 (3,6) 和 (6,9) 之间都存在最大差值 3。
+    示例 2:
+    输入: [10]
+    输出: 0
+    解释: 数组元素个数小于 2，因此返回 0。
+    说明:
+    你可以假设数组中所有元素都是非负整数，且数值在 32 位有符号整数范围内。
+    请尝试在线性时间复杂度和空间复杂度的条件下解决此问题。
+    :param nums: List[int]
+    :return: int
+    """
+    # 先实现，强行sort后找最大间距  72%
+    nums.sort()
+    ans = 0
+    for i in range(1, len(nums)):
+        ans = max(nums[i] - nums[i - 1], ans)
+    return ans
+
+
+def longestConsecutive(nums):
+    """
+    128. 最长连续序列
+    给定一个未排序的整数数组，找出最长连续序列的长度。
+    要求算法的时间复杂度为 O(n)。
+    示例:
+    输入: [100, 4, 200, 1, 3, 2]
+    输出: 4
+    解释: 最长连续序列是 [1, 2, 3, 4]。它的长度为 4。
+    :param nums: List[int]
+    :return: int
+    """
+    # 先实现，强行sort后照最长序列  25%
+    if not nums: return 0
+    nums.sort()
+    ans, cur = 1, 1
+    for i in range(1, len(nums)):
+        if nums[i] - nums[i-1] == 1:
+            cur += 1
+        elif nums[i] - nums[i-1] > 1:
+            cur = 1
+        else:
+            continue
+        ans = max(cur, ans)
+    return ans
 
 
 if __name__ == '__main__':
-    longestIncreasingPath([[9,9,4],[6,6,8],[2,1,1]])
+    candy([2,3,5,4,6,2,1,0,2,5,3,4])
+    # longestIncreasingPath([[9,9,4],[6,6,8],[2,1,1]])
     # print(canTransform("XXXXXLXXXX", "LXXXXXXXXX"))
     # maxSlidingWindow(nums = [1,3,-1,-3,5,3,6,7], k = 3)
     # print(containsNearbyAlmostDuplicate(nums = [1,5,9,1,5,9], k = 2, t = 3))

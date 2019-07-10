@@ -44,6 +44,12 @@ class NextNode:
         self.right = right
         self.next = next
 
+class Bucket:
+    def __init__(self,m=0,M=0,isempty=True):
+        self.m = m
+        self.M = M
+        self.isempty = isempty
+
 def binary_search(bs, b, e, x):
     """
     二分查找返回位置，查不到则返回大于x的第一个值的位置

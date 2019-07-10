@@ -924,12 +924,39 @@ def maximumGap(nums):
     :param nums: List[int]
     :return: int
     """
+    """
     # 先实现，强行sort后找最大间距  72%
     nums.sort()
     ans = 0
     for i in range(1, len(nums)):
         ans = max(nums[i] - nums[i - 1], ans)
     return ans
+    """
+    # 桶排序，结果就是每个非空桶之间的间距最大值 O(n)
+    if len(nums) < 2:
+        return 0
+    Buckets = [Bucket() for _ in range(len(nums)+1)]
+    max_num = max(nums)
+    min_num = min(nums)
+    if max_num == min_num:
+        return 0
+    for num in nums:
+        index = int((num-min_num)/(max_num-min_num)*len(nums))
+        bucket = Buckets[index]
+        if bucket.isempty:
+            bucket.m = num
+            bucket.M = num
+            bucket.isempty = False
+        else:
+            bucket.m = min(num,bucket.m)
+            bucket.M = max(num,bucket.M)
+    res = 0
+    pre_max = Buckets[0].M
+    for i in range(1,len(Buckets)):
+        if not Buckets[i].isempty:
+            res = max(res,Buckets[i].m - pre_max)
+            pre_max = Buckets[i].M
+    return res
 
 
 def longestConsecutive(nums):
@@ -944,6 +971,7 @@ def longestConsecutive(nums):
     :param nums: List[int]
     :return: int
     """
+    """
     # 先实现，强行sort后照最长序列  25%
     if not nums: return 0
     nums.sort()
@@ -956,6 +984,21 @@ def longestConsecutive(nums):
         else:
             continue
         ans = max(cur, ans)
+    return ans
+    """
+    # 用哈希表保存以key为端点的最长序列长度
+    d = {}
+    ans = 0
+    for x in nums:
+        if x not in d:
+            l = d.get(x - 1, 0)
+            r = d.get(x + 1, 0)
+            cur = 1 + l + r
+            if cur > ans:
+                ans = cur
+            d[x] = cur
+            d[x - l] = cur
+            d[x + r] = cur
     return ans
 
 

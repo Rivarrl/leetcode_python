@@ -6,10 +6,10 @@ class MergeSort:
 
     def __init__(self, arr):
         self.arr = arr
-        self.aux = [x for x in self.arr]
 
     def merge(self, lo, mid, hi):
         i, j = lo, mid + 1
+        self.aux = self.arr[:]
         for k in range(lo, hi + 1):
             if i > mid:
                 self.arr[k] = self.aux[j]
@@ -27,6 +27,13 @@ class MergeSort:
     def sort(self):
         self.sort_helper(0, len(self.arr) - 1)
 
+    def sort_helper(self, lo, hi):
+        if hi <= lo: return
+        mid = lo + (hi - lo) // 2
+        self.sort_helper(lo, mid)
+        self.sort_helper(mid+1, hi)
+        self.merge(lo, mid, hi)
+
     def sort_bottom_up(self):
         N = len(self.arr)
         sz = 1
@@ -36,13 +43,6 @@ class MergeSort:
                 self.merge(lo, lo+sz-1, min(lo+sz+sz-1, N-1))
                 lo += sz + sz
             sz += sz
-
-    def sort_helper(self, lo, hi):
-        if hi <= lo: return
-        mid = lo + (hi - lo) // 2
-        self.sort_helper(lo, mid)
-        self.sort_helper(mid+1, hi)
-        self.merge(lo, mid, hi)
 
 if __name__ == '__main__':
     x = [4,3,5,1,2,0,6,-1,9]

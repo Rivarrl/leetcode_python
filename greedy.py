@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
-import algorithm_utils as alg
+from leetcode import algorithm_utils as alg
+
 
 ## 贪心算法
 

@@ -1,6 +1,4 @@
 # -*- coding:utf-8 -*-
-from algorithm_utils import *
-import re
 
 # leetcode 简单题 3
 

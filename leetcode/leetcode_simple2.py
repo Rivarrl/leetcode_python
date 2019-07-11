@@ -1,5 +1,4 @@
 from algorithm_utils import *
-from collections import deque
 
 
 # leetcode 简单题 #2

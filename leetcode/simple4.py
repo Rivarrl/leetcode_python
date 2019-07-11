@@ -1,5 +1,4 @@
 # -*- coding:utf-8 -*-
-from algorithm_utils import *
 
 # leetcode 简单题 4
 

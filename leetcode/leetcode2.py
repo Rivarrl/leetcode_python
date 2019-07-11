@@ -1,5 +1,4 @@
 # -*-coding:utf-8-*-
-import algorithm_utils as alg
 from algorithm_utils import ListNode
 
 # leetcode.py 内容太杂了，新起一个leetcode2.py

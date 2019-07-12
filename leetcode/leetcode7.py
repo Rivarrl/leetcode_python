@@ -65,35 +65,154 @@ def computeArea(A, B, C, D, E, F, G, H):
     :param H: int
     :return: int
     """
+    """
     # 两个矩形面积和减去重叠部分面积
-    get_D = lambda x1, x2: abs(x2 - x1)
+    get_D = lambda x1, x2: x2 - x1
     get_S = lambda x1, y1, x2, y2: get_D(x1, x2) * get_D(y1, y2)
     S1 = get_S(A, B, C, D)
     S2 = get_S(E, F, G, H)
     S3 = 0
+    m_AC, M_AC = min(A, C), max(A, C)
+    m_EG, M_EG = min(E, G), max(E, G)
+    m_BD, M_BD = min(B, D), max(B, D)
+    m_FH, M_FH = min(F, H), max(F, H)
     D_AC = get_D(A, C)
     D_EG = get_D(E, G)
-    D_12 = max(get_D(min(A, C), max(E, G)), get_D(min(E, G), max(A, C)))
+    D_12 = max(get_D(m_AC, M_EG), get_D(m_EG, M_AC))
     D_BD = get_D(B, D)
     D_FH = get_D(F, H)
-    D_34 = max(get_D(min(B, D), max(F, H)), get_D(min(F, H), max(B, D)))
-    if (min(A, C) <= min(E, G) <= max(E, G) <= max(A, C) and min(B, D) <= min(F, H) <= max(F, H) <= max(B, D)) or (min(E, G) <= min(A, C) <= max(A, C) <= max(E, G) and min(F, H) <= min(B, D) <= max(B, D) <= max(F, H)):
-        return max(S1, S2)
-    if not (D_12 > D_AC + D_EG and D_34 > D_BD + D_FH):
-        S3 = min(get_D(min(A, C), max(E, G)), get_D(min(E, G), max(A, C))) * min(get_D(min(B, D), max(F, H)), get_D(min(F, H), max(B, D)))
+    D_34 = max(get_D(m_BD, M_FH), get_D(m_FH, M_BD))
+    if D_AC + D_EG > D_12 and D_BD + D_FH > D_34:
+        S3 = min(D_AC, D_EG, get_D(m_AC, M_EG), get_D(m_EG, M_AC)) * min(D_BD, D_FH, get_D(m_BD, M_FH), get_D(m_FH, M_BD))
     ans = S1 + S2 - S3
-    print(S1, S2, S3)
-    print(ans)
     return ans
+    """
+    # 简化版
+    S1 = (C - A) * (D - B) + (G - E) * (H - F)
+    S2 = 0
+    if A < G and B < H and C > E and D > F:
+        X, Y = sorted([A, C, E, G]), sorted([B, D, F, H])
+        S2 = (X[2] - X[1]) * (Y[2] - Y[1])
+    return S1 - S2
+
+
+def rob2(nums):
+    """
+    213. 打家劫舍 II
+    你是一个专业的小偷，计划偷窃沿街的房屋，每间房内都藏有一定的现金。这个地方所有的房屋都围成一圈，这意味着第一个房屋和最后一个房屋是紧挨着的。同时，相邻的房屋装有相互连通的防盗系统，如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警。
+    给定一个代表每个房屋存放金额的非负整数数组，计算你在不触动警报装置的情况下，能够偷窃到的最高金额。
+    示例 1:
+    输入: [2,3,2]
+    输出: 3
+    解释: 你不能先偷窃 1 号房屋（金额 = 2），然后偷窃 3 号房屋（金额 = 2）, 因为他们是相邻的。
+    示例 2:
+    输入: [1,2,3,1]
+    输出: 4
+    解释: 你可以先偷窃 1 号房屋（金额 = 1），然后偷窃 3 号房屋（金额 = 3）。
+         偷窃到的最高金额 = 1 + 3 = 4 。
+    :param nums: List[int]
+    :return: int
+    """
+    def helper(nums):
+        n = len(nums)
+        if n == 0: return 0
+        if n < 3: return max(nums)
+        if n == 3: return max(nums[2] + nums[0], nums[1])
+        cur, pre1, pre2 = nums[2] + nums[0], nums[1], nums[0]
+        ans = cur
+        for i in range(3, n):
+            cur, pre1, pre2 = nums[i] + max(pre1, pre2), cur, pre1
+            ans = max(cur, ans)
+        return ans
+    n = len(nums)
+    if n == 0: return 0
+    if n < 3: return max(nums)
+    return max(helper(nums[1:]), helper(nums[:-1]))
+
+
+def rob3(root):
+    """
+    337. 打家劫舍 III
+    在上次打劫完一条街道之后和一圈房屋后，小偷又发现了一个新的可行窃的地区。这个地区只有一个入口，我们称之为“根”。 除了“根”之外，每栋房子有且只有一个“父“房子与之相连。一番侦察之后，聪明的小偷意识到“这个地方的所有房屋的排列类似于一棵二叉树”。 如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
+    计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
+    示例 1:
+    输入: [3,2,3,null,3,null,1]
+         3
+        / \
+       2   3
+        \   \
+         3   1
+    输出: 7
+    解释: 小偷一晚能够盗取的最高金额 = 3 + 3 + 1 = 7.
+    示例 2:
+    输入: [3,4,5,1,3,null,1]
+         3
+        / \
+       4   5
+      / \   \
+     1   3   1
+    输出: 9
+    解释: 小偷一晚能够盗取的最高金额 = 4 + 5 = 9.
+    :param root: TreeNode
+    :return: int
+    """
+    pass
+
+
+def recoverFromPreorder(S):
+    """
+    1028. 从先序遍历还原二叉树
+    我们从二叉树的根节点 root 开始进行深度优先搜索。
+    在遍历中的每个节点处，我们输出 D 条短划线（其中 D 是该节点的深度），然后输出该节点的值。（如果节点的深度为 D，则其直接子节点的深度为 D + 1。根节点的深度为 0）。
+    如果节点只有一个子节点，那么保证该子节点为左子节点。
+    给出遍历输出 S，还原树并返回其根节点 root。
+    示例 1：
+    输入："1-2--3--4-5--6--7"
+    输出：[1,2,5,3,4,6,7]
+    示例 2：
+    输入："1-2--3---4-5--6---7"
+    输出：[1,2,5,3,null,6,null,4,null,7]
+    示例 3：
+    输入："1-401--349---90--88"
+    输出：[1,401,null,349,88,90]
+    提示：
+    原始树中的节点数介于 1 和 1000 之间。
+    每个节点的值介于 1 和 10 ^ 9 之间。
+    :param S: str
+    :return: TreeNode
+    """
+    res = {}
+    i, n = 0, len(S)
+    while i < n:
+        v_str, lv = [], 0
+        while i < n and S[i] == "-":
+            lv += 1
+            i += 1
+        while i < n and S[i].isdecimal():
+            v_str.append(S[i])
+            i += 1
+        v = int("".join(v_str))
+        if not lv in res:
+            res[lv] = [TreeNode(v)]
+        else:
+            res[lv].append(TreeNode(v))
+        if lv > 0:
+            pre = res[lv - 1][-1]
+            if not pre.left:
+                pre.left = res[lv][-1]
+            else:
+                pre.right = res[lv][-1]
+    return res[0][0]
 
 
 if __name__ == '__main__':
     # x = construct_tree_node([1,2,3,4,5,6])
     # countNodes(x)
-    computeArea(0, 0, 1, 1, 1, 1, 2, 2)
-    computeArea(-3, 0, 3, 4, 0, -1, 9, 2)
-    computeArea(0, 0, 0, 0, -1, -1, 1, 1)
-    computeArea(-1, -1, 1, 1, -2, -2, 2, 2)
-    computeArea(0, 0, 3, 1, 1, 0, 4, 1)
-    computeArea(-2, -2, 2, 2, -3, -3, 3, -1)
+    # computeArea(0, 0, 1, 1, 1, 1, 2, 2)
+    # ans = rob2([2,7,9,3,1])
+    # print(ans)
+    # x = construct_tree_node([3,2,3,null, 3, null,1])
+    # rob3(x)
+    recoverFromPreorder("1-2--3--4-5--6--7")
+    recoverFromPreorder("1-401--349---90--88")
     pass

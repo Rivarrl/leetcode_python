@@ -272,8 +272,19 @@ def buildTree2(inorder, postorder):
     :param postorder: List[int]
     :return: TreeNode
     """
-    pass
+    def helper(l=0, r=len(postorder)):
+        if l == r: return None
+        val = postorder[i_key[0]]
+        root = TreeNode(val)
+        idx = ino_map[val]
+        i_key[0] -= 1
+        root.right = helper(idx+1, r)
+        root.left = helper(l, idx)
+        return root
 
+    i_key = [len(postorder)-1]
+    ino_map = {k:v for v, k in enumerate(inorder)}
+    return helper()
 
 
 if __name__ == '__main__':
@@ -286,5 +297,7 @@ if __name__ == '__main__':
     # rob3(x)
     # recoverFromPreorder("1-2--3--4-5--6--7")
     x = buildTree([3,9,20,15,7],[9,3,15,20,7])
+    print_tree_node(x)
+    x = buildTree2([9,3,15,20,7], [9,15,7,20,3])
     print_tree_node(x)
     pass

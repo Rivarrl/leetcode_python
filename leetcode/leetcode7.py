@@ -224,24 +224,33 @@ def buildTree(preorder, inorder):
     :param inorder: List[int]
     :return: TreeNode
     """
+    """
+    # 60%
     if not preorder or not inorder:
         return None
-    print(preorder, inorder)
     x = preorder[0]
     root = TreeNode(x)
     ii = inorder.index(x)
-    pi = len(preorder) - 1
-    for i in range(len(preorder[1:])):
-        if preorder[i+1] in inorder[ii+1:]:
-            pi = i
-            break
-    print(ii, pi)
     # recursive
-    left = buildTree(preorder[1:pi+1], inorder[:ii])
-    right = buildTree(preorder[pi+1:], inorder[ii+1:])
+    left = buildTree(preorder[1:ii+1], inorder[:ii])
+    right = buildTree(preorder[ii+1:], inorder[ii+1:])
     root.left = left
     root.right = right
     return root
+    """
+    # 100%
+    def helper(l=0, r=len(preorder)):
+        if l == r: return None
+        val = preorder[i_key[0]]
+        root = TreeNode(val)
+        idx = inorder_map[val]
+        i_key[0] += 1
+        root.left = helper(l, idx)
+        root.right = helper(idx + 1, r)
+        return root
+    i_key = [0]
+    inorder_map = {k:v for v, k in enumerate(inorder)}
+    return helper()
 
 
 def buildTree2(inorder, postorder):
@@ -277,6 +286,5 @@ if __name__ == '__main__':
     # rob3(x)
     # recoverFromPreorder("1-2--3--4-5--6--7")
     x = buildTree([3,9,20,15,7],[9,3,15,20,7])
-    x = buildTree(preorder=[1,2], inorder = [2,1])
     print_tree_node(x)
     pass

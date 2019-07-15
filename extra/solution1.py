@@ -1,3 +1,7 @@
+import random
+import time
+
+
 def question1(arr):
     """
     数字键盘按键
@@ -8,10 +12,12 @@ def question1(arr):
     :return: int
     """
     def dfs(i, j, k, cur):
+        if cur >= ans[0]: return
         if k == n:
             ans[0] = min(ans[0], cur)
             return
-        if (j != 0 and arr[k] >= j) or arr[k] == 0:
+        arr[k] = arr[k] + 10 if arr[k] == 0 else arr[k]
+        if arr[k] >= j:
             dfs(i, arr[k], k + 1, cur + arr[k] - j)
         elif arr[k] <= i:
             dfs(arr[k], j, k + 1, cur + i - arr[k])
@@ -70,7 +76,11 @@ def question2(arr):
     return a
 
 
+
 if __name__ == '__main__':
-    question1([9,6,7,1,7])
-    question2([8, 7, 6, 5, 4, 2, 3, 1])
+    a = [random.randint(0, 9) for _ in range(100)]
+    x = time.process_time()
+    question1(a)
+    print(time.process_time() - x)
+    # question2([8, 7, 6, 5, 4, 2, 3, 1])
     pass

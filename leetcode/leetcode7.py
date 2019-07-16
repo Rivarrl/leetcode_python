@@ -130,35 +130,6 @@ def rob2(nums):
     return max(helper(nums[1:]), helper(nums[:-1]))
 
 
-def rob3(root):
-    """
-    337. 打家劫舍 III
-    在上次打劫完一条街道之后和一圈房屋后，小偷又发现了一个新的可行窃的地区。这个地区只有一个入口，我们称之为“根”。 除了“根”之外，每栋房子有且只有一个“父“房子与之相连。一番侦察之后，聪明的小偷意识到“这个地方的所有房屋的排列类似于一棵二叉树”。 如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
-    计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
-    示例 1:
-    输入: [3,2,3,null,3,null,1]
-         3
-        / \
-       2   3
-        \   \
-         3   1
-    输出: 7
-    解释: 小偷一晚能够盗取的最高金额 = 3 + 3 + 1 = 7.
-    示例 2:
-    输入: [3,4,5,1,3,null,1]
-         3
-        / \
-       4   5
-      / \   \
-     1   3   1
-    输出: 9
-    解释: 小偷一晚能够盗取的最高金额 = 4 + 5 = 9.
-    :param root: TreeNode
-    :return: int
-    """
-    pass
-
-
 def recoverFromPreorder(S):
     """
     1028. 从先序遍历还原二叉树
@@ -287,7 +258,144 @@ def buildTree2(inorder, postorder):
     return helper()
 
 
+def sumNumbers(root):
+    """
+    129. 求根到叶子节点数字之和
+    给定一个二叉树，它的每个结点都存放一个 0-9 的数字，每条从根到叶子节点的路径都代表一个数字。
+    例如，从根到叶子节点路径 1->2->3 代表数字 123。
+    计算从根到叶子节点生成的所有数字之和。
+    说明: 叶子节点是指没有子节点的节点。
+    示例 1:
+    输入: [1,2,3]
+        1
+       / \
+      2   3
+    输出: 25
+    解释:
+    从根到叶子节点路径 1->2 代表数字 12.
+    从根到叶子节点路径 1->3 代表数字 13.
+    因此，数字总和 = 12 + 13 = 25.
+    示例 2:
+    输入: [4,9,0,5,1]
+        4
+       / \
+      9   0
+     / \
+    5   1
+    输出: 1026
+    解释:
+    从根到叶子节点路径 4->9->5 代表数字 495.
+    从根到叶子节点路径 4->9->1 代表数字 491.
+    从根到叶子节点路径 4->0 代表数字 40.
+    因此，数字总和 = 495 + 491 + 40 = 1026.
+    :param root: TreeNode
+    :return: int
+    """
+    def dfs(root, curr):
+        c = curr * 10 + root.val
+        if not root.left and not root.right:
+            nonlocal ans
+            ans += c
+        if root.left:
+            dfs(root.left, c)
+        if root.right:
+            dfs(root.right, c)
+    ans = 0
+    if root: dfs(root, 0)
+    return ans
+
+
+def rob3(root):
+    """
+    337. 打家劫舍 III
+    在上次打劫完一条街道之后和一圈房屋后，小偷又发现了一个新的可行窃的地区。这个地区只有一个入口，我们称之为“根”。 除了“根”之外，每栋房子有且只有一个“父“房子与之相连。一番侦察之后，聪明的小偷意识到“这个地方的所有房屋的排列类似于一棵二叉树”。 如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
+    计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
+    示例 1:
+    输入: [3,2,3,null,3,null,1]
+         3
+        / \
+       2   3
+        \   \
+         3   1
+    输出: 7
+    解释: 小偷一晚能够盗取的最高金额 = 3 + 3 + 1 = 7.
+    示例 2:
+    输入: [3,4,5,1,3,null,1]
+         3
+        / \
+       4   5
+      / \   \
+     1   3   1
+    输出: 9
+    解释: 小偷一晚能够盗取的最高金额 = 4 + 5 = 9.
+    :param root: TreeNode
+    :return: int
+    """
+    def helper(r, p):
+        pass
+    ans = [0]
+    helper(False, root)
+
+
+def singleNumber(nums):
+    """
+    137. 只出现一次的数字 II
+    给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现了三次。找出那个只出现了一次的元素。
+    说明：
+    你的算法应该具有线性时间复杂度。 你可以不使用额外空间来实现吗？
+    示例 1:
+    输入: [2,2,3,2]
+    输出: 3
+    示例 2:
+    输入: [0,1,0,1,0,1,99]
+    输出: 99
+    :param nums: List[int]
+    :return: int
+    """
+    """
+    # 将所有出现非3倍数次的位组合即为所求 12%
+    ans = 0
+    n = len(nums)
+    for i in range(32):
+        mask = 1 << i
+        ctr = 0
+        for j in range(n):
+            if (nums[j] & mask) != 0:
+                ctr += 1
+        if ctr % 3 != 0:
+            ans |= mask
+    up_bound = 2 ** 32
+    if ans > 2 ** 31 - 1:
+        ans -= up_bound
+    return ans
+    """
+    # 用异或
+    a, b = 0, 0
+    for x in nums:
+        b = (b ^ x) & ~a
+        a = (a ^ x) & ~b
+    return b
+
+
+def singleNumber3(nums):
+    """
+    260. 只出现一次的数字 III
+    给定一个整数数组 nums，其中恰好有两个元素只出现一次，其余所有元素均出现两次。 找出只出现一次的那两个元素。
+    示例 :
+    输入: [1,2,1,3,2,5]
+    输出: [3,5]
+    注意：
+    结果输出的顺序并不重要，对于上面的例子， [5, 3] 也是正确答案。
+    你的算法应该具有线性时间复杂度。你能否仅使用常数空间复杂度来实现？
+    :param nums: List[int]
+    :return: List[int]
+    """
+    pass
+
+
+
 if __name__ == '__main__':
+    singleNumber([-2,-2,1,1,-3,1,-3,-3,-4,-2])
     # x = construct_tree_node([1,2,3,4,5,6])
     # countNodes(x)
     # computeArea(0, 0, 1, 1, 1, 1, 2, 2)
@@ -296,8 +404,10 @@ if __name__ == '__main__':
     # x = construct_tree_node([3,2,3,null, 3, null,1])
     # rob3(x)
     # recoverFromPreorder("1-2--3--4-5--6--7")
-    x = buildTree([3,9,20,15,7],[9,3,15,20,7])
-    print_tree_node(x)
-    x = buildTree2([9,3,15,20,7], [9,15,7,20,3])
-    print_tree_node(x)
+    # x = buildTree([3,9,20,15,7],[9,3,15,20,7])
+    # print_tree_node(x)
+    # x = buildTree2([9,3,15,20,7], [9,15,7,20,3])
+    # print_tree_node(x)
+    # x = construct_tree_node([4,9,0,5,1])
+    # sumNumbers(x)
     pass

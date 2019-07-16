@@ -896,19 +896,6 @@ class Solution:
         res.append([])
         return res
 
-    def singleNumber(self, nums):
-        """
-        :type nums: List[int]
-        :rtype: int
-        """
-        nums.sort(reverse=True)
-        while len(nums) > 1:
-            if nums[-1] == nums[-2]:
-                nums.pop()
-                nums.pop()
-            else:
-                return nums[-1]
-        return nums[-1]
 
     def majorityElement(self, nums):
         """

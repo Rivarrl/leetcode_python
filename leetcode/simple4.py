@@ -669,12 +669,47 @@ def singleNumber(nums):
     return ans
 
 
+def relativeSortArray(arr1, arr2):
+    """
+    1122. 数组的相对排序
+    给你两个数组，arr1 和 arr2，
+    arr2 中的元素各不相同
+    arr2 中的每个元素都出现在 arr1 中
+    对 arr1 中的元素进行排序，使 arr1 中项的相对顺序和 arr2 中的相对顺序相同。未在 arr2 中出现过的元素需要按照升序放在 arr1 的末尾。
+    示例：
+    输入：arr1 = [2,3,1,3,2,4,6,7,9,2,19], arr2 = [2,1,4,3,9,6]
+    输出：[2,2,2,1,4,3,3,9,6,7,19]
+    提示：
+    arr1.length, arr2.length <= 1000
+    0 <= arr1[i], arr2[i] <= 1000
+    arr2 中的元素 arr2[i] 各不相同
+    arr2 中的每个元素 arr2[i] 都出现在 arr1 中
+    :param arr1: List[int]
+    :param arr2: List[int]
+    :return: List[int]
+    """
+    d = {}
+    tail = []
+    for i, x in enumerate(arr2):
+        d[x] = [i, 0]
+    for i, x in enumerate(arr1):
+        if x in d:
+            d[x][1] += 1
+        else:
+            tail.append(x)
+    res = []
+    for i, x in enumerate(arr2):
+        res += [x] * d[x][1]
+    tail.sort()
+    return res + tail
+
+
+
 if __name__ == '__main__':
-    surfaceArea([[2]])
-    surfaceArea([[1,2],[3,4]])
-    surfaceArea([[1,0],[0,2]])
-    surfaceArea([[1,1,1],[1,0,1],[1,1,1]])
-    surfaceArea([[2,2,2],[2,1,2],[2,2,2]])
+    relativeSortArray(arr1 = [2,3,1,3,2,4,6,7,9,2,19], arr2 = [2,1,4,3,9,6])
+    relativeSortArray([28,6,22,8,44,17], [22,28,8,6])
+    relativeSortArray([26,21,11,20,50,34,1,18], [21,11,26,20])
+    # surfaceArea([[2,2,2],[2,1,2],[2,2,2]])
     # transpose([[1,2,3],[4,5,6]])
     # findRadius([1,5], [10])
     # findRelativeRanks([10,3,8,9,4])

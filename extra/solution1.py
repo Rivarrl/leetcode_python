@@ -79,6 +79,6 @@ def question2(arr):
 
 
 if __name__ == '__main__':
-    question1([6,9,7,1,7])
+    # question1([6,9,7,1,7])
     # question2([8, 7, 6, 5, 4, 2, 3, 1])
     pass

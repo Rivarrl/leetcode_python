@@ -338,7 +338,7 @@ def singleNumber(nums):
     return ans
     """
     # 用异或
-    # b用于记录数字出现一次的时候的值, a用于记录数字出现两次的值
+    # b用于记录异或值的1出现一次的位, a用于记录出现两次的位
     a, b = 0, 0
     for x in nums:
         b = (b ^ x) & ~a
@@ -439,9 +439,9 @@ def rob3(root):
 
 
 if __name__ == '__main__':
-    x = construct_tree_node([3,4,5,1,3,null,1])
-    rob3(x)
-    # singleNumber([-2,-2,1,1,-3,1,-3,-3,-4,-2])
+    # x = construct_tree_node([3,4,5,1,3,null,1])
+    # rob3(x)
+    singleNumber([-2,-2,1,1,-3,1,-3,-3,-4,-2])
     # x = construct_tree_node([1,2,3,4,5,6])
     # countNodes(x)
     # computeArea(0, 0, 1, 1, 1, 1, 2, 2)

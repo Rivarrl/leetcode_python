@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+from algorithm_utils import *
 
 # leetcode 简单题 4
 
@@ -704,11 +705,47 @@ def relativeSortArray(arr1, arr2):
     return res + tail
 
 
+def findTilt(root):
+    """
+    563. 二叉树的坡度
+    给定一个二叉树，计算整个树的坡度。
+    一个树的节点的坡度定义即为，该节点左子树的结点之和和右子树结点之和的差的绝对值。空结点的的坡度是0。
+    整个树的坡度就是其所有节点的坡度之和。
+    示例:
+    输入:
+             1
+           /   \
+          2     3
+    输出: 1
+    解释:
+    结点的坡度 2 : 0
+    结点的坡度 3 : 0
+    结点的坡度 1 : |2-3| = 1
+    树的坡度 : 0 + 0 + 1 = 1
+    注意:
+    任何子树的结点的和不会超过32位整数的范围。
+    坡度的值不会超过32位整数的范围。
+    :param root: TreeNode
+    :return: int
+    """
+    def helper(node):
+        if not node:
+            return 0, 0
+        left = helper(node.left)
+        right = helper(node.right)
+        tilt = abs(left[1] - right[1])
+        nonlocal ans
+        ans += tilt
+        return tilt, left[1] + right[1] + node.val
+    ans = 0
+    helper(root)
+    return ans
+
 
 if __name__ == '__main__':
-    relativeSortArray(arr1 = [2,3,1,3,2,4,6,7,9,2,19], arr2 = [2,1,4,3,9,6])
-    relativeSortArray([28,6,22,8,44,17], [22,28,8,6])
-    relativeSortArray([26,21,11,20,50,34,1,18], [21,11,26,20])
+    x = construct_tree_node([1,2,3])
+    findTilt(x)
+    # relativeSortArray([26,21,11,20,50,34,1,18], [21,11,26,20])
     # surfaceArea([[2,2,2],[2,1,2],[2,2,2]])
     # transpose([[1,2,3],[4,5,6]])
     # findRadius([1,5], [10])

@@ -12,9 +12,10 @@ def question1(arr):
     :return: int
     """
     def dfs(i, j, k, cur):
-        if cur >= ans[0]: return
+        nonlocal ans
+        if cur >= ans: return
         if k == n:
-            ans[0] = min(ans[0], cur)
+            ans = min(ans, cur)
             return
         arr[k] = arr[k] + 10 if arr[k] == 0 else arr[k]
         if arr[k] >= j:
@@ -26,10 +27,10 @@ def question1(arr):
             dfs(arr[k], j, k + 1, cur + arr[k] - i)
 
     n = len(arr)
-    ans = [float("inf")]
+    ans = float("inf")
     dfs(5, 6, 0, n)
-    print(ans[0])
-    return ans[0]
+    print(ans)
+    return ans
 
 
 def question2(arr):
@@ -78,9 +79,6 @@ def question2(arr):
 
 
 if __name__ == '__main__':
-    a = [random.randint(0, 9) for _ in range(100)]
-    x = time.process_time()
-    question1(a)
-    print(time.process_time() - x)
+    question1([6,9,7,1,7])
     # question2([8, 7, 6, 5, 4, 2, 3, 1])
     pass

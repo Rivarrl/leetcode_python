@@ -305,38 +305,6 @@ def sumNumbers(root):
     return ans
 
 
-def rob3(root):
-    """
-    337. 打家劫舍 III
-    在上次打劫完一条街道之后和一圈房屋后，小偷又发现了一个新的可行窃的地区。这个地区只有一个入口，我们称之为“根”。 除了“根”之外，每栋房子有且只有一个“父“房子与之相连。一番侦察之后，聪明的小偷意识到“这个地方的所有房屋的排列类似于一棵二叉树”。 如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
-    计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
-    示例 1:
-    输入: [3,2,3,null,3,null,1]
-         3
-        / \
-       2   3
-        \   \
-         3   1
-    输出: 7
-    解释: 小偷一晚能够盗取的最高金额 = 3 + 3 + 1 = 7.
-    示例 2:
-    输入: [3,4,5,1,3,null,1]
-         3
-        / \
-       4   5
-      / \   \
-     1   3   1
-    输出: 9
-    解释: 小偷一晚能够盗取的最高金额 = 4 + 5 = 9.
-    :param root: TreeNode
-    :return: int
-    """
-    def helper(r, p):
-        pass
-    ans = [0]
-    helper(False, root)
-
-
 def singleNumber(nums):
     """
     137. 只出现一次的数字 II
@@ -370,6 +338,7 @@ def singleNumber(nums):
     return ans
     """
     # 用异或
+    # b用于记录数字出现一次的时候的值, a用于记录数字出现两次的值
     a, b = 0, 0
     for x in nums:
         b = (b ^ x) & ~a
@@ -390,12 +359,89 @@ def singleNumber3(nums):
     :param nums: List[int]
     :return: List[int]
     """
-    pass
+    # 本题重点是如何区分开两个答案
+    q = 0
+    # 得到的q是两个答案值的异或
+    for x in nums:
+        q ^= x
+    # 取最低位的1, 也就是两个答案的最低异或位, 这样就区分开两个答案了
+    b = q & (~q + 1)
+    res = [0, 0]
+    for x in nums:
+        if x & b == 0:
+            res[0] ^= x
+        else:
+            res[1] ^= x
+    return res
 
+
+def rob3(root):
+    """
+    337. 打家劫舍 III
+    在上次打劫完一条街道之后和一圈房屋后，小偷又发现了一个新的可行窃的地区。这个地区只有一个入口，我们称之为“根”。 除了“根”之外，每栋房子有且只有一个“父“房子与之相连。一番侦察之后，聪明的小偷意识到“这个地方的所有房屋的排列类似于一棵二叉树”。 如果两个直接相连的房子在同一天晚上被打劫，房屋将自动报警。
+    计算在不触动警报的情况下，小偷一晚能够盗取的最高金额。
+    示例 1:
+    输入: [3,2,3,null,3,null,1]
+         3
+        / \
+       2   3
+        \   \
+         3   1
+    输出: 7
+    解释: 小偷一晚能够盗取的最高金额 = 3 + 3 + 1 = 7.
+    示例 2:
+    输入: [3,4,5,1,3,null,1]
+         3
+        / \
+       4   5
+      / \   \
+     1   3   1
+    输出: 9
+    解释: 小偷一晚能够盗取的最高金额 = 4 + 5 = 9.
+    :param root: TreeNode
+    :return: int
+    """
+    """
+    # 递归 O(2^n) 超时
+    def helper(p, root):
+        if not root:
+            return 0
+        if p:
+            cur = helper(False, root.left) + helper(False, root.right)
+        else:
+            cur = max(helper(True, root.left) + root.val + helper(True, root.right), helper(False, root.left) + helper(False, root.right))
+        return cur
+    ans = helper(False, root)
+    return ans
+    """
+    """
+    # 迭代 100%
+    stack = [(0, root)]
+    res = {None:(0, 0)}
+    while stack:
+        rob, node = stack.pop()
+        if not node:
+            continue
+        if not rob:
+            stack.extend([(1, node), (0, node.right), (0, node.left)])
+        else:
+            res[node] = (res[node.left][1] + res[node.right][1] + node.val, max(res[node.left]) + max(res[node.right]))
+    return max(res[root])
+    """
+    # 递归调用两次的 99%
+    def dfs(node):
+        if not node:
+            return 0, 0
+        left = dfs(node.left)
+        right = dfs(node.right)
+        return left[1] + node.val + right[1], max(left) + max(right)
+    return max(dfs(root))
 
 
 if __name__ == '__main__':
-    singleNumber([-2,-2,1,1,-3,1,-3,-3,-4,-2])
+    x = construct_tree_node([3,4,5,1,3,null,1])
+    rob3(x)
+    # singleNumber([-2,-2,1,1,-3,1,-3,-3,-4,-2])
     # x = construct_tree_node([1,2,3,4,5,6])
     # countNodes(x)
     # computeArea(0, 0, 1, 1, 1, 1, 2, 2)

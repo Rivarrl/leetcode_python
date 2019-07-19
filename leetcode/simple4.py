@@ -871,16 +871,28 @@ def addStrings(num1, num2):
     if n1 < n2:
         num1, num2 = num2, num1
         n1, n2 = n2, n1
-    i = 0
-    num1, num2 = num1[::-1], num2[::-1]
-    while i < n2:
-        num1[i]
-
+    i, j = n1 - 1, n2 - 1
+    res = []
+    while i >= 0:
+        c1 = ord(num1[i]) - ord('0')
+        c2 = 0 if j < 0 else ord(num2[j]) - ord('0')
+        cur = c1 + c2 + digit_plus
+        if cur > 9:
+            cur -= 10
+            digit_plus = 1
+        else:
+            digit_plus = 0
+        res.insert(0, str(cur))
+        i -= 1
+        j -= 1
+    ans = ''.join(res)
+    return '1' + ans if digit_plus else ans
 
 
 if __name__ == '__main__':
-    x = construct_tree_node([1,2,3])
-    findTilt(x)
+    addStrings("9", "99")
+    # x = construct_tree_node([1,2,3])
+    # findTilt(x)
     # relativeSortArray([26,21,11,20,50,34,1,18], [21,11,26,20])
     # surfaceArea([[2,2,2],[2,1,2],[2,2,2]])
     # transpose([[1,2,3],[4,5,6]])

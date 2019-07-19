@@ -44,6 +44,15 @@ class NextNode:
         self.right = right
         self.next = next
 
+class QuadNode:
+    def __init__(self, val, isLeaf, topLeft, topRight, bottomLeft, bottomRight):
+        self.val = val
+        self.isLeaf = isLeaf
+        self.topLeft = topLeft
+        self.topRight = topRight
+        self.bottomLeft = bottomLeft
+        self.bottomRight = bottomRight
+
 class Bucket:
     def __init__(self,m=0,M=0,isempty=True):
         self.m = m

@@ -742,6 +742,116 @@ def findTilt(root):
     return ans
 
 
+def findLUSlength(a, b):
+    """
+    521. 最长特殊序列 Ⅰ
+    给定两个字符串，你需要从这两个字符串中找出最长的特殊序列。最长特殊序列定义如下：该序列为某字符串独有的最长子序列（即不能是其他字符串的子序列）。
+    子序列可以通过删去字符串中的某些字符实现，但不能改变剩余字符的相对顺序。空序列为所有字符串的子序列，任何字符串为其自身的子序列。
+    输入为两个字符串，输出最长特殊序列的长度。如果不存在，则返回 -1。
+    示例 :
+    输入: "aba", "cdc"
+    输出: 3
+    解析: 最长特殊序列可为 "aba" (或 "cdc")
+    说明:
+    两个字符串长度均小于100。
+    字符串中的字符仅含有 'a'~'z'。
+    :param a: str
+    :param b: str
+    :return: int
+    """
+    return -1 if a == b else max(len(a), len(b))
+
+
+def checkRecord(s):
+    """
+    551. 学生出勤记录 I
+    给定一个字符串来代表一个学生的出勤记录，这个记录仅包含以下三个字符：
+    'A' : Absent，缺勤
+    'L' : Late，迟到
+    'P' : Present，到场
+    如果一个学生的出勤记录中不超过一个'A'(缺勤)并且不超过两个连续的'L'(迟到),那么这个学生会被奖赏。
+    你需要根据这个学生的出勤记录判断他是否会被奖赏。
+    示例 1:
+    输入: "PPALLP"
+    输出: True
+    示例 2:
+    输入: "PPALLL"
+    输出: False
+    :param s: str
+    :return: bool
+    """
+    return s.count('A') <= 1 and s.count('LL') == 0
+
+
+def intersect(quadTree1, quadTree2):
+    """
+    558. 四叉树交集
+    四叉树是一种树数据，其中每个结点恰好有四个子结点：topLeft、topRight、bottomLeft 和 bottomRight。四叉树通常被用来划分一个二维空间，递归地将其细分为四个象限或区域。
+    我们希望在四叉树中存储 True/False 信息。四叉树用来表示 N * N 的布尔网格。对于每个结点, 它将被等分成四个孩子结点直到这个区域内的值都是相同的。每个节点都有另外两个布尔属性：isLeaf 和 val。当这个节点是一个叶子结点时 isLeaf 为真。val 变量储存叶子结点所代表的区域的值。
+    例如，下面是两个四叉树 A 和 B：
+    A:
+    +-------+-------+   T: true
+    |       |       |   F: false
+    |   T   |   T   |
+    |       |       |
+    +-------+-------+
+    |       |       |
+    |   F   |   F   |
+    |       |       |
+    +-------+-------+
+    topLeft: T
+    topRight: T
+    bottomLeft: F
+    bottomRight: F
+    B:
+    +-------+---+---+
+    |       | F | F |
+    |   T   +---+---+
+    |       | T | T |
+    +-------+---+---+
+    |       |       |
+    |   T   |   F   |
+    |       |       |
+    +-------+-------+
+    topLeft: T
+    topRight:
+         topLeft: F
+         topRight: F
+         bottomLeft: T
+         bottomRight: T
+    bottomLeft: T
+    bottomRight: F
+    你的任务是实现一个函数，该函数根据两个四叉树返回表示这两个四叉树的逻辑或(或并)的四叉树。
+    A:                 B:                 C (A or B):
+    +-------+-------+  +-------+---+---+  +-------+-------+
+    |       |       |  |       | F | F |  |       |       |
+    |   T   |   T   |  |   T   +---+---+  |   T   |   T   |
+    |       |       |  |       | T | T |  |       |       |
+    +-------+-------+  +-------+---+---+  +-------+-------+
+    |       |       |  |       |       |  |       |       |
+    |   F   |   F   |  |   T   |   F   |  |   T   |   F   |
+    |       |       |  |       |       |  |       |       |
+    +-------+-------+  +-------+-------+  +-------+-------+
+    提示：
+    A 和 B 都表示大小为 N * N 的网格。
+    N 将确保是 2 的整次幂。
+    如果你想了解更多关于四叉树的知识，你可以参考这个 wiki 页面。
+    逻辑或的定义如下：如果 A 为 True ，或者 B 为 True ，或者 A 和 B 都为 True，则 "A 或 B" 为 True。
+    :param quadTree1: QuadNode
+    :param quadTree2: QuadNode
+    :return: QuadNode
+    """
+    if (quadTree1.isLeaf and quadTree1.val) or (quadTree2.isLeaf and not quadTree2.val):
+        return quadTree1
+    elif (quadTree1.isLeaf and not quadTree1.val) or (quadTree2.isLeaf and quadTree2.val):
+        return quadTree2
+    else:
+        tl = intersect(quadTree1.topLeft, quadTree2.topLeft)
+        tr = intersect(quadTree1.topRight, quadTree2.topRight)
+        bl = intersect(quadTree1.bottomLeft, quadTree2.bottomLeft)
+        br = intersect(quadTree1.bottomRight, quadTree2.bottomRight)
+        return QuadNode(True, True, None, None, None, None) if tl.isLeaf and tr.isLeaf and bl.isLeaf and br.isLeaf and tl.val and tr.val and bl.val and br.val else QuadNode(False, False, tl, tr, bl, br)
+
 if __name__ == '__main__':
     x = construct_tree_node([1,2,3])
     findTilt(x)

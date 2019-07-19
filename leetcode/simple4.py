@@ -852,6 +852,32 @@ def intersect(quadTree1, quadTree2):
         br = intersect(quadTree1.bottomRight, quadTree2.bottomRight)
         return QuadNode(True, True, None, None, None, None) if tl.isLeaf and tr.isLeaf and bl.isLeaf and br.isLeaf and tl.val and tr.val and bl.val and br.val else QuadNode(False, False, tl, tr, bl, br)
 
+
+def addStrings(num1, num2):
+    """
+    415. 字符串相加
+    给定两个字符串形式的非负整数 num1 和num2 ，计算它们的和。
+    注意：
+    num1 和num2 的长度都小于 5100.
+    num1 和num2 都只包含数字 0-9.
+    num1 和num2 都不包含任何前导零。
+    你不能使用任何內建 BigInteger 库，也不能直接将输入的字符串转换为整数形式。
+    :param num1: str
+    :param num2: str
+    :return: str
+    """
+    digit_plus = False
+    n1, n2 = len(num1), len(num2)
+    if n1 < n2:
+        num1, num2 = num2, num1
+        n1, n2 = n2, n1
+    i = 0
+    num1, num2 = num1[::-1], num2[::-1]
+    while i < n2:
+        num1[i]
+
+
+
 if __name__ == '__main__':
     x = construct_tree_node([1,2,3])
     findTilt(x)

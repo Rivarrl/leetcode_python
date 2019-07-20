@@ -441,7 +441,7 @@ def rob3(root):
 def checkRecord(n):
     """
     552. 学生出勤记录 II
-    给定一个正整数 n，返回长度为 n 的所有可被视为可奖励的出勤记录的数量。 答案可能非常大，你只需返回结果mod 109 + 7的值。
+    给定一个正整数 n，返回长度为 n 的所有可被视为可奖励的出勤记录的数量。 答案可能非常大，你只需返回结果mod 10^9 + 7的值。
     学生出勤记录是只包含以下三个字符的字符串：
     'A' : Absent，缺勤
     'L' : Late，迟到
@@ -458,7 +458,79 @@ def checkRecord(n):
     :param n: int
     :return: int
     """
-    pass
+    """
+    # 动态规划
+    # 判断条件分为前面有无A和最近的L的个数
+    # 所有组合起来的情况有以下7种
+    # A: 前面以A结束
+    # AP: 前面有A且以P结束
+    # AL: 前面有A且以L结束
+    # ALL: 前面有A且以LL结束
+    # L: 前面没有A且以L结束
+    # LL: 前面没有A且以LL结束
+    # P: 前面没有A且以P结束
+    if n == 0: return 1
+    P, AP, L, LL, AL, ALL, A = 1, 0, 1, 0, 0, 0, 1
+    M = 10 ** 9 + 7
+    for i in range(2, n+1):
+        P, AP, L, LL, AL, ALL, A = (
+            (P + L + LL) % M,
+            (AP + AL + ALL + A) % M,
+            P,
+            L,
+            (AP + A) % M,
+            AL,
+            (P + L + LL) % M
+        )
+    return (P + AP + L + LL + AL + ALL + A) % M
+    """
+    """
+    # 动态规划
+    # 定义三维数组dp，dp[i][j][k]表示字符串前i个字母中，最多有j个A，最多有k个连续的L，最后的答案为dp[n][1][2]
+    M = 10 ** 9 + 7
+    # 定义并初始化n*2*3的三维数组
+    dp = [[[0] * 3 for _ in range(2)] for _ in range(n+1)]
+    # 初始化
+    for j in range(2):
+        for k in range(3):
+            dp[0][j][k] = 1
+    for i in range(1, n+1):
+        for j in range(2):
+            for k in range(3):
+                # 取上一趟的所有结果数，相当于在上一趟所有结果后面追加P
+                val = dp[i-1][j][2]
+                # 加上可追加A的情况，由数组定义限制j只有0和1，可追加A也就是前面有0个A的情况，符合题意
+                if j > 0:
+                    val = (val + dp[i-1][j-1][2]) % M
+                # 加上可追加L的情况，有数组定义限制k只有0、1和2，可追加L也就是前面有0或1个连续L结尾的情况，符合题意
+                if k > 0:
+                    val = (val + dp[i-1][j][k-1]) % M
+                dp[i][j][k] = val
+    return dp[n][1][2]
+    """
+    # 动态规划 + 递推式
+    # 使用三个数组A，P，L分别表示到字符串x[0:i]中以A，P，L结尾的所有排列，最后答案就是A[n-1]+P[n-1]+L[n-1]
+    # 其中在当前位追加P没有限制 P[i] = A[i-1] + P[i-1] + L[i-1]
+    # 追加L的限制条件为不能有超过两个连续的L，满足条件的有在A和P后面和在单独L结尾的后面，其中单独L也就是i-2为A或P。
+    # 所以递推式：L[i] = A[i-1] + P[i-1] + A[i-2] + P[i-2]
+    # 追加A的限制是前面不能有A，用当前的三个数组无法表达，需要再定义两个数组P1和L1，其中P1代表以P结尾且前面没有A，L1代表以L结尾且前面没有A
+    # 那么递推式就是：
+    # A[i] = P1[i-1] + L1[i-1]
+    # 其中
+    # P1[i] = P1[i-1] + L1[i-1]
+    # L1[i] = P1[i-1] + P1[i-2]
+    # 将上述2、3式多次带入1，可以消掉P1和L1，最终简化为：A[i] = A[i-1] + A[i-2] + A[i-3]
+    M = 10 **9 + 7
+    A, P, L = [0] * n, [0] * n, [0] * n
+    # 初始化，简化for循环
+    P[0], L[0], L[1], A[0], A[1], A[2] = 1, 1, 3, 1, 2, 4
+    for i in range(1, n):
+        P[i] = (P[i-1] + A[i-1]+ L[i-1]) % M
+        if i > 1:
+            L[i] = (P[i-1] + A[i-1] + P[i-2] + A[i-2]) % M
+        if i > 2:
+            A[i] = (A[i-1] + A[i-2] + A[i-3]) % M
+    return (A[n-1] + P[n-1] + L[n-1]) % M
 
 
 def findLUSlength(strs):
@@ -480,9 +552,10 @@ def findLUSlength(strs):
 
 
 if __name__ == '__main__':
+    print(checkRecord(i))
     # x = construct_tree_node([3,4,5,1,3,null,1])
     # rob3(x)
-    singleNumber([-2,-2,1,1,-3,1,-3,-3,-4,-2])
+    # singleNumber([-2,-2,1,1,-3,1,-3,-3,-4,-2])
     # x = construct_tree_node([1,2,3,4,5,6])
     # countNodes(x)
     # computeArea(0, 0, 1, 1, 1, 1, 2, 2)

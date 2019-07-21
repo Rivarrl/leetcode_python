@@ -889,6 +889,76 @@ def addStrings(num1, num2):
     return '1' + ans if digit_plus else ans
 
 
+def defangIPaddr(address):
+    """
+    1108. IP 地址无效化
+    给你一个有效的 IPv4 地址 address，返回这个 IP 地址的无效化版本。
+    所谓无效化 IP 地址，其实就是用 "[.]" 代替了每个 "."。
+    示例 1：
+    输入：address = "1.1.1.1"
+    输出："1[.]1[.]1[.]1"
+    示例 2：
+    输入：address = "255.100.50.0"
+    输出："255[.]100[.]50[.]0"
+    提示：
+    给出的 address 是一个有效的 IPv4 地址
+    :param address: str
+    :return: str
+    """
+    res = ""
+    for i, x in enumerate(address):
+        if address[i] == '.':
+            res = "%s[.]" % res
+        else:
+            res = "%s%s" % (res, address[i])
+    return res
+
+
+def duplicateZeros(arr):
+    """
+    1089. 复写零
+    给你一个长度固定的整数数组 arr，请你将该数组中出现的每个零都复写一遍，并将其余的元素向右平移。
+    注意：请不要在超过该数组长度的位置写入元素。
+    要求：请对输入的数组 就地 进行上述修改，不要从函数返回任何东西。
+    示例 1：
+    输入：[1,0,2,3,0,4,5,0]
+    输出：null
+    解释：调用函数后，输入的数组将被修改为：[1,0,0,2,3,0,0,4]
+    示例 2：
+    输入：[1,2,3]
+    输出：null
+    解释：调用函数后，输入的数组将被修改为：[1,2,3]
+    提示：
+    1 <= arr.length <= 10000
+    0 <= arr[i] <= 9
+    :param arr: List[int]
+    :return: None
+    """
+    """
+    # 36%
+    n = len(arr)
+    i = 0
+    while i < n:
+        if arr[i] == 0:
+            arr.pop()
+            arr.insert(i, 0)
+            i += 1
+        i += 1
+    print(arr)
+    """
+    # 100%
+    tmp = [x for x in arr]
+    i = 0
+    for x in tmp:
+        if x == 0:
+            if i < len(arr):
+                arr[i] = 0
+                i += 1
+        if i < len(arr):
+            arr[i] = x
+            i += 1
+
+
 if __name__ == '__main__':
     addStrings("9", "99")
     # x = construct_tree_node([1,2,3])

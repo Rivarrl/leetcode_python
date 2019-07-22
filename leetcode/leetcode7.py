@@ -533,6 +533,35 @@ def checkRecord(n):
     return (A[n-1] + P[n-1] + L[n-1]) % M
 
 
+def poorPigs(buckets, minutesToDie, minutesToTest):
+    """
+    458. 可怜的小猪
+    有 1000 只水桶，其中有且只有一桶装的含有毒药，其余装的都是水。它们从外观看起来都一样。如果小猪喝了毒药，它会在 15 分钟内死去。
+    问题来了，如果需要你在一小时内，弄清楚哪只水桶含有毒药，你最少需要多少只猪？
+    回答这个问题，并为下列的进阶问题编写一个通用算法。
+    进阶:
+    假设有 n 只水桶，猪饮水中毒后会在 m 分钟内死亡，你需要多少猪（x）就能在 p 分钟内找出 “有毒” 水桶？这 n 只水桶里有且仅有一只有毒的桶。
+    提示：
+    可以允许小猪同时饮用任意数量的桶中的水，并且该过程不需要时间。
+    小猪喝完水后，必须有 m 分钟的冷却时间。在这段时间里，只允许观察，而不允许继续饮水。
+    任何给定的桶都可以无限次采样（无限数量的猪）。
+    :param buckets: int
+    :param minutesToDie: int
+    :param minutesToTest: int
+    :return: int
+    """
+    # 最简单的思路是只用1头猪去试, 这样1000桶要试1000*15分钟,显然超出了测试时间, 就要加猪
+    # 想要检测的快, 两头猪就要并行去喝, 就得把1000桶水拆成ceil(√1000)*ceil(√1000)的2维矩阵, 两头猪分别从两个维度去喝, 都喝死了的坐标锁定毒药位置, 时间为ceil(√1000)*15分钟
+    # 可以发现猪的数量就是维度, 把1000桶水拆成a^x, 这个a是由时间限制决定的
+    # 假设答案是x, a ^ x >= 1000, a = p / m + 1 = 60 / 15 + 1 = 5  argmin(x){5^x>=1000}=5
+    import math
+    if buckets == 1: return 0
+    # 这里不能用ceil, 为保证值不为0, 向下取整+1
+    time_to_try = minutesToTest // minutesToDie + 1
+    x = math.ceil(math.log(buckets, time_to_try))
+    return x
+
+
 def findLUSlength(strs):
     """
     522. 最长特殊序列 II
@@ -552,7 +581,8 @@ def findLUSlength(strs):
 
 
 if __name__ == '__main__':
-    print(checkRecord(i))
+    poorPigs(4, 15, 15)
+    # print(checkRecord(13))
     # x = construct_tree_node([3,4,5,1,3,null,1])
     # rob3(x)
     # singleNumber([-2,-2,1,1,-3,1,-3,-3,-4,-2])

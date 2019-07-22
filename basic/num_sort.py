@@ -66,8 +66,46 @@ def shell_sort(arr):
     return arr
 
 
+# 快速排序
+def quick_sort(arr):
+    def _quick_sort(arr, l, r):
+        if l >= r: return
+        i, j, base = l, r, arr[l]
+        while i < j:
+            while i < j and arr[j] >= base:
+                j -= 1
+            while i < j and arr[i] <= base:
+                i += 1
+            swap(arr, i, j)
+        swap(arr, l, j)
+        _quick_sort(arr, l, i)
+        _quick_sort(arr, i+1, r)
+    _quick_sort(arr, 0, len(arr) - 1)
+    return arr
+
+
+# 计数排序
+# 只能排整型数组
+def count_sort(arr):
+    _MIN, _MAX = float("inf"), -float("inf")
+    for x in arr:
+        if x < _MIN:
+            _MIN = x
+        if x > _MAX:
+            _MAX = x
+    tmp = [0] * (_MAX - _MIN + 1)
+    n = len(arr)
+    for i in range(n):
+        tmp[arr[i] - _MIN] += 1
+    i = 0
+    for j, x in enumerate(tmp):
+        for _ in range(x):
+            arr[i] = j + _MIN
+            i += 1
+    return arr
+
 
 if __name__ == '__main__':
     x = [5, 6, 2, 4, 7, 9, -1]
-    shell_sort(x)
+    count_sort(x)
     print(x)

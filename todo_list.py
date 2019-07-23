@@ -35,7 +35,7 @@
 # 2. leetcode shell
 # 3. leetcode 100 x
 # 4. leetcode 200 x
-# 5. leetcode 300
+# 5. leetcode 300 x
 # 6. leetcode 400
 # 7. leetcode 500
 # 8. leetcode 600

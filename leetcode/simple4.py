@@ -959,8 +959,35 @@ def duplicateZeros(arr):
             i += 1
 
 
+def countSegments(s):
+    """
+    434. 字符串中的单词数
+    统计字符串中的单词个数，这里的单词指的是连续的不是空格的字符。
+    请注意，你可以假定字符串里不包括任何不可打印的字符。
+    示例:
+    输入: "Hello, my name is John"
+    输出: 5
+    :param s: str
+    :return: int
+    """
+    # 一行
+    # return len(list(filter(lambda x: x.strip() != '', s.split(' '))))
+    # 常规
+    b, ans = False, 0
+    for i in range(len(s)):
+        if s[i] == ' ':
+            if b:
+                ans += 1
+            b = False
+        else:
+            b = True
+    print(ans)
+    return ans + (not not b)
+
+
 if __name__ == '__main__':
-    addStrings("9", "99")
+    countSegments("        ")
+    # addStrings("9", "99")
     # x = construct_tree_node([1,2,3])
     # findTilt(x)
     # relativeSortArray([26,21,11,20,50,34,1,18], [21,11,26,20])

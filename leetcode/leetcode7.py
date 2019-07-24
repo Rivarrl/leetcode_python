@@ -661,10 +661,37 @@ def minMutation(start, end, bank):
     return -1  # 队列空了说明不可达
 
 
+def largestValues(root):
+    """
+    515. 在每个树行中找最大值
+    您需要在二叉树的每一行中找到最大的值。
+    示例：
+    输入:
+              1
+             / \
+            3   2
+           / \   \
+          5   3   9
+    输出: [1, 3, 9]
+    :param root: TreeNode
+    :return: List[int]
+    """
+    def helper(p, lv):
+        if len(res) > lv:
+            res[lv] = max(res[lv], p.val)
+        else:
+            res.append(p.val)
+        if p.left: helper(p.left, lv + 1)
+        if p.right: helper(p.right, lv + 1)
+    res = []
+    if root: helper(root, 0)
+    return res
+
+
 if __name__ == '__main__':
-    minMutation("AACCGGTT","AACCGGTA",["AACCGGTA"])
-    minMutation("AACCGGTT","AAACGGTA",["AACCGGTA", "AACCGCTA", "AAACGGTA"])
-    minMutation("AAAAACCC","AACCCCCC",["AAAACCCC", "AAACCCCC", "AACCCCCC"])
+    x = construct_tree_node([1,3,2,5,3,null,9])
+    largestValues(x)
+    # minMutation("AAAAACCC","AACCCCCC",["AAAACCCC", "AAACCCCC", "AACCCCCC"])
     # poorPigs(4, 15, 15)
     # print(checkRecord(13))
     # x = construct_tree_node([3,4,5,1,3,null,1])

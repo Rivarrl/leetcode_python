@@ -612,12 +612,60 @@ def minMutation(start, end, bank):
     :param bank: List[str]
     :return: int
     """
-    pass
+    """
+    # 广度优先遍历 77%
+    def is_next_step(a, b):
+        ctr = 0
+        for x, y in zip(a, b):
+            if x != y:
+                ctr += 1
+        return ctr == 1
 
+    def _next_steps(cur):
+        return list(filter(lambda x: is_next_step(cur, x), bank))
+
+    def bfs(cur, ctr):
+        nonlocal ans
+        if cur == end:
+            ans = min(ans, ctr)
+            return
+        _next = _next_steps(cur)
+        if not _next:
+            return
+        ap = cur in bank
+        if ap: bank.remove(cur)
+        for x in _next:
+            bfs(x, ctr + 1)
+        if ap: bank.append(cur)
+    if end not in bank: return -1
+    ans = float("inf")
+    dfs(start, 0)
+    return ans if ans != float("inf") else -1
+    """
+    # 迭代 100%
+    bank = set(bank)  # 转换为set, in判断只需O(1)时间
+    if end not in bank:  # 目标不可行，直接返回-1
+        return -1
+    q = [(start, 0)]  # 初始结点及当前步数
+    change = {'A': 'TCG', 'T': 'ACG', 'C': 'ATG', 'G': 'ATC'}  # 每个基因对应的可变换基因
+    while q:  # 用队列实现广度优先
+        node, step = q.pop(0)
+        if node == end:  # 已经到达目标
+            return step
+        for i, v in enumerate(node):  # 当前序列的每一个基因
+            for j in change[v]:  # 该基因可以改变的方式
+                new = node[:i] + j + node[i + 1:]  # 改变后的序列
+                if new in bank:  # 如果该序列可行
+                    q.append((new, step + 1))  # 入队，继续广度搜索
+                    bank.remove(new)  # 避免重复遍历
+    return -1  # 队列空了说明不可达
 
 
 if __name__ == '__main__':
-    poorPigs(4, 15, 15)
+    minMutation("AACCGGTT","AACCGGTA",["AACCGGTA"])
+    minMutation("AACCGGTT","AAACGGTA",["AACCGGTA", "AACCGCTA", "AAACGGTA"])
+    minMutation("AAAAACCC","AACCCCCC",["AAAACCCC", "AAACCCCC", "AACCCCCC"])
+    # poorPigs(4, 15, 15)
     # print(checkRecord(13))
     # x = construct_tree_node([3,4,5,1,3,null,1])
     # rob3(x)

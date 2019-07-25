@@ -985,8 +985,221 @@ def countSegments(s):
     return ans + (not not b)
 
 
+def getMinimumDifference(root):
+    """
+    530. 二叉搜索树的最小绝对差
+    给定一个所有节点为非负值的二叉搜索树，求树中任意两节点的差的绝对值的最小值。
+    示例 :
+    输入:
+       1
+        \
+         3
+        /
+       2
+    输出:
+    1
+    解释:
+    最小绝对差为1，其中 2 和 1 的差的绝对值为 1（或者 2 和 3）。
+    注意: 树中至少有2个节点。
+    :param root: TreeNode
+    :return: int
+    """
+    """
+    # 中序遍历并记录
+    def helper(node):
+        if node.left:
+            helper(node.left)
+        nonlocal ans, last
+        ans, last = min(ans, node.val - last), node.val
+        if node.right:
+            helper(node.right)
+    last, ans = -float("inf"), float("inf")
+    if root:
+        helper(root)
+    return ans if ans != float("inf") else 0
+    """
+    # 二叉搜索树 离当前节点的值最近的值在左子的最右子和右子的最左子中
+    def get_deepest_right(node):
+        while node.right:
+            node = node.right
+        return node.val
+    def get_deepest_left(node):
+        while node.left:
+            node = node.left
+        return node.val
+    def helper(node):
+        if not node: return INF
+        left_right = get_deepest_right(node.left) if node.left else -INF
+        right_left = get_deepest_left(node.right) if node.right else INF
+        return min(node.val - left_right, right_left - node.val, helper(node.left), helper(node.right))
+
+    INF = float("inf")
+    ans = helper(root)
+    return ans
+
+
+def findPairs(nums, k):
+    """
+    532. 数组中的K-diff数对
+    给定一个整数数组和一个整数 k, 你需要在数组里找到不同的 k-diff 数对。这里将 k-diff 数对定义为一个整数对 (i, j), 其中 i 和 j 都是数组中的数字，且两数之差的绝对值是 k.
+    示例 1:
+    输入: [3, 1, 4, 1, 5], k = 2
+    输出: 2
+    解释: 数组中有两个 2-diff 数对, (1, 3) 和 (3, 5)。
+    尽管数组中有两个1，但我们只应返回不同的数对的数量。
+    示例 2:
+    输入:[1, 2, 3, 4, 5], k = 1
+    输出: 4
+    解释: 数组中有四个 1-diff 数对, (1, 2), (2, 3), (3, 4) 和 (4, 5)。
+    示例 3:
+    输入: [1, 3, 1, 5, 4], k = 0
+    输出: 1
+    解释: 数组中只有一个 0-diff 数对，(1, 1)。
+    注意:
+    数对 (i, j) 和数对 (j, i) 被算作同一数对。
+    数组的长度不超过10,000。
+    所有输入的整数的范围在 [-1e7, 1e7]。
+    :param nums: List[int]
+    :param k: int
+    :return: int
+    """
+    """
+    # 0的情况单独处理
+    ans = 0
+    if k < 0: return 0
+    if k == 0:
+        d = {}
+        for x in nums:
+            if not x in d:
+                d[x] = 0
+            else:
+                d[x] += 1
+                if d[x] == 1:
+                    ans += 1
+    else:
+        nums = set(nums)
+        for x in nums:
+            if x - k in nums:
+                ans += 1
+    return ans
+    """
+    # 将0的情况简化
+    if k < 0: return 0
+    d = {}
+    inf = float("inf")
+    for x in nums:
+        if x - k in d:
+            d[x-k] = x
+        if x + k in d:
+            d[x] = x + k
+        if not x in d:
+            d[x] = -inf
+    return len(list(filter(lambda x: x != -inf, d.values())))
+
+
+def reverseStr(s, k):
+    """
+    541. 反转字符串 II
+    给定一个字符串和一个整数 k，你需要对从字符串开头算起的每个 2k 个字符的前k个字符进行反转。如果剩余少于 k 个字符，则将剩余的所有全部反转。如果有小于 2k 但大于或等于 k 个字符，则反转前 k 个字符，并将剩余的字符保持原样。
+    示例:
+    输入: s = "abcdefg", k = 2
+    输出: "bacdfeg"
+    要求:
+    该字符串只包含小写的英文字母。
+    给定字符串的长度和 k 在[1, 10000]范围内。
+    :param s: str
+    :param k: int
+    :return: str
+    """
+    res = []
+    n = len(s)
+    i = 0
+    k = min(n, k)
+    last, cur = 0, k
+    while i < n:
+        j = cur - i + last - 1 if last <= i < cur else i
+        if j >= n:
+            j = n - 1
+        res.append(s[j])
+        i += 1
+        if i == cur:
+            last = min(n, last + 2 * k)
+            cur = min(n, cur + 2 * k)
+    a = "".join(res)
+    return a
+
+
+def isSubtree(s, t):
+    """
+    572. 另一个树的子树
+    给定两个非空二叉树 s 和 t，检验 s 中是否包含和 t 具有相同结构和节点值的子树。s 的一个子树包括 s 的一个节点和这个节点的所有子孙。s 也可以看做它自身的一棵子树。
+    示例 1:
+    给定的树 s:
+         3
+        / \
+       4   5
+      / \
+     1   2
+    给定的树 t：
+       4
+      / \
+     1   2
+    返回 true，因为 t 与 s 的一个子树拥有相同的结构和节点值。
+    示例 2:
+    给定的树 s：
+         3
+        / \
+       4   5
+      / \
+     1   2
+        /
+       0
+    给定的树 t：
+       4
+      / \
+     1   2
+    返回 false。
+    :param s: TreeNode
+    :param t: TreeNode
+    :return: bool
+    """
+    """
+    # 递归判断 73%
+    def helper(s, t):
+        if not s and not t: return True
+        if s and t:
+            return helper(s.left, t.left) and helper(s.right, t.right) and s.val == t.val
+        return False
+    def inner(s):
+        if not s: return False
+        if helper(s, t): return True
+        return inner(s.left) or inner(s.right)
+    return inner(s)
+    """
+    # t的先序遍历的结果包含在s先序遍历的结果中 100%
+    def helper(node, res):
+        if not node:
+            res.append("#")
+            return
+        res.append("$"+str(node.val))
+        helper(node.left, res)
+        helper(node.right, res)
+    sr, tr = [], []
+    helper(s, sr)
+    helper(t, tr)
+    ss, ts = "".join(sr), "".join(tr)
+    return ss.find(ts) >= 0
+
+
 if __name__ == '__main__':
-    countSegments("        ")
+    x = construct_tree_node([3,4,5,1,2,null,null,null,null,0])
+    y = construct_tree_node([4,1,2])
+    print(isSubtree(x, y))
+    # reverseStr("abcdefgh", 3)
+    # findPairs([-1,-2,-3], 1)
+    # x = construct_tree_node([1,null,3,null,null,2])
+    # getMinimumDifference(x)
+    # countSegments("        ")
     # addStrings("9", "99")
     # x = construct_tree_node([1,2,3])
     # findTilt(x)

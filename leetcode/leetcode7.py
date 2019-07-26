@@ -113,6 +113,7 @@ def rob2(nums):
     :param nums: List[int]
     :return: int
     """
+
     def helper(nums):
         n = len(nums)
         if n == 0: return 0
@@ -124,6 +125,7 @@ def rob2(nums):
             cur, pre1, pre2 = nums[i] + max(pre1, pre2), cur, pre1
             ans = max(cur, ans)
         return ans
+
     n = len(nums)
     if n == 0: return 0
     if n < 3: return max(nums)
@@ -209,6 +211,7 @@ def buildTree(preorder, inorder):
     root.right = right
     return root
     """
+
     # 100%
     def helper(l=0, r=len(preorder)):
         if l == r: return None
@@ -219,8 +222,9 @@ def buildTree(preorder, inorder):
         root.left = helper(l, idx)
         root.right = helper(idx + 1, r)
         return root
+
     i_key = [0]
-    inorder_map = {k:v for v, k in enumerate(inorder)}
+    inorder_map = {k: v for v, k in enumerate(inorder)}
     return helper()
 
 
@@ -243,18 +247,19 @@ def buildTree2(inorder, postorder):
     :param postorder: List[int]
     :return: TreeNode
     """
+
     def helper(l=0, r=len(postorder)):
         if l == r: return None
         val = postorder[i_key[0]]
         root = TreeNode(val)
         idx = ino_map[val]
         i_key[0] -= 1
-        root.right = helper(idx+1, r)
+        root.right = helper(idx + 1, r)
         root.left = helper(l, idx)
         return root
 
-    i_key = [len(postorder)-1]
-    ino_map = {k:v for v, k in enumerate(inorder)}
+    i_key = [len(postorder) - 1]
+    ino_map = {k: v for v, k in enumerate(inorder)}
     return helper()
 
 
@@ -291,6 +296,7 @@ def sumNumbers(root):
     :param root: TreeNode
     :return: int
     """
+
     def dfs(root, curr):
         c = curr * 10 + root.val
         if not root.left and not root.right:
@@ -300,6 +306,7 @@ def sumNumbers(root):
             dfs(root.left, c)
         if root.right:
             dfs(root.right, c)
+
     ans = 0
     if root: dfs(root, 0)
     return ans
@@ -428,6 +435,7 @@ def rob3(root):
             res[node] = (res[node.left][1] + res[node.right][1] + node.val, max(res[node.left]) + max(res[node.right]))
     return max(res[root])
     """
+
     # 递归调用两次的 99%
     def dfs(node):
         if not node:
@@ -435,6 +443,7 @@ def rob3(root):
         left = dfs(node.left)
         right = dfs(node.right)
         return left[1] + node.val + right[1], max(left) + max(right)
+
     return max(dfs(root))
 
 
@@ -520,17 +529,17 @@ def checkRecord(n):
     # P1[i] = P1[i-1] + L1[i-1]
     # L1[i] = P1[i-1] + P1[i-2]
     # 将上述2、3式多次带入1，可以消掉P1和L1，最终简化为：A[i] = A[i-1] + A[i-2] + A[i-3]
-    M = 10 **9 + 7
+    M = 10 ** 9 + 7
     A, P, L = [0] * n, [0] * n, [0] * n
     # 初始化，简化for循环
     P[0], L[0], L[1], A[0], A[1], A[2] = 1, 1, 3, 1, 2, 4
     for i in range(1, n):
-        P[i] = (P[i-1] + A[i-1]+ L[i-1]) % M
+        P[i] = (P[i - 1] + A[i - 1] + L[i - 1]) % M
         if i > 1:
-            L[i] = (P[i-1] + A[i-1] + P[i-2] + A[i-2]) % M
+            L[i] = (P[i - 1] + A[i - 1] + P[i - 2] + A[i - 2]) % M
         if i > 2:
-            A[i] = (A[i-1] + A[i-2] + A[i-3]) % M
-    return (A[n-1] + P[n-1] + L[n-1]) % M
+            A[i] = (A[i - 1] + A[i - 2] + A[i - 3]) % M
+    return (A[n - 1] + P[n - 1] + L[n - 1]) % M
 
 
 def poorPigs(buckets, minutesToDie, minutesToTest):
@@ -679,6 +688,7 @@ def largestValues(root):
     :param root: TreeNode
     :return: List[int]
     """
+
     def helper(p, lv):
         if len(res) > lv:
             res[lv] = max(res[lv], p.val)
@@ -686,6 +696,7 @@ def largestValues(root):
             res.append(p.val)
         if p.left: helper(p.left, lv + 1)
         if p.right: helper(p.right, lv + 1)
+
     res = []
     if root: helper(root, 0)
     return res
@@ -734,6 +745,7 @@ def findAndReplacePattern(words, pattern):
             res.append(each)
     return res
     """
+
     # 数组
     def helper(word):
         dp = [-1] * 26
@@ -759,8 +771,76 @@ def findAndReplacePattern(words, pattern):
     return res
 
 
+def isNStraightHand(hand, W):
+    """
+    846. 一手顺子
+    爱丽丝有一手（hand）由整数数组给定的牌。 
+    现在她想把牌重新排列成组，使得每个组的大小都是 W，且由 W 张连续的牌组成。
+    如果她可以完成分组就返回 true，否则返回 false。
+    示例 1：
+    输入：hand = [1,2,3,6,2,3,4,7,8], W = 3
+    输出：true
+    解释：爱丽丝的手牌可以被重新排列为 [1,2,3]，[2,3,4]，[6,7,8]。
+    示例 2：
+    输入：hand = [1,2,3,4,5], W = 4
+    输出：false
+    解释：爱丽丝的手牌无法被重新排列成几个大小为 4 的组。
+    提示：
+    1 <= hand.length <= 10000
+    0 <= hand[i] <= 10^9
+    1 <= W <= hand.length
+    :param hand: List[int]
+    :param W: int
+    :return: bool
+    """
+    """
+    # 排序再通过remove的方法找不符合条件的
+    n = len(hand)
+    if n % W != 0: return False
+    i = 0
+    hand.sort()
+    while i < n:
+        m = hand.pop(0)
+        for j in range(W - 1):
+            m += 1
+            if m in hand:
+                hand.remove(m)
+            else:
+                return False
+        i += W
+    return True
+    """
+    """
+    # 用map存储数字的数量, 比remove快
+    d = {}
+    n = len(hand)
+    if n % W != 0: return False
+    hand.sort()
+    for x in hand:
+        if not x in d:
+            d[x] = 0
+        d[x] += 1
+    for x in hand:
+        if d[x] > 0:
+            for i in range(W):
+                if d.get(x+i, 0) > 0:
+                    d[x+i] -= 1
+                else:
+                    return False
+    return True
+    """
+    # 有小bug但是AC的想法
+    r = [0] * W
+    for h in hand:
+        r[h % W] += 1
+    return all(x == r[0] for x in r)
+
+
 if __name__ == '__main__':
-    findAndReplacePattern(words = ["abc","deq","mee","aqq","dkd","ccc"], pattern = "abb")
+    ans = isNStraightHand(hand = [1,2,3,6,2,3,4,7,8], W = 3)
+    # ans = isNStraightHand(hand = [1,1,2,2,3,3], W = 3)
+    print(ans)
+    # findAndReplacePattern(words=["abc", "deq", "mee", "aqq", "dkd", "ccc"], pattern="abb")
     # x = construct_tree_node([1,3,2,5,3,null,9])
     # largestValues(x)
     # minMutation("AAAAACCC","AACCCCCC",["AAAACCCC", "AAACCCCC", "AACCCCCC"])

@@ -1118,8 +1118,6 @@ def reverseStr(s, k):
     last, cur = 0, k
     while i < n:
         j = cur - i + last - 1 if last <= i < cur else i
-        if j >= n:
-            j = n - 1
         res.append(s[j])
         i += 1
         if i == cur:

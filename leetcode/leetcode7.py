@@ -571,24 +571,6 @@ def poorPigs(buckets, minutesToDie, minutesToTest):
     return x
 
 
-def findLUSlength(strs):
-    """
-    522. 最长特殊序列 II
-    给定字符串列表，你需要从它们中找出最长的特殊序列。最长特殊序列定义如下：该序列为某字符串独有的最长子序列（即不能是其他字符串的子序列）。
-    子序列可以通过删去字符串中的某些字符实现，但不能改变剩余字符的相对顺序。空序列为所有字符串的子序列，任何字符串为其自身的子序列。
-    输入将是一个字符串列表，输出是最长特殊序列的长度。如果最长特殊序列不存在，返回 -1 。
-    示例：
-    输入: "aba", "cdc", "eae"
-    输出: 3
-    提示：
-    所有给定的字符串长度不会超过 10 。
-    给定字符串列表的长度将在 [2, 50 ] 之间。
-    :param strs: List[str]
-    :return: int
-    """
-    pass
-
-
 def minMutation(start, end, bank):
     """
     433. 最小基因变化
@@ -836,6 +818,52 @@ def isNStraightHand(hand, W):
     return all(x == r[0] for x in r)
 
 
+def evalRPN(tokens):
+    """
+    150. 逆波兰表达式求值
+    根据逆波兰表示法，求表达式的值。
+    有效的运算符包括 +, -, *, / 。每个运算对象可以是整数，也可以是另一个逆波兰表达式。
+    说明：
+    整数除法只保留整数部分。
+    给定逆波兰表达式总是有效的。换句话说，表达式总会得出有效数值且不存在除数为 0 的情况。
+    示例 1：
+    输入: ["2", "1", "+", "3", "*"]
+    输出: 9
+    解释: ((2 + 1) * 3) = 9
+    示例 2：
+    输入: ["4", "13", "5", "/", "+"]
+    输出: 6
+    解释: (4 + (13 / 5)) = 6
+    示例 3：
+    输入: ["10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"]
+    输出: 22
+    解释:
+      ((10 * (6 / ((9 + 3) * -11))) + 17) + 5
+    = ((10 * (6 / (12 * -11))) + 17) + 5
+    = ((10 * (6 / -132)) + 17) + 5
+    = ((10 * 0) + 17) + 5
+    = (0 + 17) + 5
+    = 17 + 5
+    = 22
+    :param tokens: List[int]
+    :return: int
+    """
+    sym = {"+":lambda x,y:x+y,
+           "-":lambda x,y:x-y,
+           "*":lambda x,y:x*y,
+           "/":lambda x,y:int(x/y)}
+    stk = []
+    for x in tokens:
+        if x in sym:
+            a = stk.pop()
+            b = stk.pop()
+            c = sym[x](b, a)
+            stk.append(c)
+        else:
+            stk.append(int(x))
+    return stk[-1]
+
+
 def constructFromPrePost(pre, post):
     """
     889. 根据前序和后序遍历构造二叉树
@@ -852,14 +880,79 @@ def constructFromPrePost(pre, post):
     :param post: List[int]
     :return: TreeNode
     """
+    pass
 
 
+def findLUSlength(strs):
+    """
+    522. 最长特殊序列 II
+    给定字符串列表，你需要从它们中找出最长的特殊序列。最长特殊序列定义如下：该序列为某字符串独有的最长子序列（即不能是其他字符串的子序列）。
+    子序列可以通过删去字符串中的某些字符实现，但不能改变剩余字符的相对顺序。空序列为所有字符串的子序列，任何字符串为其自身的子序列。
+    输入将是一个字符串列表，输出是最长特殊序列的长度。如果最长特殊序列不存在，返回 -1 。
+    示例：
+    输入: "aba", "cdc", "eae"
+    输出: 3
+    提示：
+    所有给定的字符串长度不会超过 10 。
+    给定字符串列表的长度将在 [2, 50 ] 之间。
+    :param strs: List[str]
+    :return: int
+    """
+    pass
+
+
+def maxProduct(words):
+    """
+    318. 最大单词长度乘积
+    给定一个字符串数组 words，找到 length(word[i]) * length(word[j]) 的最大值，并且这两个单词不含有公共字母。你可以认为每个单词只包含小写字母。如果不存在这样的两个单词，返回 0。
+    示例 1:
+    输入: ["abcw","baz","foo","bar","xtfn","abcdef"]
+    输出: 16
+    解释: 这两个单词为 "abcw", "xtfn"。
+    示例 2:
+    输入: ["a","ab","abc","d","cd","bcd","abcd"]
+    输出: 4
+    解释: 这两个单词为 "ab", "cd"。
+    示例 3:
+    输入: ["a","aa","aaa","aaaa"]
+    输出: 0
+    解释: 不存在这样的两个单词。
+    :param words: List[str]
+    :return: int
+    """
+    pass
+
+
+def countRangeSum(nums, lower, upper):
+    """
+    327. 区间和的个数
+    给定一个整数数组 nums，返回区间和在 [lower, upper] 之间的个数，包含 lower 和 upper。
+    区间和 S(i, j) 表示在 nums 中，位置从 i 到 j 的元素之和，包含 i 和 j (i ≤ j)。
+    说明:
+    最直观的算法复杂度是 O(n2) ，请在此基础上优化你的算法。
+    示例:
+    输入: nums = [-2,5,-1], lower = -2, upper = 2,
+    输出: 3
+    解释: 3个区间分别是: [0,0], [2,2], [0,2]，它们表示的和分别为: -2, -1, 2。
+    :param nums: List[int]
+    :param lower: int
+    :param upper: int
+    :return: int
+    """
+    n = len(nums)
+    ans = 0
+    for i in range(n):
+        for j in range(i+1, n+1):
+            if lower <= sum(nums[i:j]) <= upper:
+                ans += 1
+    return ans
 
 
 if __name__ == '__main__':
-    ans = isNStraightHand(hand = [1,2,3,6,2,3,4,7,8], W = 3)
+    evalRPN(["10","6","9","3","+","-11","*","/","*","17","+","5","+"])
+    countRangeSum([-2, 5, -1], -2, 2)
     # ans = isNStraightHand(hand = [1,1,2,2,3,3], W = 3)
-    print(ans)
+    # print(ans)
     # findAndReplacePattern(words=["abc", "deq", "mee", "aqq", "dkd", "ccc"], pattern="abb")
     # x = construct_tree_node([1,3,2,5,3,null,9])
     # largestValues(x)

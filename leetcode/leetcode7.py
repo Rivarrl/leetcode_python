@@ -864,25 +864,6 @@ def evalRPN(tokens):
     return stk[-1]
 
 
-def constructFromPrePost(pre, post):
-    """
-    889. 根据前序和后序遍历构造二叉树
-    返回与给定的前序和后序遍历匹配的任何二叉树。
-    pre 和 post 遍历中的值是不同的正整数。
-    示例：
-    输入：pre = [1,2,4,5,3,6,7], post = [4,5,2,6,7,3,1]
-    输出：[1,2,3,4,5,6,7]
-    提示：
-    1 <= pre.length == post.length <= 30
-    pre[] 和 post[] 都是 1, 2, ..., pre.length 的排列
-    每个输入保证至少有一个答案。如果有多个答案，可以返回其中一个。
-    :param pre: List[int]
-    :param post: List[int]
-    :return: TreeNode
-    """
-    pass
-
-
 def findLUSlength(strs):
     """
     522. 最长特殊序列 II
@@ -948,9 +929,88 @@ def countRangeSum(nums, lower, upper):
     return ans
 
 
+def stoneGame(piles):
+    """
+    877. 石子游戏
+    亚历克斯和李用几堆石子在做游戏。偶数堆石子排成一行，每堆都有正整数颗石子 piles[i] 。
+    游戏以谁手中的石子最多来决出胜负。石子的总数是奇数，所以没有平局。
+    亚历克斯和李轮流进行，亚历克斯先开始。 每回合，玩家从行的开始或结束处取走整堆石头。 这种情况一直持续到没有更多的石子堆为止，此时手中石子最多的玩家获胜。
+    假设亚历克斯和李都发挥出最佳水平，当亚历克斯赢得比赛时返回 true ，当李赢得比赛时返回 false 。
+    示例：
+    输入：[5,3,4,5]
+    输出：true
+    解释：
+    亚历克斯先开始，只能拿前 5 颗或后 5 颗石子 。
+    假设他取了前 5 颗，这一行就变成了 [3,4,5] 。
+    如果李拿走前 3 颗，那么剩下的是 [4,5]，亚历克斯拿走后 5 颗赢得 10 分。
+    如果李拿走后 5 颗，那么剩下的是 [3,4]，亚历克斯拿走后 4 颗赢得 9 分。
+    这表明，取前 5 颗石子对亚历克斯来说是一个胜利的举动，所以我们返回 true 。
+    提示：
+    2 <= piles.length <= 500
+    piles.length 是偶数。
+    1 <= piles[i] <= 500
+    sum(piles) 是奇数。
+    :param piles: List[int]
+    :return: bool
+    """
+    pass
+
+
+def constructFromPrePost(pre, post):
+    """
+    889. 根据前序和后序遍历构造二叉树
+    返回与给定的前序和后序遍历匹配的任何二叉树。
+    pre 和 post 遍历中的值是不同的正整数。
+    示例：
+    输入：pre = [1,2,4,5,3,6,7], post = [4,5,2,6,7,3,1]
+    输出：[1,2,3,4,5,6,7]
+    提示：
+    1 <= pre.length == post.length <= 30
+    pre[] 和 post[] 都是 1, 2, ..., pre.length 的排列
+    每个输入保证至少有一个答案。如果有多个答案，可以返回其中一个。
+    :param pre: List[int]
+    :param post: List[int]
+    :return: TreeNode
+    """
+    """
+    # 17%
+    def helper(l1, r1, l2, r2):
+        cur = TreeNode(pre[l1])
+        if l1 == r1: return cur
+        a1, a2 = pre[l1 + 1], post[r2 - 1]
+        nx = d_pre[a2]
+        nt = d_post[a1]
+        if a1 != a2:
+            left = helper(l1 + 1, nx - 1, l2, nt)
+            right = helper(nx, r1, nt + 1, r2 - 1)
+            cur.left = left
+            cur.right = right
+        else:
+            left = helper(l1 + 1, r1, l2, nt)
+            cur.left = left
+        return cur
+    n = len(pre)
+    d_pre = {v: k for k, v in enumerate(pre)}
+    d_post = {v: k for k, v in enumerate(post)}
+    return helper(0, n - 1, 0, n - 1)
+    """
+    # 100%
+    if not pre:
+        return None
+    cur = TreeNode(pre[0])
+    if len(pre) == 1:
+        return cur
+    i = post.index(pre[1]) + 1
+    cur.left = constructFromPrePost(pre[1:i+1], post[:i])
+    cur.right = constructFromPrePost(pre[i+1:], post[i:-1])
+    return cur
+
+
 if __name__ == '__main__':
-    evalRPN(["10","6","9","3","+","-11","*","/","*","17","+","5","+"])
-    countRangeSum([-2, 5, -1], -2, 2)
+    ans = constructFromPrePost([3,4,1,2], [1,4,2,3])
+    print_tree_node(ans)
+    # countRangeSum([-2, 5, -1], -2, 2)
+    # evalRPN(["10","6","9","3","+","-11","*","/","*","17","+","5","+"])
     # ans = isNStraightHand(hand = [1,1,2,2,3,3], W = 3)
     # print(ans)
     # findAndReplacePattern(words=["abc", "deq", "mee", "aqq", "dkd", "ccc"], pattern="abb")

@@ -818,6 +818,98 @@ def isNStraightHand(hand, W):
     return all(x == r[0] for x in r)
 
 
+def constructFromPrePost(pre, post):
+    """
+    889. 根据前序和后序遍历构造二叉树
+    返回与给定的前序和后序遍历匹配的任何二叉树。
+    pre 和 post 遍历中的值是不同的正整数。
+    示例：
+    输入：pre = [1,2,4,5,3,6,7], post = [4,5,2,6,7,3,1]
+    输出：[1,2,3,4,5,6,7]
+    提示：
+    1 <= pre.length == post.length <= 30
+    pre[] 和 post[] 都是 1, 2, ..., pre.length 的排列
+    每个输入保证至少有一个答案。如果有多个答案，可以返回其中一个。
+    :param pre: List[int]
+    :param post: List[int]
+    :return: TreeNode
+    """
+    """
+    # 17%
+    def helper(l1, r1, l2, r2):
+        cur = TreeNode(pre[l1])
+        if l1 == r1: return cur
+        a1, a2 = pre[l1 + 1], post[r2 - 1]
+        nx = d_pre[a2]
+        nt = d_post[a1]
+        if a1 != a2:
+            left = helper(l1 + 1, nx - 1, l2, nt)
+            right = helper(nx, r1, nt + 1, r2 - 1)
+            cur.left = left
+            cur.right = right
+        else:
+            left = helper(l1 + 1, r1, l2, nt)
+            cur.left = left
+        return cur
+    n = len(pre)
+    d_pre = {v: k for k, v in enumerate(pre)}
+    d_post = {v: k for k, v in enumerate(post)}
+    return helper(0, n - 1, 0, n - 1)
+    """
+    # 100%
+    if not pre:
+        return None
+    cur = TreeNode(pre[0])
+    if len(pre) == 1:
+        return cur
+    i = post.index(pre[1]) + 1
+    cur.left = constructFromPrePost(pre[1:i+1], post[:i])
+    cur.right = constructFromPrePost(pre[i+1:], post[i:-1])
+    return cur
+
+
+def matrixScore(A):
+    """
+    861. 翻转矩阵后的得分
+    有一个二维矩阵 A 其中每个元素的值为 0 或 1 。
+    移动是指选择任一行或列，并转换该行或列中的每一个值：将所有 0 都更改为 1，将所有 1 都更改为 0。
+    在做出任意次数的移动后，将该矩阵的每一行都按照二进制数来解释，矩阵的得分就是这些数字的总和。
+    返回尽可能高的分数。
+    示例：
+    输入：[[0,0,1,1],[1,0,1,0],[1,1,0,0]]
+    输出：39
+    解释：
+    转换为 [[1,1,1,1],[1,0,0,1],[1,1,1,1]]
+    0b1111 + 0b1001 + 0b1111 = 15 + 9 + 15 = 39
+    提示：
+    1 <= A.length <= 20
+    1 <= A[0].length <= 20
+    A[i][j] 是 0 或 1
+    :param A: List[List[int]]
+    :return: int
+    """
+    # 先横向变换, 变成横向最高分之后再对纵向变换
+    # 变换规则:
+    # 横向最高位是0就反转 1不变
+    # 纵向0的数量多就整列反转
+    n = len(A)
+    if n == 0: return 0
+    m = len(A[0])
+    for i in range(n):
+        if A[i][0] == 0:
+            for j in range(m):
+                A[i][j] ^= 1
+    ans = 0
+    for i in range(m):
+        c = 0
+        for j in range(n):
+            if A[j][i]:
+                c += 1
+        c = max(n-c, c)
+        ans = (ans << 1) + c
+    return ans
+
+
 def evalRPN(tokens):
     """
     150. 逆波兰表达式求值
@@ -956,59 +1048,11 @@ def stoneGame(piles):
     pass
 
 
-def constructFromPrePost(pre, post):
-    """
-    889. 根据前序和后序遍历构造二叉树
-    返回与给定的前序和后序遍历匹配的任何二叉树。
-    pre 和 post 遍历中的值是不同的正整数。
-    示例：
-    输入：pre = [1,2,4,5,3,6,7], post = [4,5,2,6,7,3,1]
-    输出：[1,2,3,4,5,6,7]
-    提示：
-    1 <= pre.length == post.length <= 30
-    pre[] 和 post[] 都是 1, 2, ..., pre.length 的排列
-    每个输入保证至少有一个答案。如果有多个答案，可以返回其中一个。
-    :param pre: List[int]
-    :param post: List[int]
-    :return: TreeNode
-    """
-    """
-    # 17%
-    def helper(l1, r1, l2, r2):
-        cur = TreeNode(pre[l1])
-        if l1 == r1: return cur
-        a1, a2 = pre[l1 + 1], post[r2 - 1]
-        nx = d_pre[a2]
-        nt = d_post[a1]
-        if a1 != a2:
-            left = helper(l1 + 1, nx - 1, l2, nt)
-            right = helper(nx, r1, nt + 1, r2 - 1)
-            cur.left = left
-            cur.right = right
-        else:
-            left = helper(l1 + 1, r1, l2, nt)
-            cur.left = left
-        return cur
-    n = len(pre)
-    d_pre = {v: k for k, v in enumerate(pre)}
-    d_post = {v: k for k, v in enumerate(post)}
-    return helper(0, n - 1, 0, n - 1)
-    """
-    # 100%
-    if not pre:
-        return None
-    cur = TreeNode(pre[0])
-    if len(pre) == 1:
-        return cur
-    i = post.index(pre[1]) + 1
-    cur.left = constructFromPrePost(pre[1:i+1], post[:i])
-    cur.right = constructFromPrePost(pre[i+1:], post[i:-1])
-    return cur
-
-
 if __name__ == '__main__':
-    ans = constructFromPrePost([3,4,1,2], [1,4,2,3])
-    print_tree_node(ans)
+    matrixScore([[0,1],[1,1]])
+    matrixScore([[0,0,1,1],[1,0,1,0],[1,1,0,0]])
+    # ans = constructFromPrePost([3,4,1,2], [1,4,2,3])
+    # print_tree_node(ans)
     # countRangeSum([-2, 5, -1], -2, 2)
     # evalRPN(["10","6","9","3","+","-11","*","/","*","17","+","5","+"])
     # ans = isNStraightHand(hand = [1,1,2,2,3,3], W = 3)

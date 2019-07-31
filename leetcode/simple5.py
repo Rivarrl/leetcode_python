@@ -109,8 +109,92 @@ def distributeCandies(candies, num_people):
     return res
 
 
+def lastStoneWeight(stones):
+    """
+    1046. 最后一块石头的重量
+    有一堆石头，每块石头的重量都是正整数。
+    每一回合，从中选出两块最重的石头，然后将它们一起粉碎。假设石头的重量分别为 x 和 y，且 x <= y。那么粉碎的可能结果如下：
+    如果 x == y，那么两块石头都会被完全粉碎；
+    如果 x != y，那么重量为 x 的石头将会完全粉碎，而重量为 y 的石头新重量为 y-x。
+    最后，最多只会剩下一块石头。返回此石头的重量。如果没有石头剩下，就返回 0。
+    提示：
+    1 <= stones.length <= 30
+    1 <= stones[i] <= 1000
+    :param stones: List[int]
+    :return: int
+    """
+    while len(stones) > 1:
+        stones.sort()
+        s1 = stones.pop()
+        s2 = stones.pop()
+        while stones and s2 + stones[-1] <= s1:
+            s2 += stones.pop()
+        s3 = s1 - s2
+        stones.append(s3)
+    return stones[0]
+
+
+def rotatedDigits(N):
+    """
+    788. 旋转数字
+    我们称一个数 X 为好数, 如果它的每位数字逐个地被旋转 180 度后，我们仍可以得到一个有效的，且和 X 不同的数。要求每位数字都要被旋转。
+    如果一个数的每位数字被旋转以后仍然还是一个数字， 则这个数是有效的。0, 1, 和 8 被旋转后仍然是它们自己；2 和 5 可以互相旋转成对方；6 和 9 同理，除了这些以外其他的数字旋转以后都不再是有效的数字。
+    现在我们有一个正整数 N, 计算从 1 到 N 中有多少个数 X 是好数？
+    示例:
+    输入: 10
+    输出: 4
+    解释:
+    在[1, 10]中有四个好数： 2, 5, 6, 9。
+    注意 1 和 10 不是好数, 因为他们在旋转之后不变。
+    注意:
+    N 的取值范围是 [1, 10000]。
+    :param N: int
+    :return: int
+    """
+    correct = [0, 1, 2, 5, 6, 8, 9]
+    exp = [0, 1, 8]
+    ans, dec = 0, 0
+    s = [int(x) for x in str(N)]
+    n = len(s)
+    for j in range(n):
+        i = n - 1 - j
+        x = s[j]
+        plus = 0
+        if not x in correct:
+            for q in range(len(correct)):
+                if correct[q] > x:
+                    plus = q
+            plus = plus + 1 if i == 0 else plus
+            ans += plus * (7 ** i)
+            break
+        else:
+            plus = correct.index(x)
+            plus = plus + 1 if i == 0 else plus
+            ans += plus * (7 ** i)
+    print(ans)
+    for j in range(n):
+        i = n - 1 - j
+        x = s[j]
+        minus = 0
+        if not x in exp:
+            for q in range(len(exp)):
+                if exp[q] > x:
+                    minus = q
+            minus = minus + 1 if i == 0 else minus
+            ans -= minus * (3 ** i)
+            break
+        else:
+            minus = exp.index(x)
+            minus = minus + 1 if i == 0 else minus
+            ans -= minus * (3 ** i)
+    print(ans)
+    return ans
+
+
 if __name__ == '__main__':
-    distributeCandies(10, 3)
+    rotatedDigits(2)
+    # lastStoneWeight([2,7,4,1,8,1])
+    # distributeCandies(10, 3)
     # tribonacci(25)
     # x, y = construct_tree_node([3, 5, 1, 6, 2, 9, 8, null, null, 7, 4]), construct_tree_node([2, 3, 5, 6, 1, 9, 8, null, null, 7, 0])
     # leafSimilar(x, y)

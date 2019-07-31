@@ -164,7 +164,6 @@ def rotatedDigits(N):
             for q in range(len(correct)):
                 if correct[q] > x:
                     plus = q
-            plus = plus + 1 if i == 0 else plus
             ans += plus * (7 ** i)
             break
         else:
@@ -180,14 +179,12 @@ def rotatedDigits(N):
             for q in range(len(exp)):
                 if exp[q] > x:
                     minus = q
-            minus = minus + 1 if i == 0 else minus
             ans -= minus * (3 ** i)
             break
         else:
             minus = exp.index(x)
             minus = minus + 1 if i == 0 else minus
             ans -= minus * (3 ** i)
-    print(ans)
     return ans
 
 

@@ -24,20 +24,7 @@ def removeBoxes(boxes):
     :param boxes: List[int]
     :return: int
     """
-    d = {}
-    for x in boxes:
-        if not x in d:
-            d[x] = 0
-        d[x] += 1
-    ans = 0
-    for i, x in enumerate(boxes):
-        if d[boxes[i]] == 1:
-            d.pop(boxes[i])
-            boxes.pop(i)
-            ans += 1
-    print(boxes)
-    print(d)
-
+    pass
 
 
 

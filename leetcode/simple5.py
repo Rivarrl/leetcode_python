@@ -164,6 +164,7 @@ def rotatedDigits(N):
             for q in range(len(correct)):
                 if correct[q] > x:
                     plus = q
+                    break
             ans += plus * (7 ** i)
             break
         else:
@@ -174,22 +175,24 @@ def rotatedDigits(N):
     for j in range(n):
         i = n - 1 - j
         x = s[j]
-        minus = 0
+        minus = 9
         if not x in exp:
-            for q in range(len(exp)):
-                if exp[q] > x:
-                    minus = q
+            for q in range(len(exp)-1, -1, -1):
+                if exp[q] < x:
+                    minus = q + 1
+                    break
             ans -= minus * (3 ** i)
             break
         else:
             minus = exp.index(x)
             minus = minus + 1 if i == 0 else minus
             ans -= minus * (3 ** i)
+    print(ans)
     return ans
 
 
 if __name__ == '__main__':
-    rotatedDigits(2)
+    rotatedDigits(9)
     # lastStoneWeight([2,7,4,1,8,1])
     # distributeCandies(10, 3)
     # tribonacci(25)

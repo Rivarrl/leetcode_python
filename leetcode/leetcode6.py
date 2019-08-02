@@ -526,6 +526,7 @@ def nthUglyNumber(n):
             i3 += 1
         if res[-1] == res[i5] * 5:
             i5 += 1
+    print(res)
     return res[-1]
 
 
@@ -1009,7 +1010,7 @@ if __name__ == '__main__':
     # maxSlidingWindow(nums = [1,3,-1,-3,5,3,6,7], k = 3)
     # print(containsNearbyAlmostDuplicate(nums = [1,5,9,1,5,9], k = 2, t = 3))
     # bulbSwitch(3)
-    # nthUglyNumber(10)
+    nthUglyNumber(12)
     # x = construct_tree_node([1,null,2,null,null,3])
     # flatten(x)
     # print(deconstruct_tree_node(x))

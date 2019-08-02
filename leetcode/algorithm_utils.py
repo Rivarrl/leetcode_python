@@ -115,6 +115,7 @@ def construct_list_node(arr):
     return res.next
 
 
+# deprecated
 def binary_fills(i):
     if i == 0: return 0
     x = 1
@@ -123,6 +124,7 @@ def binary_fills(i):
     return x - i - 1
 
 
+# deprecated
 def split_tree_list(arr):
     depth = pow((len(arr) + 1), 2)
     arrl, arrr = [], []
@@ -134,17 +136,29 @@ def split_tree_list(arr):
         arrr += arr[m: r]
     return arrl, arrr
 
-
-def construct_tree_node(arr):
+# deprecated
+def old_construct_tree_node(arr):
     arr += [None] * binary_fills(len(arr))
     if len(arr) == 0 or arr[0] == None: return None
     root = TreeNode(arr[0])
     arrl, arrr = split_tree_list(arr)
-    left = construct_tree_node(arrl)
-    right = construct_tree_node(arrr)
+    left = old_construct_tree_node(arrl)
+    right = old_construct_tree_node(arrr)
     root.left = left
     root.right = right
     return root
+
+
+def construct_tree_node(arr):
+    if not arr: return
+    def _construct(i):
+        if i >= len(arr):
+            return None
+        root = TreeNode(arr[i])
+        root.left = _construct(i*2+1)
+        root.right = _construct(i*2+2)
+        return root
+    return _construct(0)
 
 
 def print_tree_node(root):
@@ -214,9 +228,9 @@ def heap_sort(arr):
 
 
 if __name__ == '__main__':
-    x = [4,1,6,3,5,2]
-    heap_sort(x)
-    print(x)
+    # x = [4,1,6,3,5,2]
+    # heap_sort(x)
+    # print(x)
     # matrix_pretty_print([[1,2,3],[4,5,6]])
     # a = [5,4,2,3,6,1,7,9]
     # quick_sort(a, 0, len(a) - 1)

@@ -115,7 +115,6 @@ def construct_list_node(arr):
     return res.next
 
 
-# deprecated
 def binary_fills(i):
     if i == 0: return 0
     x = 1
@@ -124,7 +123,6 @@ def binary_fills(i):
     return x - i - 1
 
 
-# deprecated
 def split_tree_list(arr):
     depth = pow((len(arr) + 1), 2)
     arrl, arrr = [], []
@@ -136,20 +134,19 @@ def split_tree_list(arr):
         arrr += arr[m: r]
     return arrl, arrr
 
-# deprecated
-def old_construct_tree_node(arr):
+def construct_tree_node(arr):
     arr += [None] * binary_fills(len(arr))
     if len(arr) == 0 or arr[0] == None: return None
     root = TreeNode(arr[0])
     arrl, arrr = split_tree_list(arr)
-    left = old_construct_tree_node(arrl)
-    right = old_construct_tree_node(arrr)
+    left = construct_tree_node(arrl)
+    right = construct_tree_node(arrr)
     root.left = left
     root.right = right
     return root
 
-
-def construct_tree_node(arr):
+# deprecated
+def construct_tree_node_v2(arr):
     if not arr: return
     def _construct(i):
         if i >= len(arr):

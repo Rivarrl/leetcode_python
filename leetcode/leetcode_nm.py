@@ -163,7 +163,50 @@ def nthSuperUglyNumber(n, primes):
     return res[-1]
 
 
+def pathSum(root, sum):
+    """
+    113. 路径总和 II
+    给定一个二叉树和一个目标和，找到所有从根节点到叶子节点路径总和等于给定目标和的路径。
+    说明: 叶子节点是指没有子节点的节点。
+    示例:
+    给定如下二叉树，以及目标和 sum = 22，
+                  5
+                 / \
+                4   8
+               /   / \
+              11  13  4
+             /  \    / \
+            7    2  5   1
+    返回:
+    [
+       [5,4,11,2],
+       [5,8,4,5]
+    ]
+    :param root: TreeNode
+    :param sum: int
+    :return: List[List[int]]
+    """
+    def dfs(node, cur, path):
+        if not node: return
+        if not node.left and not node.right:
+            if cur == node.val:
+                nonlocal res
+                res.append(path + [node.val])
+                return
+        if node.left:
+            dfs(node.left, cur - node.val, path + [node.val])
+        if node.right:
+            dfs(node.right, cur - node.val, path + [node.val])
+
+    res = []
+    dfs(root, sum, [])
+    return res
+
+
+
 if __name__ == '__main__':
+    x = construct_tree_node([5,4,8,11,null,13,4,7,2,null,null,null,null,5,1])
+    pathSum(x, 22)
     nthSuperUglyNumber(12,[2,7,13,19])
     # a = minSteps(100)
     # print(a)

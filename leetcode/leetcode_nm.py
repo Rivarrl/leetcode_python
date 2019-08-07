@@ -91,31 +91,6 @@ def minSteps(n):
     return ans
 
 
-def lastStoneWeightII(stones):
-    """
-    1049. 最后一块石头的重量 II
-    有一堆石头，每块石头的重量都是正整数。
-    每一回合，从中选出任意两块石头，然后将它们一起粉碎。假设石头的重量分别为 x 和 y，且 x <= y。那么粉碎的可能结果如下：
-    如果 x == y，那么两块石头都会被完全粉碎；
-    如果 x != y，那么重量为 x 的石头将会完全粉碎，而重量为 y 的石头新重量为 y-x。
-    最后，最多只会剩下一块石头。返回此石头最小的可能重量。如果没有石头剩下，就返回 0。
-    示例：
-    输入：[2,7,4,1,8,1]
-    输出：1
-    解释：
-    组合 2 和 4，得到 2，所以数组转化为 [2,7,1,8,1]，
-    组合 7 和 8，得到 1，所以数组转化为 [2,1,1,1]，
-    组合 2 和 1，得到 1，所以数组转化为 [1,1,1]，
-    组合 1 和 1，得到 0，所以数组转化为 [1]，这就是最优值。
-    提示：
-    1 <= stones.length <= 30
-    1 <= stones[i] <= 1000
-    :param stones: List[int]
-    :return: int
-    """
-    pass
-
-
 def nthSuperUglyNumber(n, primes):
     """
     313. 超级丑数
@@ -203,11 +178,71 @@ def pathSum(root, sum):
     return res
 
 
+def sortedListToBST(head):
+    """
+    109. 有序链表转换二叉搜索树
+    给定一个单链表，其中的元素按升序排序，将其转换为高度平衡的二叉搜索树。
+    本题中，一个高度平衡二叉树是指一个二叉树每个节点 的左右两个子树的高度差的绝对值不超过 1。
+    示例:
+    给定的有序链表： [-10, -3, 0, 5, 9],
+    一个可能的答案是：[0, -3, 9, -10, null, 5], 它可以表示下面这个高度平衡二叉搜索树：
+          0
+         / \
+       -3   9
+       /   /
+     -10  5
+    :param head: ListNode
+    :return: TreeNode
+    """
+    # 由于链表查找中点的复杂度比数组高, 可以转成数组再操作
+    # 快慢指针找中点
+    def helper(node):
+        if not node: return None
+        if not node.next: return TreeNode(node.val)
+        last, slow, fast = node, node.next, node.next.next
+        while fast and fast.next:
+            last, slow, fast = last.next, slow.next, fast.next.next
+        last.next = None
+        root = TreeNode(slow.val)
+        root.left = helper(node)
+        root.right = helper(slow.next)
+        return root
+
+    return helper(head)
+
+
+def lastStoneWeightII(stones):
+    """
+    1049. 最后一块石头的重量 II
+    有一堆石头，每块石头的重量都是正整数。
+    每一回合，从中选出任意两块石头，然后将它们一起粉碎。假设石头的重量分别为 x 和 y，且 x <= y。那么粉碎的可能结果如下：
+    如果 x == y，那么两块石头都会被完全粉碎；
+    如果 x != y，那么重量为 x 的石头将会完全粉碎，而重量为 y 的石头新重量为 y-x。
+    最后，最多只会剩下一块石头。返回此石头最小的可能重量。如果没有石头剩下，就返回 0。
+    示例：
+    输入：[2,7,4,1,8,1]
+    输出：1
+    解释：
+    组合 2 和 4，得到 2，所以数组转化为 [2,7,1,8,1]，
+    组合 7 和 8，得到 1，所以数组转化为 [2,1,1,1]，
+    组合 2 和 1，得到 1，所以数组转化为 [1,1,1]，
+    组合 1 和 1，得到 0，所以数组转化为 [1]，这就是最优值。
+    提示：
+    1 <= stones.length <= 30
+    1 <= stones[i] <= 1000
+    :param stones: List[int]
+    :return: int
+    """
+    pass
+
 
 if __name__ == '__main__':
-    x = construct_tree_node([5,4,8,11,null,13,4,7,2,null,null,null,null,5,1])
-    pathSum(x, 22)
-    nthSuperUglyNumber(12,[2,7,13,19])
+    x = construct_list_node([-10,-3,0,5,9])
+    y = sortedListToBST(x)
+    print(deconstruct_tree_node(y))
+    # x = construct_tree_node([5,4,8,11,null,13,4,7,2,null,null,null,null,5,1])
+    # pathSum(x, 22)
+    # nthSuperUglyNumber(12,[2,7,13,19])
     # a = minSteps(100)
     # print(a)
     # x = construct_list_node([1,2,3,4,5])

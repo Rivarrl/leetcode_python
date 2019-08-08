@@ -211,6 +211,60 @@ def sortedListToBST(head):
     return helper(head)
 
 
+def maxProduct(words):
+    """
+    318. 最大单词长度乘积
+    给定一个字符串数组 words，找到 length(word[i]) * length(word[j]) 的最大值，并且这两个单词不含有公共字母。你可以认为每个单词只包含小写字母。如果不存在这样的两个单词，返回 0。
+    示例 1:
+    输入: ["abcw","baz","foo","bar","xtfn","abcdef"]
+    输出: 16
+    解释: 这两个单词为 "abcw", "xtfn"。
+    示例 2:
+    输入: ["a","ab","abc","d","cd","bcd","abcd"]
+    输出: 4
+    解释: 这两个单词为 "ab", "cd"。
+    示例 3:
+    输入: ["a","aa","aaa","aaaa"]
+    输出: 0
+    解释: 不存在这样的两个单词。
+    :param words: List[str]
+    :return: int
+    """
+    """
+    # 隐含线索：判断两个字符串是否出现共同字母时，每个字符串中字母出现的个数对解题无关紧要，ab = abb，即只需记录字符串中的某字母出现与否
+    # 状态值只有两个，而且字符串中只有26个小写字母
+    # 所以可以使用26位的二进制数来记录每个字符串的状态值
+    # 最终两个字符串与运算后为0则说明不包含共同字母
+    n = len(words)
+    d = []
+    for i in range(n):
+        a = 0
+        for c, j in enumerate(words[i]):
+            tmp = 1
+            for _ in range(ord(j) - ord('a')):
+                tmp <<= 1
+            if c == 0:
+                a = tmp
+            else:
+                a |= tmp
+        d.append(a)
+    ans = 0
+    for i in range(n):
+        for j in range(i + 1, n):
+            if d[i] and d[j] and d[i] & d[j] == 0:
+                ans = max(len(words[i]) * len(words[j]), ans)
+    return ans
+    """
+    # 排名靠前的，上述思路优化版
+    d = {}
+    for w in words:
+        mask = 0
+        for c in set(w):
+            mask |= (1 << (ord(c) - 97))
+        d[mask] = max(d.get(mask, 0), len(w))
+    return max([d[x] * d[y] for x in d for y in d if not x & y] or [0])
+
+
 def lastStoneWeightII(stones):
     """
     1049. 最后一块石头的重量 II
@@ -237,9 +291,10 @@ def lastStoneWeightII(stones):
 
 
 if __name__ == '__main__':
-    x = construct_list_node([-10,-3,0,5,9])
-    y = sortedListToBST(x)
-    print(deconstruct_tree_node(y))
+    # maxProduct(["eae","ea","aaf","bda","fcf","dc","ac","ce","cefde","dabae"])
+    # x = construct_list_node([-10,-3,0,5,9])
+    # y = sortedListToBST(x)
+    # print(deconstruct_tree_node(y))
     # x = construct_tree_node([5,4,8,11,null,13,4,7,2,null,null,null,null,5,1])
     # pathSum(x, 22)
     # nthSuperUglyNumber(12,[2,7,13,19])

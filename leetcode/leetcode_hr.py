@@ -108,7 +108,7 @@ def crackSafe(n, k):
 
 
 if __name__ == '__main__':
-    y = crackSafe(2, 3)
-    print(y)
+    # y = crackSafe(2, 3)
+    # print(y)
     # removeBoxes([1, 3, 2, 2, 2, 3, 4, 3, 1])
     pass

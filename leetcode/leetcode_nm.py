@@ -345,8 +345,141 @@ def findDuplicates(nums):
     return list(res)
 
 
+def hIndex(citations):
+    """
+    274. H指数
+    给定一位研究者论文被引用次数的数组（被引用次数是非负整数）。编写一个方法，计算出研究者的 h 指数。
+    h 指数的定义: “h 代表“高引用次数”（high citations），一名科研人员的 h 指数是指他（她）的 （N 篇论文中）至多有 h 篇论文分别被引用了至少 h 次。（其余的 N - h 篇论文每篇被引用次数不多于 h 次。）”
+    示例:
+    输入: citations = [3,0,6,1,5]
+    输出: 3
+    解释: 给定数组表示研究者总共有 5 篇论文，每篇论文相应的被引用了 3, 0, 6, 1, 5 次。
+         由于研究者有 3 篇论文每篇至少被引用了 3 次，其余两篇论文每篇被引用不多于 3 次，所以她的 h 指数是 3。
+    说明: 如果 h 有多种可能的值，h 指数是其中最大的那个。
+    :param citations: List[int]
+    :return: int
+    """
+    """
+    # 直接sort, 弟弟做法 55%
+    citations.sort()
+    n = len(citations)
+    ans = 0
+    for i in range(n):
+        j = n - i
+        if citations[i] >= j:
+            ans = j
+            break
+    return ans
+    """
+    # 用nums存储每个下标位置对应引用次数的数量, 超出部分放到nums[n]里
+    n = len(citations)
+    nums = [0] * (n + 1)
+    for i in citations:
+        if i >= n:
+            nums[n] += 1
+        else:
+            nums[i] += 1
+    ans = 0
+    for i in range(n, 0, -1):
+        if ans + nums[i] >= i:
+            return i
+        else:
+            ans += nums[i]
+    return 0
+
+
+def hIndex2(citations):
+    """
+    275. H指数 II
+    给定一位研究者论文被引用次数的数组（被引用次数是非负整数），数组已经按照升序排列。编写一个方法，计算出研究者的 h 指数。
+    h 指数的定义: “h 代表“高引用次数”（high citations），一名科研人员的 h 指数是指他（她）的 （N 篇论文中）至多有 h 篇论文分别被引用了至少 h 次。（其余的 N - h 篇论文每篇被引用次数不多于 h 次。）"
+    示例:
+    输入: citations = [0,1,3,5,6]
+    输出: 3
+    解释: 给定数组表示研究者总共有 5 篇论文，每篇论文相应的被引用了 0, 1, 3, 5, 6 次。
+         由于研究者有 3 篇论文每篇至少被引用了 3 次，其余两篇论文每篇被引用不多于 3 次，所以她的 h 指数是 3。
+    说明:
+    如果 h 有多有种可能的值 ，h 指数是其中最大的那个。
+    进阶：
+    这是 H指数 的延伸题目，本题中的 citations 数组是保证有序的。
+    你可以优化你的算法到对数时间复杂度吗？
+    :param citations: List[int]
+    :return: int
+    """
+    n = len(citations)
+    i, j = 0, n - 1
+    ans = 0
+    while i <= j:
+        m = i + (j - i) // 2
+        ans = n - m
+        if citations[m] >= n - m:
+            j = m - 1
+        else:
+            i = m + 1
+            ans -= 1
+    return ans
+
+
+def getHint(secret, guess):
+    """
+    299. 猜数字游戏
+    你正在和你的朋友玩 猜数字（Bulls and Cows）游戏：你写下一个数字让你的朋友猜。每次他猜测后，你给他一个提示，告诉他有多少位数字和确切位置都猜对了（称为“Bulls”, 公牛），有多少位数字猜对了但是位置不对（称为“Cows”, 奶牛）。你的朋友将会根据提示继续猜，直到猜出秘密数字。
+    请写出一个根据秘密数字和朋友的猜测数返回提示的函数，用 A 表示公牛，用 B 表示奶牛。
+    请注意秘密数字和朋友的猜测数都可能含有重复数字。
+    示例 1:
+    输入: secret = "1807", guess = "7810"
+    输出: "1A3B"
+    解释: 1 公牛和 3 奶牛。公牛是 8，奶牛是 0, 1 和 7。
+    示例 2:
+    输入: secret = "1123", guess = "0111"
+    输出: "1A1B"
+    解释: 朋友猜测数中的第一个 1 是公牛，第二个或第三个 1 可被视为奶牛。
+    说明: 你可以假设秘密数字和朋友的猜测数都只包含数字，并且它们的长度永远相等。
+    :param secret: str
+    :param guess: str
+    :return: str
+    """
+    """
+    # 第一大佬的思路, 先算A的, 再算所有的, 再减
+    bulls = sum(map(operator.eq, secret, guess))
+    both = sum(min(secret.count(x), guess.count(x)) for x in set(guess))
+    return '%dA%dB' % (bulls, both - bulls)
+    """
+    # 先查找值和位置都相等的pop掉, 再排序, 在双指针查找剩下相同的, 80%
+    A, B = 0, 0
+    ss = [x for x in secret]
+    gs = [x for x in guess]
+    n = len(secret)
+    i = 0
+    while i < n:
+        if ss[i] == gs[i]:
+            ss.pop(i)
+            gs.pop(i)
+            n -= 1
+            A += 1
+        else:
+            i += 1
+    ss.sort()
+    gs.sort()
+    m = len(ss)
+    i, j = 0, 0
+    while i < m and j < m:
+        if ss[i] < gs[j]:
+            i += 1
+        elif ss[i] > gs[j]:
+            j += 1
+        else:
+            B += 1
+            i += 1
+            j += 1
+    return "%dA%dB" % (A, B)
+
+
 if __name__ == '__main__':
-    findDuplicates([4,3,2,7,8,2,3,1])
+    getHint("1123", "0111")
+    # hIndex2([0,1,3,5,6])
+    # hIndex([3,0,6,1,5])
+    # findDuplicates([4,3,2,7,8,2,3,1])
     # x = construct_list_node([1,2,3,4,5])
     # oddEvenList(x)
     # maxProduct(["eae","ea","aaf","bda","fcf","dc","ac","ce","cefde","dabae"])

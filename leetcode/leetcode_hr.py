@@ -163,10 +163,46 @@ def findIntegers(num):
     :param num: int
     :return: int
     """
-    pass
+    """
+    # 找规律发现x=位数 答案是fib(x) 5%
+    def fib(n):
+        if n <= 0: return 1
+        if n == 1: return 2
+        a, b = 1, 2
+        while n >= 1:
+            b, a = a + b, b
+            n -= 1
+        return a
+    if num == 0: return 1
+    if num == 1: return 2
+    c = 0
+    while num >> c != 0:
+        c += 1
+    if num >> (c - 2) == 3:
+        return fib(c)
+    mask = (1 << (c - 1)) - 1
+    return fib(c-1) + findIntegers(num & mask)
+    """
+    # 82%
+    def fib(n):
+        return int((d1 ** n - d2 ** n) / sqrt5)
+    sqrt5 = 5 ** 0.5
+    d1 = (1 + sqrt5) / 2
+    d2 = (1 - sqrt5) / 2
+    ans = 1
+    flag = False
+    for i in range(31, -1, -1):
+        if num & (1 << i):
+            ans += fib(i + 2)
+            if flag: return ans - 1
+            flag = True
+        else:
+            flag = False
+    return ans
 
 
 if __name__ == '__main__':
+    # findIntegers(2)
     # y = crackSafe(2, 3)
     # print(y)
     # removeBoxes([1, 3, 2, 2, 2, 3, 4, 3, 1])

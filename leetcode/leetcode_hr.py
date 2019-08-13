@@ -183,7 +183,7 @@ def findIntegers(num):
     mask = (1 << (c - 1)) - 1
     return fib(c-1) + findIntegers(num & mask)
     """
-    # 82%
+    # 斐波那契数列通项公式 a(n) = 1/√5 * ((1+√5)/2)^n + ((1-√5)/2)^n 82%
     def fib(n):
         return int((d1 ** n - d2 ** n) / sqrt5)
     sqrt5 = 5 ** 0.5

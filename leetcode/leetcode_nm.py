@@ -506,27 +506,220 @@ def lastStoneWeightII(stones):
     :param stones: List[int]
     :return: int
     """
-    # 垃圾暴力待剪枝 超时
-    def dfs(stones, ans):
-        if len(stones) == 0:
-            return 0
-        if len(stones) == 1:
-            return stones[0]
-        n = len(stones)
-        for i in range(n):
-            x = stones[i]
-            for j in range(i+1, n):
-                y = stones[j]
-                left = abs(x - y)
-                ans = min(ans, dfs(stones[:i] + stones[i+1:j] + stones[j+1:] + [left], ans))
-        return ans
-    ans = dfs(stones, float("inf"))
-    print(ans)
+    """
+    # dfs + 剪枝 19%
+    def dfs(stones, i, cur):
+        if i >= len(stones) and cur >= 0:
+            nonlocal ans
+            ans = min(ans, cur)
+            return
+        if not visited[i][cur + stones[i]]:
+            visited[i][cur + stones[i]] = True
+            dfs(stones, i + 1, cur + stones[i])
+        if not visited[i][abs(cur - stones[i])]:
+            visited[i][abs(cur - stones[i])] = True
+            dfs(stones, i + 1, abs(cur - stones[i]))
+    ans = float("inf")
+    n = len(stones)
+    m = sum(stones)
+    visited = [[False] * (m + 1) for _ in range(n)]
+    dfs(stones, 0, 0)
+    return ans
+    """
+    # 把所有操作的结果存到set
+    dp = {0}
+    sumA = sum(stones)
+    for a in stones:
+        dp |= {a + i for i in dp}
+    return min(abs(sumA - i * 2) for i in dp)
+
+
+def maxRotateFunction(A):
+    """
+    396. 旋转函数
+    给定一个长度为 n 的整数数组 A 。
+    假设 Bk 是数组 A 顺时针旋转 k 个位置后的数组，我们定义 A 的“旋转函数” F 为：
+    F(k) = 0 * Bk[0] + 1 * Bk[1] + ... + (n-1) * Bk[n-1]。
+    计算F(0), F(1), ..., F(n-1)中的最大值。
+    注意:
+    可以认为 n 的值小于 105。
+    示例:
+    A = [4, 3, 2, 6]
+    F(0) = (0 * 4) + (1 * 3) + (2 * 2) + (3 * 6) = 0 + 3 + 4 + 18 = 25
+    F(1) = (0 * 6) + (1 * 4) + (2 * 3) + (3 * 2) = 0 + 4 + 6 + 6 = 16
+    F(2) = (0 * 2) + (1 * 6) + (2 * 4) + (3 * 3) = 0 + 6 + 8 + 9 = 23
+    F(3) = (0 * 3) + (1 * 2) + (2 * 6) + (3 * 4) = 0 + 2 + 12 + 12 = 26
+    所以 F(0), F(1), F(2), F(3) 中的最大值是 F(3) = 26 。
+    :param A: List[int]
+    :return: int
+    """
+    # 按F函数变化过程推, F(0) -> F(1): 每个位置加一个自身后减去所有最后一位(6) -> F(1) = F(0) + sum(A) - n*A[n-1]
+    n = len(A)
+    if n == 0: return 0
+    cur, m = 0, 0
+    for i in range(n):
+        cur += i * A[i]
+        m += A[i]
+    ans = cur
+    for i in range(n-1, 0, -1):
+        cur += m - (n * A[i])
+        ans = max(ans, cur)
     return ans
 
 
+def findFrequentTreeSum(root):
+    """
+    508. 出现次数最多的子树元素和
+    给出二叉树的根，找出出现次数最多的子树元素和。一个结点的子树元素和定义为以该结点为根的二叉树上所有结点的元素之和（包括结点本身）。然后求出出现次数最多的子树元素和。如果有多个元素出现的次数相同，返回所有出现次数最多的元素（不限顺序）。
+    示例 1
+    输入:
+      5
+     /  \
+    2   -3
+    返回 [2, -3, 4]，所有的值均只出现一次，以任意顺序返回所有值。
+    示例 2
+    输入:
+      5
+     /  \
+    2   -5
+    返回 [2]，只有 2 出现两次，-5 只出现 1 次。
+    提示： 假设任意子树元素和均可以用 32 位有符号整数表示。
+    :param root: TreeNode
+    :return: List[int]
+    """
+    def helper(node):
+        if node:
+            left = helper(node.left) if node.left else 0
+            right = helper(node.right) if node.right else 0
+            nonlocal res
+            cur = node.val + left + right
+            if not cur in res:
+                res[cur] = 0
+            res[cur] += 1
+            return cur
+    res = {}
+    if not root:
+        return []
+    helper(root)
+    mv = max(res.values())
+    return [x[0] for x in list(filter(lambda x:x[1]==mv, res.items()))]
+
+
+def findTargetSumWays(nums, S):
+    """
+    494. 目标和
+    给定一个非负整数数组，a1, a2, ..., an, 和一个目标数，S。现在你有两个符号 + 和 -。对于数组中的任意一个整数，你都可以从 + 或 -中选择一个符号添加在前面。
+    返回可以使最终数组和为目标数 S 的所有添加符号的方法数。
+    示例 1:
+    输入: nums: [1, 1, 1, 1, 1], S: 3
+    输出: 5
+    解释:
+    -1+1+1+1+1 = 3
+    +1-1+1+1+1 = 3
+    +1+1-1+1+1 = 3
+    +1+1+1-1+1 = 3
+    +1+1+1+1-1 = 3
+    一共有5种方法让最终目标和为3。
+    注意:
+    数组的长度不会超过20，并且数组中的值全为正数。
+    初始的数组的和不会超过1000。
+    保证返回的最终结果为32位整数。
+    :param nums: List[int]
+    :param S: int
+    :return: int
+    """
+    """
+    # 背包问题
+    n = len(nums)
+    if n == 0 or abs(S) > 1000: return 0
+    dp = [[0] * 1001 for _ in range(n)]
+    dp[0][nums[0]] = 1 if nums[0] > 0 else 2
+    for i in range(1, n):
+        for j in range(1001):
+            minus = 0 if abs(j - nums[i]) > 1000 else dp[i-1][abs(j-nums[i])]
+            plus = 0 if j + nums[i] > 1000 else dp[i-1][j+nums[i]]
+            dp[i][j] = minus + plus
+    return dp[n-1][abs(S)]
+    """
+    """
+    # dfs + memo
+    def dfs(i, cur):
+        if i == len(nums):
+            return 1 if cur == S else 0
+        if memo[i][cur+1000] != -1:
+            return memo[i][cur+1000]
+        res = dfs(i+1, cur + nums[i]) + dfs(i+1, cur - nums[i])
+        memo[i][cur+1000] = res
+        return res
+    memo = [[-1] * 2001 for _ in range(len(nums))]
+    return dfs(0, 0)
+    """
+    # 非递归dp
+    n = len(nums)
+    dp = {(0, 0): 1}
+    for i in range(1, n + 1):
+        for j in range(-sum(nums), sum(nums) + 1):
+            dp[(i, j)] = dp.get((i-1, j-nums[i-1]), 0) + dp.get((i-1, j+nums[i-1]), 0)
+    return dp.get((n, S), 0)
+
+
+
+def findSubsequences(nums):
+    """
+
+    :param nums:
+    :return:
+    """
+    pass
+
+
+def findDiagonalOrder(matrix):
+    """
+
+    :param matrix:
+    :return:
+    """
+    pass
+
+
+def change(amount, coins):
+    """
+    518. 零钱兑换 II
+    给定不同面额的硬币和一个总金额。写出函数来计算可以凑成总金额的硬币组合数。假设每一种面额的硬币有无限个。 
+    示例 1:
+    输入: amount = 5, coins = [1, 2, 5]
+    输出: 4
+    解释: 有四种方式可以凑成总金额:
+    5=5
+    5=2+2+1
+    5=2+1+1+1
+    5=1+1+1+1+1
+    示例 2:
+    输入: amount = 3, coins = [2]
+    输出: 0
+    解释: 只用面额2的硬币不能凑成总金额3。
+    示例 3:
+    输入: amount = 10, coins = [10]
+    输出: 1
+    注意:
+    你可以假设：
+    0 <= amount (总金额) <= 5000
+    1 <= coin (硬币面额) <= 5000
+    硬币种类不超过 500 种
+    结果符合 32 位符号整数
+    :param amount: int
+    :param coins: List[int]
+    :return: int
+    """
+    pass
+
+
+
 if __name__ == '__main__':
-    lastStoneWeightII([2,7,4,1,8,1])
+    findTargetSumWays([1,1,1,1,1], 3)
+    # x = construct_tree_node([5,2,-5])
+    # findFrequentTreeSum(x)
+    # lastStoneWeightII([2,7,4,1,8,1])
     # getHint("1123", "0111")
     # hIndex2([0,1,3,5,6])
     # hIndex([3,0,6,1,5])

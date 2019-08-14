@@ -11,6 +11,8 @@ def question1(arr):
     :param arr: List[int]
     :return: int
     """
+    """
+    # dfs + 剪枝 感觉还是会超时
     def dfs(i, j, k, cur):
         nonlocal ans
         if cur >= ans: return
@@ -31,6 +33,35 @@ def question1(arr):
     dfs(5, 6, 0, n)
     print(ans)
     return ans
+    """
+    # dfs + memo
+    def dfs(i, j, k, cur):
+        if k == n or cur > memo[k][i][j]:
+            return
+        memo[k][i][j] = cur
+        arr[k] = arr[k] + 10 if arr[k] == 0 else arr[k]
+        if arr[k] >= j:
+            dfs(i, arr[k], k + 1, cur + arr[k] - j)
+        elif arr[k] <= i:
+            dfs(arr[k], j, k + 1, cur + i - arr[k])
+        else:
+            dfs(i, arr[k], k + 1, cur + j - arr[k])
+            dfs(arr[k], j, k + 1, cur + arr[k] - i)
+
+    n = len(arr)
+    inf = float("inf")
+    # 保存某状态的最优解 memo[k][i][j]表示第k次操作两只手在i和j时的最小操作次数
+    memo = [[[inf] * 10 for _ in range(11)] for _ in range(n)]
+    x, y = 5, 6
+    dfs(x, y, 0, n)
+    if n == 1:
+        x = arr[-1]
+    elif n >= 2:
+        x, y = arr[-2], arr[-1]
+    if x > y:
+        x, y = y, x
+    print(memo[n-1][x][y])
+    return memo[n-1][x][y]
 
 
 def question2(arr):
@@ -79,6 +110,6 @@ def question2(arr):
 
 
 if __name__ == '__main__':
-    # question1([6,9,7,1,7])
+    question1([6,9,7,1,7])
     # question2([8, 7, 6, 5, 4, 2, 3, 1])
     pass

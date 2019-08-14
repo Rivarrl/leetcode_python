@@ -663,23 +663,54 @@ def findTargetSumWays(nums, S):
     return dp.get((n, S), 0)
 
 
-
-def findSubsequences(nums):
-    """
-
-    :param nums:
-    :return:
-    """
-    pass
-
-
 def findDiagonalOrder(matrix):
     """
-
-    :param matrix:
-    :return:
+    498. 对角线遍历
+    给定一个含有 M x N 个元素的矩阵（M 行，N 列），请以对角线遍历的顺序返回这个矩阵中的所有元素，对角线遍历如下图所示。
+    示例:
+    输入:
+    [
+     [ 1, 2, 3 ],
+     [ 4, 5, 6 ],
+     [ 7, 8, 9 ]
+    ]
+    输出:  [1,2,4,7,5,3,6,8,9]
+    解释: ↗ ↙ ↗ ↙ ↗
+    说明:
+    给定矩阵中的元素总数不会超过 100000 。
+    :param matrix: List[List[int]]
+    :return: List[int]
     """
-    pass
+    M = len(matrix)
+    if M == 0: return []
+    N = len(matrix[0])
+    # 1是up
+    direction = 1
+    res = [0] * (M * N)
+    i, j = 0, 0
+    for k in range(M*N):
+        res[k] = matrix[i][j]
+        if direction:
+            if i == 0 or j == N - 1:
+                direction ^= 1
+                if j < N - 1:
+                    j += 1
+                else:
+                    i += 1
+            else:
+                j += 1
+                i -= 1
+        else:
+            if j == 0 or i == M - 1:
+                direction ^= 1
+                if i < M - 1:
+                    i += 1
+                else:
+                    j += 1
+            else:
+                j -= 1
+                i += 1
+    return res
 
 
 def change(amount, coins):
@@ -714,9 +745,36 @@ def change(amount, coins):
     pass
 
 
+def findSubsequences(nums):
+    """
+    491. 递增子序列
+    给定一个整型数组, 你的任务是找到所有该数组的递增子序列，递增子序列的长度至少是2。
+    示例:
+    输入: [4, 6, 7, 7]
+    输出: [[4, 6], [4, 7], [4, 6, 7], [4, 6, 7, 7], [6, 7], [6, 7, 7], [7,7], [4,7,7]]
+    说明:
+    给定数组的长度不会超过15。
+    数组中的整数范围是 [-100,100]。
+    给定数组中可能包含重复数字，相等的数字应该被视为递增的一种情况。
+    :param nums: List[int]
+    :return: List[List[int]]
+    """
+    if len(nums) <= 1: return []
+    res = [[nums[-1]]]
+    for i in range(len(nums)-2, -1, -1):
+        x = nums[i]
+        for i in range(len(res)):
+            if x <= res[i][0] and not [x] + res[i] in res:
+                res.append([x] + res[i])
+        if not [x] in res:
+            res.append([x])
+    return list(filter(lambda x:len(x)>1, res))
+
 
 if __name__ == '__main__':
-    findTargetSumWays([1,1,1,1,1], 3)
+    findSubsequences([4,6,7,7])
+    # findDiagonalOrder([[ 1, 2, 3 ], [ 4, 5, 6 ], [ 7, 8, 9 ]])
+    # findTargetSumWays([1,1,1,1,1], 3)
     # x = construct_tree_node([5,2,-5])
     # findFrequentTreeSum(x)
     # lastStoneWeightII([2,7,4,1,8,1])

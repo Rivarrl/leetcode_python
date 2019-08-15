@@ -854,10 +854,10 @@ def pathInZigZagTree(label):
     res = []
     while x > 1:
         res.append(label)
-        if x % 2 == 0:
-            label = (label ^ ((1 << (x - 1)) - 1)) // 2
+        if x & 1:
+            label = ((1 << (x - 2)) - 1) ^ (label // 2)
         else:
-            label = ((1 << (x - 2))-1) ^ (label // 2)
+            label = (label ^ ((1 << (x - 1)) - 1)) // 2
         x -= 1
     res.append(1)
     return res[::-1]

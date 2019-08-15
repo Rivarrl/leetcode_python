@@ -759,20 +759,24 @@ def findSubsequences(nums):
     :param nums: List[int]
     :return: List[List[int]]
     """
-    if len(nums) <= 1: return []
-    res = [[nums[-1]]]
-    for i in range(len(nums)-2, -1, -1):
-        x = nums[i]
-        for i in range(len(res)):
-            if x <= res[i][0] and not [x] + res[i] in res:
-                res.append([x] + res[i])
-        if not [x] in res:
-            res.append([x])
-    return list(filter(lambda x:len(x)>1, res))
+    def recursion(nums):
+        if len(nums) == 1: return [tuple(nums)]
+        res = set()
+        for i in range(len(nums) - 1):
+            last = recursion(nums[i + 1:])
+            for x in last:
+                res.add(x)
+                cur = (nums[i], ) + x
+                if nums[i] <= x[0] and not cur in res:
+                    res.add(cur)
+            res.add((nums[i], ))
+        return res
+    return [list(x) for x in recursion(nums) if len(x) > 1]
 
 
 if __name__ == '__main__':
-    findSubsequences([4,6,7,7])
+    a = findSubsequences([1,3,5,7])
+    print(a)
     # findDiagonalOrder([[ 1, 2, 3 ], [ 4, 5, 6 ], [ 7, 8, 9 ]])
     # findTargetSumWays([1,1,1,1,1], 3)
     # x = construct_tree_node([5,2,-5])

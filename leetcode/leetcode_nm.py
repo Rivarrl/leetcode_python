@@ -860,11 +860,31 @@ def change(amount, coins):
     :param coins: List[int]
     :return: int
     """
-    pass
 
+    def dfs(a, p):
+        if dp[a] >= 0:
+            return dp[a]
+        if a == 0:
+            return 1
+        cur = 0
+        for x in coins[::-1]:
+            if x <= min(p, a):
+                cur += dfs(a - x, x)
+        dp[a] = cur
+        return cur
+    dp = [-1] * (amount+1)
+    if amount == 0:
+        return 1
+    if coins == []:
+        return 0
+    ans = dfs(amount, max(coins))
+    print(ans)
+    print(dp)
+    return ans
 
 if __name__ == '__main__':
-    pathInZigZagTree(14)
+    change(5, [1,2,5])
+    # pathInZigZagTree(14)
     # x = construct_tree_node([1,0,0,null,3])
     # a = distributeCoins(x)
     # print(a)

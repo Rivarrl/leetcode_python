@@ -295,7 +295,126 @@ def constructRectangle(area):
     return [area // x, x]
 
 
+def dayOfYear(date):
+    """
+    1154. 一年中的第几天
+    给你一个按 YYYY-MM-DD 格式表示日期的字符串 date，请你计算并返回该日期是当年的第几天。
+    通常情况下，我们认为 1 月 1 日是每年的第 1 天，1 月 2 日是每年的第 2 天，依此类推。每个月的天数与现行公元纪年法（格里高利历）一致。
+    示例 1：
+    输入：date = "2019-01-09"
+    输出：9
+    示例 2：
+    输入：date = "2019-02-10"
+    输出：41
+    示例 3：
+    输入：date = "2003-03-01"
+    输出：60
+    示例 4：
+    输入：date = "2004-03-01"
+    输出：61
+    提示：
+    date.length == 10
+    date[4] == date[7] == '-'，其他的 date[i] 都是数字。
+    date 表示的范围从 1900 年 1 月 1 日至 2019 年 12 月 31 日。
+    :param date: str
+    :return: int
+    """
+    month_days = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    y, m, d = [int(x.lstrip('0')) for x in date.split("-")]
+    p = 1 if y % 4 == 0 and y % 100 != 0 and m > 2 else 0
+    res = sum(month_days[:m]) + d + p
+    return res
+
+
+def isLongPressedName(name, typed):
+    """
+    925. 长按键入
+    你的朋友正在使用键盘输入他的名字 name。偶尔，在键入字符 c 时，按键可能会被长按，而字符可能被输入 1 次或多次。
+    你将会检查键盘输入的字符 typed。如果它对应的可能是你的朋友的名字（其中一些字符可能被长按），那么就返回 True。
+    示例 1：
+    输入：name = "alex", typed = "aaleex"
+    输出：true
+    解释：'alex' 中的 'a' 和 'e' 被长按。
+    示例 2：
+    输入：name = "saeed", typed = "ssaaedd"
+    输出：false
+    解释：'e' 一定需要被键入两次，但在 typed 的输出中不是这样。
+    示例 3：
+    输入：name = "leelee", typed = "lleeelee"
+    输出：true
+    示例 4：
+    输入：name = "laiden", typed = "laiden"
+    输出：true
+    解释：长按名字中的字符并不是必要的。
+    提示：
+    name.length <= 1000
+    typed.length <= 1000
+    name 和 typed 的字符都是小写字母。
+    :param name: str
+    :param typed: str
+    :return: bool
+    """
+    i, j = 0, 0
+    n = len(name)
+    t = len(typed)
+    while i < n and j < t:
+        a, b = i, j
+        while i < n - 1 and name[i] == name[i+1]:
+            i += 1
+        while j < t - 1 and typed[j] == typed[j+1]:
+            j += 1
+        if name[i] != typed[j] or i - a > j - b:
+            return False
+        if i == n - 1 and j == t - 1:
+            return True
+        i += 1
+        j += 1
+    return False
+
+
+def fairCandySwap(A, B):
+    """
+    888. 公平的糖果交换
+    爱丽丝和鲍勃有不同大小的糖果棒：A[i] 是爱丽丝拥有的第 i 块糖的大小，B[j] 是鲍勃拥有的第 j 块糖的大小。
+    因为他们是朋友，所以他们想交换一个糖果棒，这样交换后，他们都有相同的糖果总量。（一个人拥有的糖果总量是他们拥有的糖果棒大小的总和。）
+    返回一个整数数组 ans，其中 ans[0] 是爱丽丝必须交换的糖果棒的大小，ans[1] 是 Bob 必须交换的糖果棒的大小。
+    如果有多个答案，你可以返回其中任何一个。保证答案存在。
+    示例 1：
+    输入：A = [1,1], B = [2,2]
+    输出：[1,2]
+    示例 2：
+    输入：A = [1,2], B = [2,3]
+    输出：[1,2]
+    示例 3：
+    输入：A = [2], B = [1,3]
+    输出：[2,3]
+    示例 4：
+    输入：A = [1,2,5], B = [2,4]
+    输出：[5,4]
+    提示：
+    1 <= A.length <= 10000
+    1 <= B.length <= 10000
+    1 <= A[i] <= 100000
+    1 <= B[i] <= 100000
+    保证爱丽丝与鲍勃的糖果总量不同。
+    答案肯定存在。
+    :param A: List[int]
+    :param B: List[int]
+    :return: List[int]
+    """
+    a, b = sum(A), sum(B)
+    c = (a + b) // 2
+    d = c - a
+    B = set(B)
+    for x in A:
+        if x + d in B:
+            return [x, x + d]
+
+
+
 if __name__ == '__main__':
+    print(fairCandySwap([35, 17, 4, 24, 10], [63, 21]))
+    # print(isLongPressedName("saeedi", "ssaaeediixxxiii"))
     # ans = constructRectangle(6)
     # print(ans)
     # largestTriangleArea([[0,0],[0,1],[1,0],[0,2],[2,0]])

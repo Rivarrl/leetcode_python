@@ -860,27 +860,38 @@ def change(amount, coins):
     :param coins: List[int]
     :return: int
     """
+    """
+    # dfs 记忆化搜索 5%
+    def dfs(a, i):
+        if i == len(coins) or a < 0: return 0
+        if dp[a][i] >= 0: return dp[a][i]
+        if a == 0: return 1
+        dp[a][i] = dfs(a-coins[i], i) + dfs(a, i+1)
+        return dp[a][i]
 
-    def dfs(a, p):
-        if dp[a] >= 0:
-            return dp[a]
-        if a == 0:
-            return 1
-        cur = 0
-        for x in coins[::-1]:
-            if x <= min(p, a):
-                cur += dfs(a - x, x)
-        dp[a] = cur
-        return cur
-    dp = [-1] * (amount+1)
-    if amount == 0:
-        return 1
-    if coins == []:
-        return 0
-    ans = dfs(amount, max(coins))
-    print(ans)
-    print(dp)
+    if amount == 0: return 1
+    dp = [[-1] * len(coins) for _ in range(amount+1)]
+    ans = dfs(amount, 0)
     return ans
+    """
+    """
+    # 动态规划 dp[i][j]表示前i个硬币能组成j的组合数
+    dp = [[1] + [0] * amount for _ in range(len(coins) + 1)]
+    n = len(coins)
+    for i in range(1, n + 1):
+        for j in range(1, amount + 1):
+            dp[i][j] = dp[i - 1][j]
+            if j >= coins[i - 1]:
+                dp[i][j] += dp[i][j - coins[i - 1]]
+    return dp[-1][-1]
+    """
+    # 背包问题
+    dp = [1] + [0] * amount
+    for c in coins:
+        for j in range(amount - c + 1):
+            dp[j + c] += dp[j]
+    return dp[-1]
+
 
 if __name__ == '__main__':
     change(5, [1,2,5])

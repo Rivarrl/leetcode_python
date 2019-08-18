@@ -893,8 +893,88 @@ def change(amount, coins):
     return dp[-1]
 
 
+def maxProductv2(nums):
+    """
+    152. 乘积最大子序列
+    给定一个整数数组 nums ，找出一个序列中乘积最大的连续子序列（该序列至少包含一个数）。
+    示例 1:
+    输入: [2,3,-2,4]
+    输出: 6
+    解释: 子数组 [2,3] 有最大乘积 6。
+    示例 2:
+    输入: [-2,0,-1]
+    输出: 0
+    解释: 结果不能为 2, 因为 [-2,-1] 不是子数组。
+    :param nums: List[int]
+    :return: int
+    """
+    # 动态规划，分别记录最大值和最小值，遇到负数反转
+    n = len(nums)
+    ans = -float('inf')
+    MAX, MIN = 1, 1
+    for i in range(n):
+        if nums[i] < 0:
+            MAX, MIN = MIN, MAX
+        MAX = max(nums[i]*MAX, nums[i])
+        MIN = min(nums[i]*MIN, nums[i])
+        ans = max(MAX, ans)
+    return ans
+
+
+def searchMatrix(matrix, target):
+    """
+    74. 搜索二维矩阵
+    编写一个高效的算法来判断 m x n 矩阵中，是否存在一个目标值。该矩阵具有如下特性：
+    每行中的整数从左到右按升序排列。
+    每行的第一个整数大于前一行的最后一个整数。
+    示例 1:
+    输入:
+    matrix = [
+      [1,   3,  5,  7],
+      [10, 11, 16, 20],
+      [23, 30, 34, 50]
+    ]
+    target = 3
+    输出: true
+    示例 2:
+    输入:
+    matrix = [
+      [1,   3,  5,  7],
+      [10, 11, 16, 20],
+      [23, 30, 34, 50]
+    ]
+    target = 13
+    输出: false
+    :param matrix: List[List[int]]
+    :param target: int
+    :return: bool
+    """
+    m = len(matrix)
+    if m == 0: return False
+    n = len(matrix[0])
+    l, r = 0, m * n - 1
+    while l <= r:
+        k = l + (r - l) // 2
+        i, j = k // n, k % n
+        if matrix[i][j] > target:
+            r = k - 1
+        elif matrix[i][j] < target:
+            l = k + 1
+        else:
+            return True
+    return False
+
+
 if __name__ == '__main__':
-    change(5, [1,2,5])
+    ans = searchMatrix(matrix = [
+      [1,   3,  5,  7],
+      [10, 11, 16, 20],
+      [23, 30, 34, 50]
+    ],
+    target = 13)
+    print(ans)
+    # maxProductv2([2,3,-2,4])
+    # change(5, [1,2,5])
     # pathInZigZagTree(14)
     # x = construct_tree_node([1,0,0,null,3])
     # a = distributeCoins(x)

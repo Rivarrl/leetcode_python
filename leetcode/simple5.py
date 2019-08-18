@@ -411,9 +411,56 @@ def fairCandySwap(A, B):
             return [x, x + d]
 
 
+def arrayPairSum(nums):
+    """
+    561. 数组拆分 I
+    给定长度为 2n 的数组, 你的任务是将这些数分成 n 对, 例如 (a1, b1), (a2, b2), ..., (an, bn) ，使得从1 到 n 的 min(ai, bi) 总和最大。
+    示例 1:
+    输入: [1,4,3,2]
+    输出: 4
+    解释: n 等于 2, 最大总和为 4 = min(1, 2) + min(3, 4).
+    提示:
+    n 是正整数,范围在 [1, 10000].
+    数组中的元素范围在 [-10000, 10000].
+    :param nums: List[int]
+    :return: int
+    """
+    return sum(sorted(nums)[::2])
+
+
+def repeatedSubstringPattern(s):
+    """
+    459. 重复的子字符串
+    给定一个非空的字符串，判断它是否可以由它的一个子串重复多次构成。给定的字符串只含有小写英文字母，并且长度不超过10000。
+    示例 1:
+    输入: "abab"
+    输出: True
+    解释: 可由子字符串 "ab" 重复两次构成。
+    示例 2:
+    输入: "aba"
+    输出: False
+    示例 3:
+    输入: "abcabcabcabc"
+    输出: True
+    解释: 可由子字符串 "abc" 重复四次构成。 (或者子字符串 "abcabc" 重复两次构成。)
+    :param s: str
+    :return: bool
+    """
+    """
+    n = len(s)
+    i = 1
+    while i <= n // 2:
+        if n % i == 0 and s[:i] * (n//i) == s:
+            return True
+        i += 1
+    return False
+    """
+    return (s+s)[1:-1].find(s) != -1
+
 
 if __name__ == '__main__':
-    print(fairCandySwap([35, 17, 4, 24, 10], [63, 21]))
+    repeatedSubstringPattern("babbabbabbabbab")
+    # print(fairCandySwap([35, 17, 4, 24, 10], [63, 21]))
     # print(isLongPressedName("saeedi", "ssaaeediixxxiii"))
     # ans = constructRectangle(6)
     # print(ans)

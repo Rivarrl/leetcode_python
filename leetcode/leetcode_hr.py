@@ -201,7 +201,47 @@ def findIntegers(num):
     return ans
 
 
+def largestPalindrome(n):
+    """
+    479. 最大回文数乘积
+    你需要找到由两个 n 位数的乘积组成的最大回文数。
+    由于结果会很大，你只需返回最大回文数 mod 1337得到的结果。
+    示例:
+    输入: 2
+    输出: 987
+    解释: 99 x 91 = 9009, 9009 % 1337 = 987
+    说明:
+    n 的取值范围为 [1,8]。
+    :param n: int
+    :return: int
+    """
+    """
+    # 超时
+    a, b = 10 ** (n - 1), 10**n - 1
+    for z in range(b, a, -1):
+        y = int(str(z) + str(z)[::-1])
+        x = b
+        while x * x > y:
+            if y % x == 0:
+                return int(y % 1337)
+            x -= 1
+    return 9
+    """
+    if n == 1: return 9
+    for z in range(2, 2 * (9 * 10 ** n) - 1):
+        left = 10 ** n - z
+        right = int(str(left)[::-1])
+        if z ** 2 - 4 * right < 0:
+            continue
+        else:
+            root_1 = 1 / 2 * (z + (z ** 2 - 4 * right) ** 0.5)
+            root_2 = 1 / 2 * (z - (z ** 2 - 4 * right) ** 0.5)
+            if root_1.is_integer() or root_2.is_integer():
+                return (10 ** n * left + right) % 1337
+
+
 if __name__ == '__main__':
+    largestPalindrome(1)
     # findIntegers(2)
     # y = crackSafe(2, 3)
     # print(y)

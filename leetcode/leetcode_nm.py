@@ -1000,8 +1000,162 @@ def magicalString(n):
     return s[:n].count("1")
 
 
+def optimalDivision(nums):
+    """
+    553. 最优除法
+    给定一组正整数，相邻的整数之间将会进行浮点除法操作。例如， [2,3,4] -> 2 / 3 / 4 。
+    但是，你可以在任意位置添加任意数目的括号，来改变算数的优先级。你需要找出怎么添加括号，才能得到最大的结果，并且返回相应的字符串格式的表达式。你的表达式不应该含有冗余的括号。
+    示例：
+    输入: [1000,100,10,2]
+    输出: "1000/(100/10/2)"
+    解释:
+    1000/(100/10/2) = 1000/((100/10)/2) = 200
+    但是，以下加粗的括号 "1000/((100/10)/2)" 是冗余的，
+    因为他们并不影响操作的优先级，所以你需要返回 "1000/(100/10/2)"。
+    其他用例:
+    1000/(100/10)/2 = 50
+    1000/(100/(10/2)) = 50
+    1000/100/10/2 = 0.5
+    1000/100/(10/2) = 2
+    说明:
+    输入数组的长度在 [1, 10] 之间。
+    数组中每个元素的大小都在 [2, 1000] 之间。
+    每个测试用例只有一个最优除法解。
+    :param nums: List[int]
+    :return: str
+    """
+    """
+    # dfs
+    def dfs(nums, cur, i):
+        n = len(cur)
+        if n == 1: return cur[0], cur[0], str(nums[i]), str(nums[i])
+        a, b = dfs(nums, [cur[0] / cur[1]] + cur[2:], i+1), dfs(nums, cur[1:], i+1)
+        case1 = a[1]
+        case2 = cur[0] / b[0]
+        s1 = str(nums[i]) + '/' + a[3]
+        s2 = str(nums[i]) + '/' + b[2] if b[2].isdigit() else str(nums[i]) + '/(' + b[2] + ')'
+        case3 = a[0]
+        case4 = cur[0] / b[1]
+        s3 = str(nums[i]) + '/' + a[2]
+        s4 = str(nums[i]) + '/' + b[3] if b[3].isdigit() else str(nums[i]) + '/(' + b[3] + ')'
+        if case1 < case2:
+            case1, case2 = case2, case1
+            s1, s2 = s2, s1
+        if case3 > case4:
+            case3, case4 = case4, case3
+            s3, s4 = s4, s3
+        return case3, case1, s3, s1
+    ans = dfs(nums, nums, 0)
+    print(ans)
+    return ans[3]
+    """
+    # 这题所有元素都>=2, 所以最大值就是nums[0]/(nums[1]/nums[2]/.../nums[n-1])
+    n = len(nums)
+    if n == 2:
+        return '/'.join([str(x) for x in nums])
+    return str(nums[0]) + '(' + '/'.join([str(x) for x in nums[1:]]) + ')'
+
+
+def findMinDifference(timePoints):
+    """
+    539. 最小时间差
+    给定一个 24 小时制（小时:分钟）的时间列表，找出列表中任意两个时间的最小时间差并已分钟数表示。
+    示例 1：
+    输入: ["23:59","00:00"]
+    输出: 1
+    备注:
+    列表中时间数在 2~20000 之间。
+    每个时间取值在 00:00~23:59 之间。
+    :param timePoints: List[str]
+    :return: int
+    """
+    def f(t):
+        x = t.split(':')
+        for i in range(2):
+            if x[i][0] == '0':
+                x[i] = x[i][1]
+        return 60 * int(x[0]) + int(x[1])
+    ts = sorted([f(x) for x in timePoints])
+    ans = ts[0] + 1440 - ts[-1]
+    for i in range(1, len(ts)):
+        ans = min(ts[i] - ts[i-1], ans)
+    return ans
+
+
+def find132pattern(nums):
+    """
+    456. 132模式
+    给定一个整数序列：a1, a2, ..., an，一个132模式的子序列 ai, aj, ak 被定义为：当 i < j < k 时，ai < ak < aj。设计一个算法，当给定有 n 个数字的序列时，验证这个序列中是否含有132模式的子序列。
+    注意：n 的值小于15000。
+    示例1:
+    输入: [1, 2, 3, 4]
+    输出: False
+    解释: 序列中不存在132模式的子序列。
+    示例 2:
+    输入: [3, 1, 4, 2]
+    输出: True
+    解释: 序列中有 1 个132模式的子序列： [1, 4, 2].
+    示例 3:
+    输入: [-1, 3, 2, 0]
+    输出: True
+    解释: 序列中有 3 个132模式的的子序列: [-1, 3, 2], [-1, 3, 0] 和 [-1, 2, 0].
+    :param nums: List[int]
+    :return: bool
+    """
+    """
+    # 超时
+    n = len(nums)
+    MIN = float('inf')
+    for i in range(n):
+        MIN = min(nums[i], MIN)
+        if MIN == nums[i]:
+            continue
+        for j in range(n-1, i, -1):
+            if nums[j] < nums[i] and nums[j] > MIN:
+                return True
+    return False    
+    """
+    """
+    # 单调栈
+    n = len(nums)
+    stk = []
+    two = -float('inf')
+    for i in range(n-1, -1, -1):
+        if nums[i] < two:
+            return True
+        while stk and stk[-1] < nums[i]:
+            two = stk.pop()
+        stk.append(nums[i])
+    return False
+    """
+    #
+    n = len(nums)
+    if n <= 2: return False
+    dp = [0] * n
+    dp[0] = nums[0]
+    for i in range(1, n):
+        dp[i] = min(dp[i-1], nums[i])
+    print(dp)
+    dns = [-1] * n
+    stk = []
+    for i in range(n):
+        while stk and nums[stk[-1]] <= nums[i]:
+            stk.pop()
+        if stk:
+            dns[i] = stk[-1]
+        stk.append(i)
+    print(dns)
+    for i in range(n-1, -1, -1):
+        if dns[i] > 0 and dp[dns[i] - 1] < nums[i]:
+            return True
+    return False
+
+
 if __name__ == '__main__':
-    magicalString(3)
+    ans = find132pattern([3,5,0,3,4])
+    print(ans)
+    # optimalDivision([6,2,3,4,5])
+    # magicalString(3)
     # ans = searchMatrix(matrix = [
     #   [1,   3,  5,  7],
     #   [10, 11, 16, 20],

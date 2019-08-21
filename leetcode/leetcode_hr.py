@@ -3,29 +3,6 @@ from algorithm_utils import *
 
 # leetcode 困难题
 
-def removeBoxes(boxes):
-    """
-    546. 移除盒子
-    给出一些不同颜色的盒子，盒子的颜色由数字表示，即不同的数字表示不同的颜色。
-    你将经过若干轮操作去去掉盒子，直到所有的盒子都去掉为止。每一轮你可以移除具有相同颜色的连续 k 个盒子（k >= 1），这样一轮之后你将得到 k*k 个积分。
-    当你将所有盒子都去掉之后，求你能获得的最大积分和。
-    示例 1：
-    输入:
-    [1, 3, 2, 2, 2, 3, 4, 3, 1]
-    输出:
-    23
-    解释:
-    [1, 3, 2, 2, 2, 3, 4, 3, 1]
-    ----> [1, 3, 3, 4, 3, 1] (3*3=9 分)
-    ----> [1, 3, 3, 3, 1] (1*1=1 分)
-    ----> [1, 1] (3*3=9 分)
-    ----> [] (2*2=4 分)
-    提示：盒子的总数 n 不会超过 100。
-    :param boxes: List[int]
-    :return: int
-    """
-    pass
-
 
 def removeInvalidParentheses(s):
     """
@@ -240,8 +217,116 @@ def largestPalindrome(n):
                 return (10 ** n * left + right) % 1337
 
 
+def removeBoxes(boxes):
+    """
+    546. 移除盒子
+    给出一些不同颜色的盒子，盒子的颜色由数字表示，即不同的数字表示不同的颜色。
+    你将经过若干轮操作去去掉盒子，直到所有的盒子都去掉为止。每一轮你可以移除具有相同颜色的连续 k 个盒子（k >= 1），这样一轮之后你将得到 k*k 个积分。
+    当你将所有盒子都去掉之后，求你能获得的最大积分和。
+    示例 1：
+    输入:
+    [1, 3, 2, 2, 2, 3, 4, 3, 1]
+    输出:
+    23
+    解释:
+    [1, 3, 2, 2, 2, 3, 4, 3, 1]
+    ----> [1, 3, 3, 4, 3, 1] (3*3=9 分)
+    ----> [1, 3, 3, 3, 1] (1*1=1 分)
+    ----> [1, 1] (3*3=9 分)
+    ----> [] (2*2=4 分)
+    提示：盒子的总数 n 不会超过 100。
+    :param boxes: List[int]
+    :return: int
+    """
+    """
+    # Top-Down
+    def dfs(boxes, i, j, k):
+        if i > j: return 0
+        elif i == j:
+            return k * k
+        elif memo[i][j][k]:
+            return memo[i][j][k]
+        else:
+            ans = dfs(boxes, i+1, j, 1) + k * k
+            for m in range(i + 1, j + 1):
+                if boxes[i] == boxes[m]:
+                    ans = max(ans, dfs(boxes, i+1, m-1, 1) + dfs(boxes, m, j, k+1))
+            memo[i][j][k] = ans
+        return ans
+
+    n = len(boxes)
+    memo = [[[0] * n for _ in range(n)] for _ in range(n)]
+    return dfs(boxes, 0, n-1, 1)
+    """
+    # Bottom-Up
+    n = len(boxes)
+    if n == 0: return 0
+    dp = [[[0] * n for _ in range(n)] for _ in range(n)]
+    for j in range(n):
+        for k in range(j+1):
+            dp[j][j][k] = (k+1) * (k+1)
+    for l in range(1, n):
+        for j in range(l, n):
+            i = j - l
+            for k in range(i+1):
+                res = (k+1) * (k+1) + dp[i+1][j][0]
+                for m in range(i+1, j+1):
+                    if boxes[m] == boxes[i]:
+                        res = max(res, dp[i+1][m-1][0] + dp[m][j][k+1])
+                dp[i][j][k] = res
+    return dp[0][n-1][0]
+
+
+def intersectionSizeTwo(intervals):
+    """
+    757.  设置交集大小至少为2
+    一个整数区间 [a, b]  ( a < b ) 代表着从 a 到 b 的所有连续整数，包括 a 和 b。
+    给你一组整数区间intervals，请找到一个最小的集合 S，使得 S 里的元素与区间intervals中的每一个整数区间都至少有2个元素相交。
+    输出这个最小集合S的大小。
+    示例 1:
+    输入: intervals = [[1, 3], [1, 4], [2, 5], [3, 5]]
+    输出: 3
+    解释:
+    考虑集合 S = {2, 3, 4}. S与intervals中的四个区间都有至少2个相交的元素。
+    且这是S最小的情况，故我们输出3。
+    示例 2:
+    输入: intervals = [[1, 2], [2, 3], [2, 4], [4, 5]]
+    输出: 5
+    解释:
+    最小的集合S = {1, 2, 3, 4, 5}.
+    注意:
+    intervals 的长度范围为[1, 3000]。
+    intervals[i] 长度为 2，分别代表左、右边界。
+    intervals[i][j] 的值是 [0, 10^8]范围内的整数。
+    :param intervals: List[List[int]]
+    :return: int
+    """
+    d = {}
+    ks = []
+    for e in intervals:
+        if not e[0] in d:
+            d[e[0]] = []
+            ks.append(e[0])
+        d[e[0]].append(e[1])
+    ks.sort()
+    for k in d.keys():
+        d[k].sort()
+    c = []
+    for k in ks:
+        for x in d.get(k):
+            c.append([k, x])
+    a = c[0][1] - 1
+    b = c[-1][0] + 1
+    return b - a + 1
+
+
+
 if __name__ == '__main__':
-    largestPalindrome(1)
+    x = intersectionSizeTwo([[2,10],[3,7],[3,15],[4,11],[6,12],[6,16],[7,8],[7,11],[7,15],[11,12]])
+    print(x)
+    # a = removeBoxes([1,3,2,2,2,3,4,3,1])
+    # print(a)
+    # largestPalindrome(1)
     # findIntegers(2)
     # y = crackSafe(2, 3)
     # print(y)

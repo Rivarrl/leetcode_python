@@ -242,21 +242,21 @@ def removeBoxes(boxes):
     # Top-Down
     def dfs(boxes, i, j, k):
         if i > j: return 0
-        elif i == j:
-            return k * k
-        elif memo[i][j][k]:
+        if memo[i][j][k]:
             return memo[i][j][k]
-        else:
-            ans = dfs(boxes, i+1, j, 1) + k * k
-            for m in range(i + 1, j + 1):
-                if boxes[i] == boxes[m]:
-                    ans = max(ans, dfs(boxes, i+1, m-1, 1) + dfs(boxes, m, j, k+1))
-            memo[i][j][k] = ans
+        while i < j and boxes[i] == boxes[i+1]:
+            i += 1
+            k += 1
+        ans = dfs(boxes, i+1, j, 0) + (k+1) ** 2
+        for m in range(i + 1, j + 1):
+            if boxes[i] == boxes[m]:
+                ans = max(ans, dfs(boxes, i+1, m-1, 0) + dfs(boxes, m, j, k+1))
+        memo[i][j][k] = ans
         return ans
 
     n = len(boxes)
     memo = [[[0] * n for _ in range(n)] for _ in range(n)]
-    return dfs(boxes, 0, n-1, 1)
+    return dfs(boxes, 0, n-1, 0)
     """
     # Bottom-Up
     n = len(boxes)
@@ -269,7 +269,7 @@ def removeBoxes(boxes):
         for j in range(l, n):
             i = j - l
             for k in range(i+1):
-                res = (k+1) * (k+1) + dp[i+1][j][0]
+                res = dp[i+1][j][0] + (k+1) ** 2
                 for m in range(i+1, j+1):
                     if boxes[m] == boxes[i]:
                         res = max(res, dp[i+1][m-1][0] + dp[m][j][k+1])

@@ -1,5 +1,6 @@
 import random
 import time
+from algorithm_utils import *
 
 
 def question1(arr):
@@ -107,9 +108,32 @@ def question2(arr):
     print(a)
     return a
 
+def question3(root):
+    """
+    二叉搜索树转排序双向链表
+    :param root: TreeNode
+    :return: TreeNode
+    """
+    def helper(node):
+        if node and node.left:
+            helper(node.left)
+        nonlocal last
+        p = node
+        p.left = last
+        if last: last.right = p
+        last = p
+        if node.right:
+            helper(node.right)
+    last = None
+    helper(root)
+    while last and last.left:
+        last = last.left
+    return last
 
 
 if __name__ == '__main__':
-    question1([6,9,7,1,7])
+    x = construct_tree_node([4,2,6,1,3,5,7])
+    question3(x)
+    # question1([6,9,7,1,7])
     # question2([8, 7, 6, 5, 4, 2, 3, 1])
     pass

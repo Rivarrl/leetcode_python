@@ -293,9 +293,78 @@ class BSTIterator:
         return self.root
 
 
+# 173. 二叉搜索树迭代器
+# 中序遍历二叉搜索树, 用stack
+class BSTIterator_Stack:
+    def __init__(self, root: TreeNode):
+        self.stk = []
+        self.push(root)
+
+    def next(self) -> int:
+        """
+        @return the next smallest number
+        """
+        cur = self.stk.pop()
+        if cur.right:
+            self.push(cur.right)
+        return cur.val
+
+
+    def push(self, node) -> None:
+        while node and node.left:
+            self.stk.append(node)
+            node = node.left
+        return node
+
+
+    def hasNext(self) -> bool:
+        """
+        @return whether we have a next smallest number
+        """
+        return bool(self.stk)
+
+
+# 173. 二叉搜索树迭代器
+# 中序莫里斯遍历
+class BSTIterator_Morris:
+    def __init__(self, root: TreeNode):
+        self.cur = root
+
+    def next(self) -> int:
+        """
+        @return the next smallest number
+        """
+        res = 0
+        while self.cur:
+            if self.cur.left:
+                pre = self.cur.left
+                while pre.right and pre.right != self.cur:
+                    pre = pre.right
+                if pre.right:
+                    pre.right = None
+                    res = self.cur.val
+                    self.cur = self.cur.right
+                    break
+                else:
+                    pre.right = self.cur
+                    self.cur = self.cur.left
+            else:
+                res = self.cur.val
+                self.cur = self.cur.right
+                break
+        return res
+
+
+    def hasNext(self) -> bool:
+        """
+        @return whether we have a next smallest number
+        """
+        return bool(self.cur)
+
+
 if __name__ == '__main__':
     x = construct_tree_node([4,2,6,1,3,5,7])
-    bs = BSTIterator(x)
+    bs = BSTIterator_Morris(x)
     while bs.hasNext():
         print(bs.next())
     # x = construct_tree_node([5,2,3,null,null,2,4,null,null,null,null,3,1])

@@ -23,6 +23,7 @@ def fractionToDecimal(numerator, denominator):
     :return: str
     """
     # 能化成循环小数的分数的特点：当分子和分母只有公因数1时,分母含有2和5以外的质因数
+    # 字典记录被除数, 某个被除数第二次出现的时候就是循环结束的时候, 所以字典中存第一次出现时小数点后的位置
     flag = '-' if numerator * denominator < 0 else ''
     numerator, denominator = abs(numerator), abs(denominator)
     a, b = numerator // denominator, numerator % denominator
@@ -42,5 +43,6 @@ def fractionToDecimal(numerator, denominator):
 
 
 if __name__ == '__main__':
-    fractionToDecimal(45, 56)
+    ans = fractionToDecimal(45, 56)
+    print(ans)
     pass

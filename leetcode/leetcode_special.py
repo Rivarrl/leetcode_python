@@ -233,10 +233,74 @@ class Codec:
         return root
 
 
+# 173. 二叉搜索树迭代器
+# 中序遍历二叉搜索树, 拉成只有right的搜索树
+class BSTIterator:
+    """
+    实现一个二叉搜索树迭代器。你将使用二叉搜索树的根节点初始化迭代器。
+    调用 next() 将返回二叉搜索树中的下一个最小的数。
+    示例：
+        7
+       3,15
+      ,,9,20
+
+    BSTIterator iterator = new BSTIterator(root);
+    iterator.next();    // 返回 3
+    iterator.next();    // 返回 7
+    iterator.hasNext(); // 返回 true
+    iterator.next();    // 返回 9
+    iterator.hasNext(); // 返回 true
+    iterator.next();    // 返回 15
+    iterator.hasNext(); // 返回 true
+    iterator.next();    // 返回 20
+    iterator.hasNext(); // 返回 false
+    提示：
+    next() 和 hasNext() 操作的时间复杂度是 O(1)，并使用 O(h) 内存，其中 h 是树的高度。
+    你可以假设 next() 调用总是有效的，也就是说，当调用 next() 时，BST 中至少存在一个下一个最小的数。
+    """
+    def __init__(self, root: TreeNode):
+        self.root = None
+        self.last = None
+        if root: self.dfs(root)
+
+
+    def next(self) -> int:
+        """
+        @return the next smallest number
+        """
+        val = self.root.val
+        self.root = self.root.right
+        return val
+
+
+    def dfs(self, node) -> None:
+        if node.left:
+            self.dfs(node.left)
+        if self.last:
+            node.left = None
+            self.last.right = node
+        else:
+            self.root = node
+        self.last = node
+        if node.right:
+            self.dfs(node.right)
+
+
+    def hasNext(self) -> bool:
+        """
+        @return whether we have a next smallest number
+        """
+        return self.root
+
+
 if __name__ == '__main__':
-    x = construct_tree_node([5,2,3,null,null,2,4,null,null,null,null,3,1])
-    codec = Codec()
-    y = codec.deserialize(codec.serialize(x))
-    print_tree_node(x)
-    print_tree_node(y)
+    x = construct_tree_node([4,2,6,1,3,5,7])
+    bs = BSTIterator(x)
+    while bs.hasNext():
+        print(bs.next())
+    # x = construct_tree_node([5,2,3,null,null,2,4,null,null,null,null,3,1])
+    # codec = Codec()
+    # y = codec.deserialize(codec.serialize(x))
+    # print_tree_node(x)
+    # print_tree_node(y)
     pass

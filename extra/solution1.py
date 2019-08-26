@@ -302,9 +302,44 @@ def bd_alg1(n):
             dp[i] += dp[j] * dp[i-2-j]
     return dp[n] % (10**9+7)
 
+
+def chess(table):
+    """
+    围棋
+    :param table:
+    :return:
+    """
+    def can_re(i, j):
+        visited[i][j] = True
+        if i == n - 1 or i == 0 or j == m - 1 or j == 0:
+            return False
+        table[i][j] = 'X'
+        if table[i][j-1] == 'X' and table[i-1][j] == 'X' and table[i][j+1] == 'X' and table[i+1][j] == 'X':
+            return True
+        axis = [(-1, 0), (1,0), (0,1), (0,-1)]
+        for x, y in axis:
+            if not visited[i+x][j+y] and table[i+x][j+y] == 'O':
+                if not can_re(i+x, j+y):
+                    table[i][j] = 'O'
+                    return False
+        return True
+
+    n = len(table)
+    m = len(table[0])
+    visited = [[False] * m for _ in range(n)]
+    for i in range(n):
+        for j in range(m):
+            if table[i][j] == 'O':
+                can_re(i, j)
+    print(table)
+    return table
+
+
 if __name__ == '__main__':
-    x = bd_alg1(10)
-    print(x)
+    x = [['X', 'X', 'X', 'X'], ['X', 'O', 'O', 'X'], ['X','X','O','X'],['X','O','X','X']]
+    chess(x)
+    # x = bd_alg1(10)
+    # print(x)
     # yfd_dev2([0,2,4,99])
     # jd_dev1([1,3,2,6,5,4,7,8,10,9])
     # x = construct_tree_node([4,2,6,1,3,5,7])

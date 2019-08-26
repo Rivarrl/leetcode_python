@@ -362,6 +362,61 @@ class BSTIterator_Morris:
         return bool(self.cur)
 
 
+# 398. 随机数索引
+# hashmap + list
+class RandomIndex:
+    """
+    给定一个可能含有重复元素的整数数组，要求随机输出给定的数字的索引。 您可以假设给定的数字一定存在于数组中。
+    注意：
+    数组大小可能非常大。 使用太多额外空间的解决方案将不会通过测试。
+    示例:
+    int[] nums = new int[] {1,2,3,3,3};
+    Solution solution = new Solution(nums);
+    // pick(3) 应该返回索引 2,3 或者 4。每个索引的返回概率应该相等。
+    solution.pick(3);
+    // pick(1) 应该返回 0。因为只有nums[0]等于1。
+    solution.pick(1);
+    """
+    def __init__(self, nums):
+        from collections import defaultdict
+        self.map = defaultdict(list)
+        self.imap = {}
+        for i, x in enumerate(nums):
+            self.map[x].append(i)
+            if not x in self.imap:
+                self.imap[x] = 0
+
+    def pick(self, target):
+        target_list = self.map.get(target)
+        ans = target_list[self.imap[target]]
+        self.imap[target] = (self.imap[target] + 1) % len(target_list)
+        return ans
+
+
+# 398. 随机数索引
+# hashmap + 循环链表
+class RandomIndex2:
+    def __init__(self, nums):
+        self.map = {}
+        self.temp = {}
+        for i, x in enumerate(nums):
+            cur = ListNode(i)
+            if not x in self.map:
+                self.map[x] = cur
+            else:
+                last = self.temp[x]
+                last.next = cur
+            self.temp[x] = cur
+        for k, v in self.temp.items():
+            v.next = self.map[k]
+        self.temp.clear()
+
+    def pick(self, target):
+        ans = self.map[target].val
+        self.map[target] = self.map[target].next
+        return ans
+
+
 if __name__ == '__main__':
     x = construct_tree_node([4,2,6,1,3,5,7])
     bs = BSTIterator_Morris(x)

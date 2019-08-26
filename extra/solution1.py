@@ -294,16 +294,17 @@ def bd_alg1(n):
     :param n: int
     :return: int
     """
-    dp = [0] * (n//2 + 1)
-    dp[1] = 1
-    for i in range(2, n//2+1):
-        dp[i] = (dp[i-1] + 3**(i-2)) % (10**9+7)
-    print(dp)
-    return dp[n//2]
-
+    dp = [0] * (n+1)
+    dp[0] = 1
+    dp[2] = 1
+    for i in range(4, n+1, 2):
+        for j in range(0, i, 2):
+            dp[i] += dp[j] * dp[i-2-j]
+    return dp[n] % (10**9+7)
 
 if __name__ == '__main__':
-    bd_alg1(8)
+    x = bd_alg1(10)
+    print(x)
     # yfd_dev2([0,2,4,99])
     # jd_dev1([1,3,2,6,5,4,7,8,10,9])
     # x = construct_tree_node([4,2,6,1,3,5,7])

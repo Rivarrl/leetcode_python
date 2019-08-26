@@ -301,24 +301,20 @@ def intersectionSizeTwo(intervals):
     :param intervals: List[List[int]]
     :return: int
     """
-    d = {}
-    ks = []
-    for e in intervals:
-        if not e[0] in d:
-            d[e[0]] = []
-            ks.append(e[0])
-        d[e[0]].append(e[1])
-    ks.sort()
-    for k in d.keys():
-        d[k].sort()
-    c = []
-    for k in ks:
-        for x in d.get(k):
-            c.append([k, x])
-    a = c[0][1] - 1
-    b = c[-1][0] + 1
-    return b - a + 1
-
+    # 贪心算法，遍历数组。
+    # 先排序，以右边界为关键字排序，右边界相同的，按左边界降序排序，先处理长度较小的区间
+    # 分三种情况，1二者完全没有交集，2二者有一个数字的交集，3有两个以上的数字交集。
+    intervals.sort(key=lambda x: (x[1], -x[0]))
+    print(intervals)
+    res = [-1, -1]
+    for x in intervals:
+        if x[0] <= res[-2]:
+            continue
+        if x[0] > res[-1]:
+            res.append(x[1] - 1)
+        res.append(x[1])
+    print(res)
+    return len(res) - 2
 
 
 if __name__ == '__main__':

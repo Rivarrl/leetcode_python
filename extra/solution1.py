@@ -335,9 +335,58 @@ def chess(table):
     return table
 
 
+def dd_alg1(n, sn, ss):
+    stk1 = []
+    # 先处理乘除
+    i = 0
+    while i < n:
+        stk2 = []
+        num = sn[i]
+        sym = ss[i-1]
+        while sym in ['*', '/']:
+            i += 1
+            sym = ss[i-1]
+        i += 1
+
+
+
+def dd_alg2(n, ms, ns, d):
+    from collections import defaultdict
+    di = defaultdict(set)
+    for i in range(n-1):
+        di[ns[i]].add(i+2)
+        di[i+2].add(ns[i])
+    print(di)
+    res = []
+    for m in ms:
+        v = [False] * (n + 1)
+        cur = set()
+        stk = [(m, d - 1)]
+        dd = d
+        while stk and dd > 0:
+            c = stk.pop()
+            v[c[0]] = True
+            dd = c[1]
+            for e in di[c[0]]:
+                if not v[e]:
+                    stk.insert(0, (e, dd-1))
+                    if not e in cur:
+                        cur.add(e)
+        res.append(cur)
+    r = set([i for i in range(1, n+1)])
+    print(res)
+    for e in res:
+        r &= e
+    print(r)
+    print(r.__len__())
+    return r.__len__()
+
+
 if __name__ == '__main__':
-    x = [['X', 'X', 'X', 'X'], ['X', 'O', 'O', 'X'], ['X','X','O','X'],['X','O','X','X']]
-    chess(x)
+    dd_alg1(6, [3, 2, 1, -4, -5, 1], ['+', '+', '+', '*', '+'])
+    # dd_alg2(6, [2,5], [1,1,3,3,2], 2)
+    # x = [['X', 'X', 'X', 'X'], ['X', 'O', 'O', 'X'], ['X','X','O','X'],['X','O','X','X']]
+    # chess(x)
     # x = bd_alg1(10)
     # print(x)
     # yfd_dev2([0,2,4,99])

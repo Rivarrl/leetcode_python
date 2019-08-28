@@ -303,9 +303,11 @@ def bd_alg1(n):
     return dp[n] % (10**9+7)
 
 
-def chess(table):
+def gld_chess(table):
     """
-    围棋
+    围棋 (广联达2019秋招开发岗笔试题)
+    输入一张棋盘, 下满黑白子, X表示黑, O表示白, 输出黑子将白子吃过后的棋盘
+    围棋中需要四个方位完全围住对手才可以叫吃.
     :param table:
     :return:
     """
@@ -335,19 +337,50 @@ def chess(table):
     return table
 
 
-def dd_alg1(n, sn, ss):
+def dd_alg1(n, s):
+    """
+    算式转换 滴滴
+    给定算式如 4 + 3 * 2 - 1, 在不破坏运算规则的情况下, 通过交换将算式中的所有数字排序为字典序最小值, 即 2 * 3 + 4 - 1
+    运算规则为, 如果符号两侧的数交换后, 结果被改变, 则视为破坏运算规则
+    只有+-*/ 没有括号 所有元素均为整数
+    :param n:
+    :param s:
+    :return:
+    """
+    # 4 - 3 + 2 - 1 = 2  ->  2 - 1 + 4 - 3 = 2
+    # 规律是 * / 时, 起始为做为1*a, 若出现连续*或连续/, 该部分内部排序, 并用最小值代表它们继续参与+ -运算
+    ss, sn = [], []
+    cc = ('+', '-', '*', '/')
+    for e in s.split(' '):
+        if e in cc:
+            ss.append(e)
+        else:
+            sn.append(int(e))
+    print(ss)
+    print(sn)
     stk1 = []
-    # 先处理乘除
+    last = '+'
     i = 0
     while i < n:
-        stk2 = []
-        num = sn[i]
-        sym = ss[i-1]
-        while sym in ['*', '/']:
-            i += 1
-            sym = ss[i-1]
+        if last in cc[:2]:
+            stk2 = []
+            last = '*'
+            while i < n - 1 and ss[i] in cc[2:] and last in cc[2:]:
+                stk3 = [sn[i]]
+                while i < n - 1 and ss[i] in cc[2:] and ss[i] == last:
+                    stk3.append(sn[i+1])
+                    i += 1
+                if i < n - 1:
+                    last = ss[i]
+                stk3.sort()
+                stk2.extend(stk3)
+                i += 1
+        else:
+            stk2 = [sn[i]]
+            last = sn[i]
+        stk1.append(stk2)
         i += 1
-
+    print(stk1)
 
 
 def dd_alg2(n, ms, ns, d):
@@ -383,7 +416,8 @@ def dd_alg2(n, ms, ns, d):
 
 
 if __name__ == '__main__':
-    dd_alg1(6, [3, 2, 1, -4, -5, 1], ['+', '+', '+', '*', '+'])
+    # dd_alg1(6, "3 + 2 + 1 + -4 * -5 + 1")
+    dd_alg1(16, "1 * 3 * 2 + 6 / 3 / 2 * 4 * 2 * 1 - 9 / 3 / 3 * 7 + -10 * 100 - -43")
     # dd_alg2(6, [2,5], [1,1,3,3,2], 2)
     # x = [['X', 'X', 'X', 'X'], ['X', 'O', 'O', 'X'], ['X','X','O','X'],['X','O','X','X']]
     # chess(x)

@@ -340,15 +340,29 @@ def gld_chess(table):
 def dd_alg1(n, s):
     """
     算式转换 滴滴
-    给定算式如 4 + 3 * 2 - 1, 在不破坏运算规则的情况下, 通过交换将算式中的所有数字排序为字典序最小值, 即 2 * 3 + 4 - 1
+    给定算式如 4 + 3 * 2 - 1, 在不破坏运算符顺序的情况下, 通过交换将算式中的所有数字排序为字典序最小值, 即 2 * 3 + 4 - 1
     运算规则为, 如果符号两侧的数交换后, 结果被改变, 则视为破坏运算规则
     只有+-*/ 没有括号 所有元素均为整数
-    :param n:
-    :param s:
-    :return:
     """
-    # 4 - 3 + 2 - 1 = 2  ->  2 - 1 + 4 - 3 = 2
+    # 疑问: 4 - 3 + 2 - 1 = 2  ->  2 - 1 + 4 - 3 = 2 可以吗?
+    # 假设不可以, 规则就是交换两个相邻的数结果不变才能交换
+    # 规则 => 连加连减连乘连除的数字可以交换 => 连续出现2次以上相同运算符才可交换
+    # 加法: ..?+a+b+c?.. ab参与交换   最简结构: +a+b+
+    # 减法: ..?-a-b-c?.. ab参与交换   最简结构: -a-b-
+    # 乘法: ..?(*+-)a*b*c?.. abc参与交换  最简结构: (!/)a*b
+    # 除法: ..?/a/b/c?.. abc参与交换  最简结构: /a/b
+    print(s)
+    ls = s.split(' ')
+    print(ls)
+
+
+
+def dd_alg1_v2(n, s):
+    # 改了一下题目需求, 在不改变各个运算符的个数情况下, 可以破坏运算符顺序交换
     # 规律是 * / 时, 起始为做为1*a, 若出现连续*或连续/, 该部分内部排序, 并用最小值代表它们继续参与+ -运算
+    # - 同理, 出现连续的 -, 该部分内部排序, 以最小值代表
+    # 最后 每一项都是用 + 相连, 排序
+    print("原公式:\n", s)
     ss, sn = [], []
     cc = ('+', '-', '*', '/')
     for e in s.split(' '):
@@ -356,31 +370,87 @@ def dd_alg1(n, s):
             ss.append(e)
         else:
             sn.append(int(e))
-    print(ss)
-    print(sn)
+    print("符号列表:\n", ss)
+    print("数字列表:\n", sn)
+    # 处理 * /
     stk1 = []
     last = '+'
+    mul = False
     i = 0
     while i < n:
-        if last in cc[:2]:
-            stk2 = []
-            last = '*'
-            while i < n - 1 and ss[i] in cc[2:] and last in cc[2:]:
-                stk3 = [sn[i]]
-                while i < n - 1 and ss[i] in cc[2:] and ss[i] == last:
-                    stk3.append(sn[i+1])
-                    i += 1
-                if i < n - 1:
-                    last = ss[i]
-                stk3.sort()
-                stk2.extend(stk3)
+        stk2 = []
+        if last == '/':
+            stk2 = stk1.pop()
+            stk2.append(sn[i])
+            stk3 = []
+            while i < n - 1 and ss[i] == last:
+                stk3.append(sn[i+1])
                 i += 1
+            stk3.sort()
+            stk2.extend(stk3)
+        elif last == '*':
+            print(mul, stk1[-1], sn[i])
+            l1 = stk1.pop()
+            if mul:
+                stk3 = l1 + [sn[i]]
+            else:
+                stk2 = l1
+                stk3 = [sn[i]]
+            while i < n - 1 and ss[i] == last:
+                stk3.append(sn[i+1])
+                i += 1
+            stk2.extend(sorted(stk3))
         else:
-            stk2 = [sn[i]]
-            last = sn[i]
+            if i < n - 1:
+                mul = ss[i] == '*'
+            stk2.append(sn[i])
         stk1.append(stk2)
+        if i < n - 1:
+            last = ss[i]
         i += 1
-    print(stk1)
+    print("连续乘除内部排序后:\n", stk1)
+    # 处理 -
+    sort_first_element = lambda x: x[0]
+    sss = [x for x in ss if x in cc[:2]]
+    print("加减法符号列表:\n", sss)
+    sys = []
+    j = 0
+    for i in range(len(stk1)):
+        sys.append(ss[j:j+len(stk1[i])-1])
+        j += len(stk1[i])
+    print("包含乘除法关系:\n", sys)
+    for i in range(len(stk1)):
+        for j in range(1, len(stk1[i])):
+            stk1[i][j] = "%s %d"%(sys[i][j-1], stk1[i][j])
+    print("将不会变化的符号位恢复:\n", stk1)
+    last = '+'
+    i = 0
+    m = len(sss)
+    while i < m:
+        if last == '-':
+            j = i
+            while i < m and sss[i] == last:
+                i += 1
+            nstk = []
+            for k in range(i - j):
+                mns = stk1.pop(j+1)
+                nstk.append(mns)
+            print(stk1)
+            nstk.sort(key=sort_first_element)
+            for x in nstk:
+                stk1[j].append('-')
+                stk1[j].extend(x)
+        if i < m:
+            last = sss[i]
+        i += 1
+    print("连续减法做内部排序后合并:\n", stk1)
+    # 最后处理 +
+    stk1.sort(key=sort_first_element)
+    print("最后对所有加法元素进行排序:\n", stk1)
+    # 将stk1展开遍历
+    result = " + ".join([" ".join([str(x) for x in stk1[i]]) for i in range(len(stk1))])
+    print("最终结果:\n", result)
+    return result
 
 
 def dd_alg2(n, ms, ns, d):
@@ -416,8 +486,8 @@ def dd_alg2(n, ms, ns, d):
 
 
 if __name__ == '__main__':
-    # dd_alg1(6, "3 + 2 + 1 + -4 * -5 + 1")
-    dd_alg1(16, "1 * 3 * 2 + 6 / 3 / 2 * 4 * 2 * 1 - 9 / 3 / 3 * 7 + -10 * 100 - -43")
+    dd_alg1(6, "3 + 2 + 1 + -4 * -5 + 1")
+    # dd_alg1_v2(16, "6 / 3 / 2 * 4 * 2 * 1 + 3 * 1 * 2 - 9 / 3 / 3 * 7 - -10 * 100 - -43")
     # dd_alg2(6, [2,5], [1,1,3,3,2], 2)
     # x = [['X', 'X', 'X', 'X'], ['X', 'O', 'O', 'X'], ['X','X','O','X'],['X','O','X','X']]
     # chess(x)

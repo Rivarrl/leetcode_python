@@ -357,6 +357,7 @@ def dd_alg1(n, s):
 
 
 
+
 def dd_alg1_v2(n, s):
     # 改了一下题目需求, 在不改变各个运算符的个数情况下, 可以破坏运算符顺序交换
     # 规律是 * / 时, 起始为做为1*a, 若出现连续*或连续/, 该部分内部排序, 并用最小值代表它们继续参与+ -运算
@@ -485,8 +486,42 @@ def dd_alg2(n, ms, ns, d):
     return r.__len__()
 
 
+def sf_dev2(n, m, k, li):
+    """
+    第一题是个LIS问题, 在dp.py里写过
+    第二题:
+    某学术会议上, 一共有n人参加, 现在已知每个人会的语言(可能有不会任何语言的人)
+    现在有一种学习机,每一个学习机可以在会议期间让一个人暂时掌握一种自己不会的语言
+    问要使得任意两人都要能直接或间接交流至少准备多少学习机?
+    间接交流就是通过其他人的转译可以完成交流
+    """
+    d = {}
+    for a, b in li:
+        if not a in d:
+            d[a] = set()
+        d[a].add(b)
+    # 用到的语言数
+    print(d)
+    # 不会说话的人数
+    l = n - len(d)
+    vals = [x for x in d.values()]
+    for i in range(len(vals)):
+        if len(vals[i]) > 0:
+            for j in range(i+1, len(vals)):
+                if vals[i].intersection(vals[j]).__len__() != 0:
+                    vals[i], vals[j] = vals[i].union(vals[j]), set()
+    print(vals)
+    vals = list(filter(lambda x:len(x)>0, vals))
+    print(vals)
+    r = len(vals)
+    print(l + r - 1)
+    return l + r - 1
+
+
 if __name__ == '__main__':
-    dd_alg1(6, "3 + 2 + 1 + -4 * -5 + 1")
+    sf_dev2(3, 3, 2, [[1,2], [2,3]])
+    sf_dev2(3, 3, 4, [[1,2], [1,3], [2,1], [2,2]])
+    # dd_alg1(6, "3 + 2 + 1 + -4 * -5 + 1")
     # dd_alg1_v2(16, "6 / 3 / 2 * 4 * 2 * 1 + 3 * 1 * 2 - 9 / 3 / 3 * 7 - -10 * 100 - -43")
     # dd_alg2(6, [2,5], [1,1,3,3,2], 2)
     # x = [['X', 'X', 'X', 'X'], ['X', 'O', 'O', 'X'], ['X','X','O','X'],['X','O','X','X']]

@@ -4,28 +4,6 @@ from algorithm_utils import *
 # leetcode 困难题
 
 
-def removeInvalidParentheses(s):
-    """
-    301. 删除无效的括号
-    删除最小数量的无效括号，使得输入的字符串有效，返回所有可能的结果。
-    说明: 输入可能包含了除 ( 和 ) 以外的字符。
-    示例 1:
-    输入: "()())()"
-    输出: ["()()()", "(())()"]
-    示例 2:
-    输入: "(a)())()"
-    输出: ["(a)()()", "(a())()"]
-    示例 3:
-    输入: ")("
-    输出: [""]
-    :param s: str
-    :return: List[str]
-    """
-    fn = 0
-    res = []
-    pass
-
-
 def crackSafe(n, k):
     """
     753. 破解保险箱
@@ -315,6 +293,42 @@ def intersectionSizeTwo(intervals):
         res.append(x[1])
     print(res)
     return len(res) - 2
+
+
+def removeInvalidParentheses(s):
+    """
+    301. 删除无效的括号
+    删除最小数量的无效括号，使得输入的字符串有效，返回所有可能的结果。
+    说明: 输入可能包含了除 ( 和 ) 以外的字符。
+    示例 1:
+    输入: "()())()"
+    输出: ["()()()", "(())()"]
+    示例 2:
+    输入: "(a)())()"
+    输出: ["(a)()()", "(a())()"]
+    示例 3:
+    输入: ")("
+    输出: [""]
+    :param s: str
+    :return: List[str]
+    """
+    def isvalid(string):  # 判断括号串是否合法
+        l_minus_r = 0
+        for c in string:
+            if c == '(':
+                l_minus_r += 1
+            elif c == ')':
+                l_minus_r -= 1
+                if l_minus_r < 0:
+                    return False
+        return l_minus_r == 0
+
+    level = {s}
+    while True:  # BFS
+        valid = list(filter(isvalid, level))
+        if valid:
+            return valid
+        level = {s[:i] + s[i + 1:] for s in level for i in range(len(s)) if s[i] in '()'}
 
 
 if __name__ == '__main__':

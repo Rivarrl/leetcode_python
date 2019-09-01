@@ -108,6 +108,7 @@ def question2(arr):
     print(a)
     return a
 
+
 def question3(root):
     """
     二叉搜索树转排序双向链表

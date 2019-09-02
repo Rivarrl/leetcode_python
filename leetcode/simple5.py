@@ -458,8 +458,37 @@ def repeatedSubstringPattern(s):
     return (s+s)[1:-1].find(s) != -1
 
 
+def validPalindrome(s):
+    """
+    680. 验证回文字符串 Ⅱ
+    给定一个非空字符串 s，最多删除一个字符。判断是否能成为回文字符串。
+    示例 1:
+    输入: "aba"
+    输出: True
+    示例 2:
+    输入: "abca"
+    输出: True
+    解释: 你可以删除c字符。
+    注意:
+    字符串只包含从 a-z 的小写字母。字符串的最大长度是50000.
+    :param s: str
+    :return: bool
+    """
+    r = s[::-1]
+    if s == r: return True
+    for i in range(len(s)):
+        if s[i] != r[i]:
+            a = s[:i] + s[i+1:]
+            if a != a[::-1]:
+                b = r[:i] + r[i+1:]
+                return b == b[::-1]
+            return True
+
+
 if __name__ == '__main__':
-    repeatedSubstringPattern("babbabbabbabbab")
+    ans = validPalindrome("eccer")
+    print(ans)
+    # repeatedSubstringPattern("babbabbabbabbab")
     # print(fairCandySwap([35, 17, 4, 24, 10], [63, 21]))
     # print(isLongPressedName("saeedi", "ssaaeediixxxiii"))
     # ans = constructRectangle(6)

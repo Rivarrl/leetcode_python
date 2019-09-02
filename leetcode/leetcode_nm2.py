@@ -251,9 +251,94 @@ def canIWin(maxChoosableInteger, desiredTotal):
     return dfs(maxChoosableInteger, desiredTotal, 0)
 
 
+def updateMatrix(matrix):
+    """
+    542. 01 矩阵
+    给定一个由 0 和 1 组成的矩阵，找出每个元素到最近的 0 的距离。
+    两个相邻元素间的距离为 1 。
+    示例 1:
+    输入:
+    0 0 0
+    0 1 0
+    0 0 0
+    输出:
+    0 0 0
+    0 1 0
+    0 0 0
+    示例 2:
+    输入:
+    0 0 0
+    0 1 0
+    1 1 1
+    输出:
+    0 0 0
+    0 1 0
+    1 2 1
+    注意:
+    给定矩阵的元素个数不超过 10000。
+    给定矩阵中至少有一个元素是 0。
+    矩阵中的元素只在四个方向上相邻: 上、下、左、右。
+    :param matrix: List[List[int]]
+    :return: List[List[int]]
+    """
+    """
+    # bfs 77%
+    n = len(matrix)
+    m = len(matrix[0])
+    dist = [[0] * m for _ in range(n)]
+    stk = [(i, j) for i in range(n) for j in range(m) if matrix[i][j]]
+    step = 0
+    dij = [(-1, 0), (1, 0), (0, 1), (0, -1)]
+    while stk:
+        step += 1
+        next_stk, cur = [], []
+        for i, j in stk:
+            z = 0
+            for di, dj in dij:
+                x, y = i + di, j + dj
+                if 0 <= x < n and 0 <= y < m and matrix[x][y] == 0:
+                    z += 1
+                    break
+            if z:
+                dist[i][j] = step
+                cur.append((i, j))
+            else:
+                next_stk.append((i, j))
+        for x, y in cur:
+            matrix[x][y] = 0
+        stk = next_stk
+    print(dist)
+    return dist
+    """
+    # dp
+    n = len(matrix)
+    m = len(matrix[0])
+    dp = [[float('inf')] * m for _ in range(n)]
+    for i in range(n):
+        for j in range(m):
+            if matrix[i][j] == 0:
+                dp[i][j] = 0
+            else:
+                if i > 0:
+                    dp[i][j] = min(dp[i][j], dp[i-1][j] + 1)
+                if j > 0:
+                    dp[i][j] = min(dp[i][j], dp[i][j-1] + 1)
+    for i in range(n-1, -1, -1):
+        for j in range(m-1, -1, -1):
+            if matrix[i][j] == 0:
+                dp[i][j] = 0
+            else:
+                if i < n - 1:
+                    dp[i][j] = min(dp[i][j], dp[i+1][j] + 1)
+                if j < m - 1:
+                    dp[i][j] = min(dp[i][j], dp[i][j+1] + 1)
+    return dp
+
+
 if __name__ == '__main__':
-    b = canIWin(4, 6)
-    print(b)
+    updateMatrix([[0,1,1],[1,1,1],[1,1,1]])
+    # b = canIWin(4, 6)
+    # print(b)
     # board = [['X', '.', '.', 'X'], ['.', '.', '.', 'X'], ['.', '.', '.', 'X']]
     # ans = countBattleships(board)
     # print(ans)

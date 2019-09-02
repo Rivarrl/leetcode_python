@@ -312,7 +312,10 @@ def removeInvalidParentheses(s):
     :param s: str
     :return: List[str]
     """
-    def isvalid(string):  # 判断括号串是否合法
+    """
+    # bfs 28%
+    def is_valid(string):
+        # 判断括号串是否合法
         l_minus_r = 0
         for c in string:
             if c == '(':
@@ -324,16 +327,59 @@ def removeInvalidParentheses(s):
         return l_minus_r == 0
 
     level = {s}
-    while True:  # BFS
-        valid = list(filter(isvalid, level))
+    while True:
+        valid = list(filter(is_valid, level))
         if valid:
             return valid
         level = {s[:i] + s[i + 1:] for s in level for i in range(len(s)) if s[i] in '()'}
+    """
+    # dfs 98%
+    def is_valid(string):
+        # 判断括号串是否合法
+        l_minus_r = 0
+        for c in string:
+            if c == '(':
+                l_minus_r += 1
+            elif c == ')':
+                l_minus_r -= 1
+                if l_minus_r < 0:
+                    return False
+        return l_minus_r == 0
+
+    def dfs(s, idx, l, r):
+        if l == 0 and r == 0:
+            if is_valid(s):
+                res.append(s)
+            return
+        for i in range(idx, len(s)):
+            # 跳过重复括号, 减少递归次数, 因为删除哪个后s都一样
+            if i > idx and s[i] == s[i-1]:
+                continue
+            if r > 0:
+                if s[i] == ')':
+                    dfs(s[:i] + s[i+1:], i, l, r-1)
+            else:
+                if l > 0 and s[i] == '(':
+                    dfs(s[:i] + s[i+1:], i, l-1, r)
+    res = []
+    l, r = 0, 0
+    for c in s:
+        if c == '(':
+            l += 1
+        elif c == ')':
+            if l == 0:
+                r += 1
+            else:
+                l -= 1
+    dfs(s, 0, l, r)
+    print(res)
+    return res
 
 
 if __name__ == '__main__':
-    x = intersectionSizeTwo([[2,10],[3,7],[3,15],[4,11],[6,12],[6,16],[7,8],[7,11],[7,15],[11,12]])
-    print(x)
+    removeInvalidParentheses("()())()")
+    # x = intersectionSizeTwo([[2,10],[3,7],[3,15],[4,11],[6,12],[6,16],[7,8],[7,11],[7,15],[11,12]])
+    # print(x)
     # a = removeBoxes([1,3,2,2,2,3,4,3,1])
     # print(a)
     # largestPalindrome(1)

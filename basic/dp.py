@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from leetcode import algorithm_utils as alg
+import algorithm_utils as alg
 
 
 ## 动态规划

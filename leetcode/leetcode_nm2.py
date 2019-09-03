@@ -335,8 +335,96 @@ def updateMatrix(matrix):
     return dp
 
 
+def checkValidString(s):
+    """
+    678. 有效的括号字符串
+    给定一个只包含三种字符的字符串：（ ，） 和 *，写一个函数来检验这个字符串是否为有效字符串。有效字符串具有如下规则：
+    任何左括号 ( 必须有相应的右括号 )。
+    任何右括号 ) 必须有相应的左括号 ( 。
+    左括号 ( 必须在对应的右括号之前 )。
+    * 可以被视为单个右括号 ) ，或单个左括号 ( ，或一个空字符串。
+    一个空字符串也被视为有效字符串。
+    示例 1:
+    输入: "()"
+    输出: True
+    示例 2:
+    输入: "(*)"
+    输出: True
+    示例 3:
+    输入: "(*))"
+    输出: True
+    注意:
+    字符串大小将在 [1，100] 范围内。
+    :param s: str
+    :return: bool
+    """
+    """
+    # dfs超时
+    def dfs(s, i, l):
+        if not s: return True
+        if l < 0 or i + l > len(s): return False
+        if i == n:
+            if l == 0:
+                return True
+            return False
+        if s[i] == '(':
+            return dfs(s, i+1, l+1)
+        elif s[i] == ')':
+            return dfs(s, i+1, l-1)
+        else:
+            return dfs(s, i+1, l-1) or dfs(s, i+1, l) or dfs(s, i+1, l+1)
+    n = len(s)
+    return dfs(s, 0, 0)
+    """
+    """
+    # 栈分别存储(和*
+    stk = []
+    stk2 = []
+    for i, c in enumerate(s):
+        if c == '(':
+            stk.append(i)
+        elif c == '*':
+            stk2.append(i)
+        else:
+            if not stk and not stk2:
+                return False
+            if stk:
+                stk.pop()
+            else:
+                stk2.pop()
+    while stk and stk2:
+        if stk[-1] > stk2[-1]:
+            return False
+        stk.pop()
+        stk2.pop()
+    return len(stk) == 0
+    """
+    # 双指针l, h 分别代表'*'代表')'和'*'代表'('时的'('数
+    l, h = 0, 0
+    for c in s:
+        if c == '(':
+            l += 1
+            h += 1
+        elif c == ')':
+            if l > 0:
+                l -= 1
+            h -= 1
+        else:
+            if l > 0:
+                l -= 1
+            h += 1
+        # '*'代表'(', 还是没有')'多
+        if h < 0:
+            return False
+    print(l, h)
+    # 大于0说明就算把能替换的'*'都替换成')', 还是没有'('多
+    return l == 0
+
+
 if __name__ == '__main__':
-    updateMatrix([[0,1,1],[1,1,1],[1,1,1]])
+    b = checkValidString("(*()*))(()")
+    print(b)
+    # updateMatrix([[0,1,1],[1,1,1],[1,1,1]])
     # b = canIWin(4, 6)
     # print(b)
     # board = [['X', '.', '.', 'X'], ['.', '.', '.', 'X'], ['.', '.', '.', 'X']]

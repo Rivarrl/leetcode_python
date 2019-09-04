@@ -516,10 +516,98 @@ def checkPossibility(nums):
         if ctr < 0: return False
     return True
 
+def averageOfLevels(root):
+    """
+    637. 二叉树的层平均值
+    给定一个非空二叉树, 返回一个由每层节点平均值组成的数组.
+    示例 1:
+    输入:
+        3
+       / \
+      9  20
+        /  \
+       15   7
+    输出: [3, 14.5, 11]
+    解释:
+    第0层的平均值是 3,  第1层是 14.5, 第2层是 11. 因此返回 [3, 14.5, 11].
+    注意：
+    节点值的范围在32位有符号整数范围内。
+    :param root: TreeNode
+    :return: List[float]
+    """
+    stk = []
+    res = []
+    if root:
+        stk.append(root)
+        while stk:
+            cur = []
+            m = 0
+            for p in stk:
+                m += p.val
+                if p.right:
+                    cur.insert(0, p.right)
+                if p.left:
+                    cur.insert(0, p.left)
+            res.append(m / len(stk))
+            stk = cur
+    return res
+
+
+def longestUnivaluePath(root):
+    """
+    687. 最长同值路径
+    给定一个二叉树，找到最长的路径，这个路径中的每个节点具有相同值。 这条路径可以经过也可以不经过根节点。
+    注意：两个节点之间的路径长度由它们之间的边数表示。
+    示例 1:
+    输入:
+                  5
+                 / \
+                4   5
+               / \   \
+              1   1   5
+    输出:
+    2
+    示例 2:
+    输入:
+                  1
+                 / \
+                4   5
+               / \   \
+              4   4   5
+    输出:
+    2
+    注意: 给定的二叉树不超过10000个结点。 树的高度不超过1000。
+    :param root: TreeNode
+    :return: int
+    """
+    def dfs(node):
+        nonlocal ans
+        if not node or (not node.left and not node.right):
+            return 0
+        d, s = 0, 0
+        l, r = dfs(node.left), dfs(node.right)
+        if node.left and node.val == node.left.val:
+            d += l + 1
+            s = max(s, l + 1)
+        if node.right and node.val == node.right.val:
+            d += r + 1
+            s = max(s, r + 1)
+        ans = max(d, ans)
+        return s
+
+    ans = 0
+    dfs(root)
+    print(ans)
+    return ans
+
 
 if __name__ == '__main__':
-    b = checkPossibility([3,4,2,3])
-    print(b)
+    x = construct_tree_node([1,4,5,4,4,null,5])
+    longestUnivaluePath(x)
+    # x = construct_tree_node([3,9,20,null,null,15,7])
+    # averageOfLevels(x)
+    # b = checkPossibility([3,4,2,3])
+    # print(b)
     # ans = validPalindrome("eccer")
     # print(ans)
     # repeatedSubstringPattern("babbabbabbabbab")

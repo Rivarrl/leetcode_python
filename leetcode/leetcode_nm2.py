@@ -445,6 +445,8 @@ def stoneGame(piles):
     :param piles: List[int]
     :return: bool
     """
+    # 由于这个比赛非输即赢，是零和博弈，先手永远可以让自己赢
+    # return True
     # 分别记录所有可能情况的先后手，由于每次只能从头或者尾取数，所以不存在只有中间的数被选走的情况
     col = len(piles)
     dp = [[[0, 0] for _ in range(col)] for _ in range(col)]
@@ -496,6 +498,40 @@ def lenLongestFibSubseq(A):
     :param A: List[int]
     :return: int
     """
+    """
+    # set
+    s = set(A)
+    n = len(A)
+    ans = 0
+    for i in range(n):
+        for j in range(i+1, n):
+            cur = 2
+            a, b = A[i], A[j]
+            while a + b in s:
+                cur += 1
+                a, b = b, a+b
+                ans = max(ans, cur)
+    return ans
+    """
+    # dp
+    n = len(A)
+    if n < 3: return 0
+    dp = [[2] * n for _ in range(n)]
+    ans = 0
+    for i in range(n):
+        l, r = 0, i-1
+        while l < r:
+            s = A[l] + A[r]
+            if s == A[i]:
+                dp[r][i] = max(dp[r][i], dp[l][r] + 1)
+                ans = max(ans, dp[r][i])
+                l += 1
+                r -= 1
+            elif s < A[i]:
+                l += 1
+            else:
+                r -= 1
+    return ans
 
 
 if __name__ == '__main__':

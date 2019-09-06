@@ -534,9 +534,86 @@ def lenLongestFibSubseq(A):
     return ans
 
 
+def uniquePathsWithObstacles(obstacleGrid):
+    """
+    63. 不同路径 II
+    一个机器人位于一个 m x n 网格的左上角 （起始点在下图中标记为“Start” ）。
+    机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为“Finish”）。
+    现在考虑网格中有障碍物。那么从左上角到右下角将会有多少条不同的路径？
+    网格中的障碍物和空位置分别用 1 和 0 来表示。
+    说明：m 和 n 的值均不超过 100。
+    示例 1:
+    输入:
+    [
+      [0,0,0],
+      [0,1,0],
+      [0,0,0]
+    ]
+    输出: 2
+    解释:
+    3x3 网格的正中间有一个障碍物。
+    从左上角到右下角一共有 2 条不同的路径：
+    1. 向右 -> 向右 -> 向下 -> 向下
+    2. 向下 -> 向下 -> 向右 -> 向右
+    :param obstacleGrid: List[List[int]]
+    :return: int
+    """
+    n = len(obstacleGrid)
+    if n == 0: return 0
+    m = len(obstacleGrid[0])
+    dp = [[0] * m for _ in range(n)]
+    i = 0
+    while i < m and obstacleGrid[0][i] == 0:
+        dp[0][i] = 1
+        i += 1
+    i = 0
+    while i < n and obstacleGrid[i][0] == 0:
+        dp[i][0] = 1
+        i += 1
+    for i in range(1, n):
+        for j in range(1, m):
+            if obstacleGrid[i][j] == 1:
+                dp[i][j] = 0
+            else:
+                dp[i][j] = dp[i-1][j] + dp[i][j-1]
+    return dp[n-1][m-1]
+
+
+def removeDuplicates(nums):
+    """
+    80. 删除排序数组中的重复项 II
+    给定一个排序数组，你需要在原地删除重复出现的元素，使得每个元素最多出现两次，返回移除后数组的新长度。
+    不要使用额外的数组空间，你必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成。
+    示例 1:
+    给定 nums = [1,1,1,2,2,3],
+    函数应返回新长度 length = 5, 并且原数组的前五个元素被修改为 1, 1, 2, 2, 3 。
+    你不需要考虑数组中超出新长度后面的元素。
+    示例 2:
+    给定 nums = [0,0,1,1,1,1,2,3,3],
+    函数应返回新长度 length = 7, 并且原数组的前五个元素被修改为 0, 0, 1, 1, 2, 3, 3 。
+    你不需要考虑数组中超出新长度后面的元素。
+    说明:
+    为什么返回数值是整数，但输出的答案是数组呢?
+    请注意，输入数组是以“引用”方式传递的，这意味着在函数里修改输入数组对于调用者是可见的。
+    你可以想象内部操作如下:
+    // nums 是以“引用”方式传递的。也就是说，不对实参做任何拷贝
+    int len = removeDuplicates(nums);
+    // 在函数里修改输入数组对于调用者是可见的。
+    // 根据你的函数返回的长度, 它会打印出数组中该长度范围内的所有元素。
+    for (int i = 0; i < len; i++) {
+        print(nums[i]);
+    }
+    :param nums: List[int]
+    :return: None
+    """
+
+
+
 if __name__ == '__main__':
-    x = stoneGame([5,3,4,5])
-    print(x)
+    x = [[0,0,0], [0,1,0], [0,0,0]]
+    uniquePathsWithObstacles(x)
+    # x = stoneGame([5,3,4,5])
+    # print(x)
     # b = checkValidString("(*()*))(()")
     # print(b)
     # updateMatrix([[0,1,1],[1,1,1],[1,1,1]])

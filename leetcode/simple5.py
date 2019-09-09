@@ -645,8 +645,96 @@ def shortestCompletingWord(licensePlate, words):
     return res
 
 
+def dayOfTheWeek(day, month, year):
+    """
+    1185. 一周中的第几天
+    给你一个日期，请你设计一个算法来判断它是对应一周中的哪一天。
+    输入为三个整数：day、month 和 year，分别表示日、月、年。
+    您返回的结果必须是这几个值中的一个 {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}。
+    示例 1：
+    输入：day = 31, month = 8, year = 2019
+    输出："Saturday"
+    示例 2：
+    输入：day = 18, month = 7, year = 1999
+    输出："Sunday"
+    示例 3：
+    输入：day = 15, month = 8, year = 1993
+    输出："Sunday"
+    提示：
+    给出的日期一定是在 1971 到 2100 年之间的有效日期。
+    :param day: int
+    :param month: int
+    :param year: int
+    :return: str
+    """
+    ry = lambda yr: (yr % 4 == 0 and yr % 100 != 0) or yr % 400 == 0
+    def rys(yr):
+        ctr = 0
+        for i in range(y, yr):
+            if ry(i):
+                ctr += 1
+        return ctr
+    res = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    mm = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    fw = 5
+    y, m, d = 1971, 1, 1
+    dy = (year - y) * 365 + rys(year)
+    dm = sum(mm[:month - m])
+    if ry(year) and month > 2:
+        dm += 1
+    dd = day - d
+    ans = (dy + dm + dd + fw) % 7
+    return res[ans]
+
+
+def distanceBetweenBusStops(distance, start, destination):
+    """
+    1184. 公交站间的距离
+    环形公交路线上有 n 个站，按次序从 0 到 n - 1 进行编号。我们已知每一对相邻公交站之间的距离，distance[i] 表示编号为 i 的车站和编号为 (i + 1) % n 的车站之间的距离。
+    环线上的公交车都可以按顺时针和逆时针的方向行驶。
+    返回乘客从出发点 start 到目的地 destination 之间的最短距离。
+    示例 1：
+    输入：distance = [1,2,3,4], start = 0, destination = 1
+    输出：1
+    解释：公交站 0 和 1 之间的距离是 1 或 9，最小值是 1。
+    示例 2：
+    输入：distance = [1,2,3,4], start = 0, destination = 2
+    输出：3
+    解释：公交站 0 和 2 之间的距离是 3 或 7，最小值是 3。
+    示例 3：
+    输入：distance = [1,2,3,4], start = 0, destination = 3
+    输出：4
+    解释：公交站 0 和 3 之间的距离是 6 或 4，最小值是 4。
+    提示：
+    1 <= n <= 10^4
+    distance.length == n
+    0 <= start, destination < n
+    0 <= distance[i] <= 10^4
+    :param distance: List[int]
+    :param start: int
+    :param destination: int
+    :return: int
+    """
+    n = len(distance)
+    l, r = start, start
+    c = 0
+    while l != destination:
+        c += distance[l]
+        l = (l + 1) % n
+    ans = 0
+    while r != destination:
+        r = (r - 1) % n
+        ans += distance[r]
+        if ans >= c:
+            ans = c
+            break
+    return ans
+
+
 if __name__ == '__main__':
-    shortestCompletingWord(licensePlate = "1s3 456", words = ["looks", "pest", "stew", "show"])
+    distanceBetweenBusStops([0,11,6,1,4,3], 0, 5)
+    # dayOfTheWeek(9, 9, 2019)
+    # shortestCompletingWord(licensePlate = "1s3 456", words = ["looks", "pest", "stew", "show"])
     # x = construct_tree_node([1,4,5,4,4,null,5])
     # longestUnivaluePath(x)
     # x = construct_tree_node([3,9,20,null,null,15,7])

@@ -635,7 +635,8 @@ def maximumSum(arr):
     :param arr: List[int]
     :return: int
     """
-    # 左右两侧求lcs取max(left[i-1], right[i+1])
+    """
+    # 左右两侧求最大子串和取max(left[i-1], right[i+1])
     n = len(arr)
     left, right = [0] * n, [0] * n
     left[0] = arr[0]
@@ -654,6 +655,19 @@ def maximumSum(arr):
     for i in range(1, n-1):
         ans = max(ans, left[i-1] + right[i+1])
     return ans
+    """
+    # dp
+    n = len(arr)
+    res = arr[0]
+    f, g = [0] * n, [0] * n
+    f[0] = arr[0]
+    for i in range(1, n):
+        # 如果上一步是负值就不带上一步的结果
+        f[i] = max(f[i-1] + arr[i], arr[i])
+        # g[i]是删除出现在i-1以前的最大值和删除i的最大值的最大值
+        g[i] = max(g[i-1] + arr[i], f[i-1])
+        res = max(res, f[i], g[i])
+    return res
 
 
 if __name__ == '__main__':

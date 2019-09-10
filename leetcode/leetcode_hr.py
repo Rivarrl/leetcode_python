@@ -401,12 +401,33 @@ def makeArrayIncreasing(arr1, arr2):
     :param arr2: List[int]
     :return: int
     """
+    """
+    import collections, bisect
+    dp = {-1: 0}
+    arr2.sort()
+    for i in arr1:
+        tmp = collections.defaultdict(lambda: float('inf'))
+        for key in dp:
+            if i > key:
+                tmp[i] = min(tmp[i], dp[key])
+            loc = bisect.bisect_right(arr2, key)
+            if loc < len(arr2):
+                tmp[arr2[loc]] = min(tmp[arr2[loc]], dp[key] + 1)
+        dp = tmp
+    print(dp)
+    if dp:
+        return min(dp.values())
+    return -1
+    """
+    # dp
     arr2.sort()
     n = len(arr1)
+    i = 1
+    while i < len(arr2):
+        if arr2[i] == arr2[i-1]:
+            arr2.pop(i)
     m = len(arr2)
-    i = 0
-    while i < m - 1:
-        if arr2[i]
+    f, g = [0] *
 
 
 

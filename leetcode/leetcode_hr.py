@@ -419,30 +419,92 @@ def makeArrayIncreasing(arr1, arr2):
         return min(dp.values())
     return -1
     """
+    """
     # dp
     import bisect
     n = len(arr1)
     maxV = 1000000001
     dp = [[maxV for i in range(n + 1)] for _ in range(n + 1)]
-
-    # initial
     arr2.sort()
     dp[0][0] = -1
-
     for i in range(1, n + 1):
         for j in range(0, i + 1):
             if arr1[i - 1] > dp[j][i - 1]:
                 dp[j][i] = arr1[i - 1]
-
             if j > 0:
                 loc = bisect.bisect_right(arr2, dp[j - 1][i - 1])
                 if loc < len(arr2):
                     dp[j][i] = min(dp[j][i], arr2[loc])
-
             if i == n and dp[j][i] != maxV:
                 return j
-
     return -1
+    """
+    # dfs
+    import bisect
+    def dfs(i, prev):
+        if i == len(arr1):
+            return 0
+        if (i, prev) in memo:
+            return memo[(i, prev)]
+        j = bisect.bisect_right(arr2, prev)
+        if arr1[i] <= prev:
+            if j >= len(arr2):
+                res = 2001
+            else:
+                res = 1 + dfs(i+1, arr2[j])
+        else:
+            if j >= len(arr2) or arr2[j] >= arr1[i]:
+                res = dfs(i+1, arr1[i])
+            else:
+                res = min(1 + dfs(i+1, arr2[j]), dfs(i+1, arr1[i]))
+        memo[(i, prev)] = res
+        return res
+    arr2.sort()
+    memo = {}
+    res = dfs(0, -1)
+    if res > 2000:
+        return -1
+    return res
+
+
+def numPermsDISequence(S):
+    """
+    903. DI 序列的有效排列
+    我们给出 S，一个源于 {'D', 'I'} 的长度为 n 的字符串 。（这些字母代表 “减少” 和 “增加”。）
+    有效排列 是对整数 {0, 1, ..., n} 的一个排列 P[0], P[1], ..., P[n]，使得对所有的 i：
+    如果 S[i] == 'D'，那么 P[i] > P[i+1]，以及；
+    如果 S[i] == 'I'，那么 P[i] < P[i+1]。
+    有多少个有效排列？因为答案可能很大，所以请返回你的答案模 10^9 + 7.
+    示例：
+    输入："DID"
+    输出：5
+    解释：
+    (0, 1, 2, 3) 的五个有效排列是：
+    (1, 0, 3, 2)
+    (2, 0, 3, 1)
+    (2, 1, 3, 0)
+    (3, 0, 2, 1)
+    (3, 1, 2, 0)
+    提示：
+    1 <= S.length <= 200
+    S 仅由集合 {'D', 'I'} 中的字符组成。
+    :param S: str
+    :return: int
+    """
+    from functools import lru_cache
+    MOD = 10 ** 9 + 7
+    N = len(S)
+
+    @lru_cache(None)
+    def dp(i, j):
+        # How many ways to place P_i with relative rank j?
+        if i == 0:
+            return 1
+        elif S[i - 1] == 'D':
+            return sum(dp(i - 1, k) for k in range(j, i)) % MOD
+        else:
+            return sum(dp(i - 1, k) for k in range(j)) % MOD
+    return sum(dp(N, j) for j in range(N + 1)) % MOD
 
 
 if __name__ == '__main__':

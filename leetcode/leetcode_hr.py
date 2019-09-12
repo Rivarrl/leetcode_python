@@ -491,20 +491,17 @@ def numPermsDISequence(S):
     :param S: str
     :return: int
     """
-    from functools import lru_cache
-    MOD = 10 ** 9 + 7
-    N = len(S)
-
-    @lru_cache(None)
-    def dp(i, j):
-        # How many ways to place P_i with relative rank j?
-        if i == 0:
-            return 1
-        elif S[i - 1] == 'D':
-            return sum(dp(i - 1, k) for k in range(j, i)) % MOD
+    dp = [1] * (len(S) + 1)
+    for c in S:
+        if c == "I":
+            dp = dp[:-1]
+            for i in range(1, len(dp)):
+                dp[i] += dp[i - 1]
         else:
-            return sum(dp(i - 1, k) for k in range(j)) % MOD
-    return sum(dp(N, j) for j in range(N + 1)) % MOD
+            dp = dp[1:]
+            for i in range(len(dp) - 1)[::-1]:
+                dp[i] += dp[i + 1]
+    return dp[0] % (10 ** 9 + 7)
 
 
 if __name__ == '__main__':

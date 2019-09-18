@@ -670,9 +670,59 @@ def maximumSum(arr):
     return res
 
 
+def findNumberOfLIS(nums):
+    """
+    673. 最长递增子序列的个数
+    给定一个未排序的整数数组，找到最长递增子序列的个数。
+    示例 1:
+    输入: [1,3,5,4,7]
+    输出: 2
+    解释: 有两个最长递增子序列，分别是 [1, 3, 4, 7] 和[1, 3, 5, 7]。
+    示例 2:
+    输入: [2,2,2,2,2]
+    输出: 5
+    解释: 最长递增子序列的长度是1，并且存在5个子序列的长度为1，因此输出5。
+    注意: 给定的数组长度不超过 2000 并且结果一定是32位有符号整数。
+    :param nums: List[int]
+    :return: int
+    """
+    n = len(nums)
+    if n == 0:
+        return 0
+    # 记录以第i个元素结尾的LIS
+    dp = [1] * n
+    # 记录以第i个元素结尾LIS的种类
+    dp_num = [1] * n
+    for i in range(n):
+        for j in range(i):
+            # 如果j位的数值比i位小，则可加入i位的LIS比较队列
+            if nums[i] > nums[j]:
+                # 如果j位前的LIS加上i位数字后的长度比目前所有i位的LIS都长
+                if dp[j] + 1 > dp[i]:
+                    # 把j位的LIS+1赋给i
+                    dp[i] = dp[j] + 1
+                    # 继承j位的LIS种类
+                    dp_num[i] = dp_num[j]
+                # 如果j位前的LIS加上i位数字后的长度和目前i位的LIS相等，说明发现了新的组合
+                elif dp[j] + 1 == dp[i]:
+                    # 把j位的种类数目加给i位
+                    dp_num[i] += dp_num[j]
+    print(dp)
+    print(dp_num)
+    ans = 0
+    lis = max(dp)
+    for i in range(n):
+        if dp[i] == lis:
+            ans += dp_num[i]
+    return ans
+
+
+
 if __name__ == '__main__':
-    x = [[0,0,0], [0,1,0], [0,0,0]]
-    uniquePathsWithObstacles(x)
+    x = [3,1,2]
+    findNumberOfLIS(x)
+    # x = [[0,0,0], [0,1,0], [0,0,0]]
+    # uniquePathsWithObstacles(x)
     # x = stoneGame([5,3,4,5])
     # print(x)
     # b = checkValidString("(*()*))(()")

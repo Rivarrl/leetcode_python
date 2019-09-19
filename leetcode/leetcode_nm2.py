@@ -689,23 +689,15 @@ def findNumberOfLIS(nums):
     n = len(nums)
     if n == 0:
         return 0
-    # 记录以第i个元素结尾的LIS
     dp = [1] * n
-    # 记录以第i个元素结尾LIS的种类
     dp_num = [1] * n
     for i in range(n):
         for j in range(i):
-            # 如果j位的数值比i位小，则可加入i位的LIS比较队列
             if nums[i] > nums[j]:
-                # 如果j位前的LIS加上i位数字后的长度比目前所有i位的LIS都长
                 if dp[j] + 1 > dp[i]:
-                    # 把j位的LIS+1赋给i
                     dp[i] = dp[j] + 1
-                    # 继承j位的LIS种类
                     dp_num[i] = dp_num[j]
-                # 如果j位前的LIS加上i位数字后的长度和目前i位的LIS相等，说明发现了新的组合
                 elif dp[j] + 1 == dp[i]:
-                    # 把j位的种类数目加给i位
                     dp_num[i] += dp_num[j]
     print(dp)
     print(dp_num)

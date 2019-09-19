@@ -709,10 +709,44 @@ def findNumberOfLIS(nums):
     return ans
 
 
+def findLength(A, B):
+    """
+    718. 最长重复子数组
+    给两个整数数组 A 和 B ，返回两个数组中公共的、长度最长的子数组的长度。
+    示例 1:
+    输入:
+    A: [1,2,3,2,1]
+    B: [3,2,1,4,7]
+    输出: 3
+    解释:
+    长度最长的公共子数组是 [3, 2, 1]。
+    说明:
+    1 <= len(A), len(B) <= 1000
+    0 <= A[i], B[i] < 100
+    :param A: List[int]
+    :param B: List[int]
+    :return: int
+    """
+    n, m = len(A), len(B)
+    dp = [[0] * m for _ in range(n)]
+    ans = 0
+    for i in range(n-1, -1, -1):
+        for j in range(m-1, -1, -1):
+            if A[i] == B[j]:
+                if i == n - 1 or j == m - 1:
+                    dp[i][j] = 1
+                else:
+                    dp[i][j] = dp[i+1][j+1] + 1
+                ans = max(ans, dp[i][j])
+    return ans
+
 
 if __name__ == '__main__':
-    x = [3,1,2]
-    findNumberOfLIS(x)
+    A = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+    B = [0, 0, 0, 0, 0, 0, 0, 1, 0, 0]
+    findLength(A, B)
+    # x = [3,1,2]
+    # findNumberOfLIS(x)
     # x = [[0,0,0], [0,1,0], [0,0,0]]
     # uniquePathsWithObstacles(x)
     # x = stoneGame([5,3,4,5])

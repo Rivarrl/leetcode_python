@@ -514,9 +514,16 @@ def shortestPalindrome(s):
     示例 2:
     输入: "abcd"
     输出: "dcbabcd"
-    :param s:
-    :return:
+    :param s: str
+    :return: str
     """
+    n = len(s)
+    rs = s[::-1]
+    for i in range(1, n):
+        ns = rs[:i] + s
+        if ns[::-1] == ns:
+            return ns
+
 
 
 def maxNumber(nums1, nums2, k):
@@ -555,7 +562,8 @@ def maxNumber(nums1, nums2, k):
 
 
 if __name__ == '__main__':
-    makeArrayIncreasing([1,5,3,6,7], [4,3,1])
+    shortestPalindrome("aacecaaa")
+    # makeArrayIncreasing([1,5,3,6,7], [4,3,1])
     # removeInvalidParentheses("()())()")
     # x = intersectionSizeTwo([[2,10],[3,7],[3,15],[4,11],[6,12],[6,16],[7,8],[7,11],[7,15],[11,12]])
     # print(x)

@@ -870,28 +870,28 @@ def findMode(root):
     :param root: TreeNode
     :return: List[int]
     """
-    def helper(node, v):
-        nonlocal m, ans
-        res = 0
-        if node:
-            left = helper(node.left, node.val)
-            right = helper(node.right, node.val)
-            res = left + right
-            if node.val == v:
-                res += 1
-                if res > m:
-                    m = res
-                    ans = v
-        return res
-    m = 0
-    ans = -1
-    helper(root, root.val)
-    print(ans)
-    return ans
+    def helper(node, pre, cur, total):
+        if not node: return
+        helper(node.left, pre, cur, total)
+        if pre:
+            cur = cur + 1 if node.val == pre.val else 1
+        if cur == total:
+            res.append(node.val)
+        if cur > total:
+            res.clear()
+            res.append(node.val)
+            total = cur
+        pre = node
+        helper(node.right, pre, cur, total)
+    res = []
+    pre, cur, total = None, 1, 0
+    helper(root, pre, cur, total)
+    print(res)
+    return res
 
 
 if __name__ == '__main__':
-    x = construct_tree_node([1,null,2,2])
+    x = construct_tree_node([1,null,2,null,null,2])
     findMode(x)
     # maxNumberOfBalloons("nlaebolko")
     # distanceBetweenBusStops([0,11,6,1,4,3], 0, 5)

@@ -553,10 +553,43 @@ def sc_dev2(m, arr):
     """
 
 
+def lx_alg1():
+    """
+    联想秋招算法1:
+    正整数划分
+    输入一个正整数N, 输出一个N的划分, 使得N1+N2+...+Nm=N, 返回一个正整数数组[N1, N2,...,Nm], 使得:
+    1. N1 >= N2 >= N3 >= ... >= Nm
+    2. N1 * N2 * ... * Nm 的值是所有满足条件的划分中最大的
+    3. 若两组划分其乘积值相同, 取划分粒度最细的划分.
+    :return:
+    """
+    while 1:
+        s = input()
+        if s != "":
+            m = int(s)
+            res = []
+            if m == 0 or m == 1:
+                res.append(m)
+            elif m == 2:
+                res +=[1, 1]
+            else:
+                i = m // 3
+                j = m % 3
+                if j == 0:
+                    res += [3] * i
+                elif j == 1:
+                    res += [3] * (i-1) + [2] * 2
+                else:
+                    res += [3] * i + [2]
+            print(res)
+        else:
+            break
+
 
 if __name__ == '__main__':
-    res = sc_dev1("a((ur)oi)b")
-    print(res)
+    lx_alg1()
+    # res = sc_dev1("a((ur)oi)b")
+    # print(res)
     # sf_dev2(3, 3, 2, [[1,2], [2,3]])
     # sf_dev2(3, 3, 4, [[1,2], [1,3], [2,1], [2,2]])
     # dd_alg1(6, "3 + 2 + 1 + -4 * -5 + 1")

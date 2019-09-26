@@ -780,13 +780,23 @@ def numTilePossibilities(tiles):
     :param tiles: str
     :return: int
     """
-
+    def helper(s):
+        if len(s) == 0: return 0
+        cur = set()
+        ans = 0
+        for i in range(len(s)):
+            if not s[i] in cur:
+                cur.add(s[i])
+                ans += helper(s[:i] + s[i+1:]) + 1
+        return ans
+    return helper(tiles)
 
 
 if __name__ == '__main__':
-    A = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
-    B = [0, 0, 0, 0, 0, 0, 0, 1, 0, 0]
-    findLength(A, B)
+    numTilePossibilities("AAB")
+    # A = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+    # B = [0, 0, 0, 0, 0, 0, 0, 1, 0, 0]
+    # findLength(A, B)
     # x = [3,1,2]
     # findNumberOfLIS(x)
     # x = [[0,0,0], [0,1,0], [0,0,0]]

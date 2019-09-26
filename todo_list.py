@@ -36,7 +36,7 @@
 # 3. leetcode 100 x
 # 4. leetcode 200 x
 # 5. leetcode 300 x
-# 6. leetcode 400
+# 6. leetcode 400 x
 # 7. leetcode 500
 # 8. leetcode 600
 # 9. leetcode 700

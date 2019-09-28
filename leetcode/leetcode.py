@@ -360,15 +360,12 @@ class Solution:
         :type n: int
         :rtype: int
         """
-        l = [0] * (n + 1)
-        l[0] = 1
-        l[1] = 1
-        if n == 1:
-            return l[1]
-        else:
-            for i in range(2, n + 1):
-                l[i] = l[i - 1] + l[i - 2]
-        return l[n]
+        if n < 2: return n
+        one, two = 1, 1
+        for i in range(2, n+1):
+            one, two = one + two, one
+        return one
+
 
     def hammingDistance(self, x, y):
         """

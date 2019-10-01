@@ -839,6 +839,240 @@ def addNegabinary(arr1, arr2):
     return arr1 if arr1 else [0]
 
 
+def largestDivisibleSubset(nums):
+    """
+    368. 最大整除子集
+    给出一个由无重复的正整数组成的集合，找出其中最大的整除子集，子集中任意一对 (Si，Sj) 都要满足：Si % Sj = 0 或 Sj % Si = 0。
+    如果有多个目标子集，返回其中任何一个均可。
+    示例 1:
+    输入: [1,2,3]
+    输出: [1,2] (当然, [1,3] 也正确)
+    示例 2:
+    输入: [1,2,4,8]
+    输出: [1,2,4,8]
+    :param nums: List[int]
+    :return: List[int]
+    """
+    if not nums: return []
+    nums.sort()
+    n = len(nums)
+    dp = [1] * n
+    pre = [-1] * n
+    for i in range(1, n):
+        for j in range(0, i):
+            if nums[i] % nums[j] == 0:
+                if dp[j] + 1 > dp[i]:
+                    dp[i] = dp[j] + 1
+                    pre[i] = j
+    max_index = dp.index(max(dp))
+    res = []
+    while max_index != -1:
+        res.append(nums[max_index])
+        max_index = pre[max_index]
+    return res
+
+
+def getMoneyAmount(n):
+    """
+    375. 猜数字大小 II
+    我们正在玩一个猜数游戏，游戏规则如下：
+    我从 1 到 n 之间选择一个数字，你来猜我选了哪个数字。
+    每次你猜错了，我都会告诉你，我选的数字比你的大了或者小了。
+    然而，当你猜了数字 x 并且猜错了的时候，你需要支付金额为 x 的现金。直到你猜到我选的数字，你才算赢得了这个游戏。
+    示例:
+    n = 10, 我选择了8.
+    第一轮: 你猜我选择的数字是5，我会告诉你，我的数字更大一些，然后你需要支付5块。
+    第二轮: 你猜是7，我告诉你，我的数字更大一些，你支付7块。
+    第三轮: 你猜是9，我告诉你，我的数字更小一些，你支付9块。
+    游戏结束。8 就是我选的数字。
+    你最终要支付 5 + 7 + 9 = 21 块钱。
+    给定 n ≥ 1，计算你至少需要拥有多少现金才能确保你能赢得这个游戏。
+    :param n: int
+    :return: int
+    """
+    dp = [[0] * (n+1) for _ in range(n+1)]
+    for k in range(2, n+1):
+        for i in range(1, n-k+2):
+            ans = float('inf')
+            for j in range(i, i+k-1):
+                cur = j + max(dp[i][j-1], dp[j+1][i+k-1])
+                ans = min(ans, cur)
+            dp[i][i+k-1] = ans
+    return dp[1][n]
+
+
+def generateTrees(n):
+    """
+    95. 不同的二叉搜索树 II
+    给定一个整数 n，生成所有由 1 ... n 为节点所组成的二叉搜索树。
+    示例:
+    输入: 3
+    输出:
+    [
+      [1,null,3,2],
+      [3,2,null,1],
+      [3,1,null,null,2],
+      [2,1,3],
+      [1,null,2,null,3]
+    ]
+    解释:
+    以上的输出对应以下 5 种不同结构的二叉搜索树：
+
+       1         3     3      2      1
+        \       /     /      / \      \
+         3     2     1      1   3      2
+        /     /       \                 \
+       2     1         2                 3
+    :param n: int
+    :return: List[TreeNode]
+    """
+    def helper(l, r):
+        res = []
+        if l > r:
+            res.append(None)
+        for i in range(l, r+1):
+            left = helper(l, i-1)
+            right = helper(i+1, r)
+
+            for j in range(len(left)):
+                for k in range(len(right)):
+                    cur = TreeNode(i)
+                    cur.left = left[j]
+                    cur.right = right[k]
+                    res.append(cur)
+        return res
+    if n == 0: return []
+    return helper(1, n)
+
+
+def combinationSum4(nums, target):
+    """
+    377. 组合总和 Ⅳ
+    给定一个由正整数组成且不存在重复数字的数组，找出和为给定目标正整数的组合的个数。
+    示例:
+    nums = [1, 2, 3]
+    target = 4
+    所有可能的组合为：
+    (1, 1, 1, 1)
+    (1, 1, 2)
+    (1, 2, 1)
+    (1, 3)
+    (2, 1, 1)
+    (2, 2)
+    (3, 1)
+    请注意，顺序不同的序列被视作不同的组合。
+    因此输出为 7。
+    进阶：
+    如果给定的数组中含有负数会怎么样？
+    问题会产生什么变化？
+    我们需要在题目中添加什么限制来允许负数的出现？
+    :param nums: List[int]
+    :param target: int
+    :return: int
+    """
+    # 完全背包
+    nums = [i for i in nums if i <= target]
+    n = len(nums)
+    if n == 0 or target <= 0:
+        return 0
+    dp = [0] * (target + 1)
+    dp[0] = 1
+    for i in range(1, target + 1):
+        for j in range(n):
+            if i >= nums[j]:
+                dp[i] += dp[i - nums[j]]
+    return dp[-1]
+
+
+def longestArithSeqLength(A):
+    """
+    1027. 最长等差数列
+    给定一个整数数组 A，返回 A 中最长等差子序列的长度。
+    回想一下，A 的子序列是列表 A[i_1], A[i_2], ..., A[i_k] 其中 0 <= i_1 < i_2 < ... < i_k <= A.length - 1。并且如果 B[i+1] - B[i]( 0 <= i < B.length - 1) 的值都相同，那么序列 B 是等差的。
+    示例 1：
+    输入：[3,6,9,12]
+    输出：4
+    解释：
+    整个数组是公差为 3 的等差数列。
+    示例 2：
+    输入：[9,4,7,2,10]
+    输出：3
+    解释：
+    最长的等差子序列是 [4,7,10]。
+    示例 3：
+    输入：[20,1,15,3,10,5,8]
+    输出：4
+    解释：
+    最长的等差子序列是 [20,15,10,5]。
+    提示：
+    2 <= A.length <= 2000
+    0 <= A[i] <= 10000
+    :param A: List[int]
+    :return: int
+    """
+    n = len(A)
+    arr = [{} for _ in range(n)]
+    ans = 1
+    for i in range(1, n):
+        for j in range(i):
+            k = A[i] - A[j]
+            x = arr[j].get(k, 1) + 1
+            arr[i][k] = x
+        ans = max(ans, max(arr[i].values()))
+    return ans
+
+
+def numTilings(N):
+    """
+    790. 多米诺和托米诺平铺
+    有两种形状的瓷砖：一种是 2x1 的多米诺形，另一种是形如 "L" 的托米诺形。两种形状都可以旋转。
+    XX  <- 多米诺
+    XX  <- "L" 托米诺
+    X
+    给定 N 的值，有多少种方法可以平铺 2 x N 的面板？返回值 mod 10^9 + 7。
+    （平铺指的是每个正方形都必须有瓷砖覆盖。两个平铺不同，当且仅当面板上有四个方向上的相邻单元中的两个，使得恰好有一个平铺有一个瓷砖占据两个正方形。）
+    示例:
+    输入: 3
+    输出: 5
+    解释:
+    下面列出了五种不同的方法，不同字母代表不同瓷砖：
+    XYZ XXZ XYY XXY XYY
+    XYZ YYZ XZZ XYY XXY
+    提示：
+    N  的范围是 [1, 1000]
+    :param N: int
+    :return: int
+    """
+    """
+    # 发现递推式：dp[i] = dp[i-1] * 2 + dp[i-3]
+    if N <= 2: return N
+    dp = [0] * (N + 1)
+    dp[1] = 1
+    dp[2] = 2
+    dp[3] = 5
+    for i in range(4, N + 1):
+        dp[i] = (dp[i-3] + dp[i-1] * 2) % (10**9+7)
+    return dp[N]
+    """
+    # 不能推出递推式，辅助数组来解决, 辅助数组h[i]为2i-1大小的地板时的平铺种类
+    if N <= 2: return N
+    mod = 10 ** 9 + 7
+    dp = [0] * (N + 1)
+    h = [0] * (N + 1)
+    dp[0] = 1
+    for i in range(1, N+1):
+        h[i] += h[i-1]
+        if i > 1:
+            h[i] += dp[i-2]
+        dp[i] += dp[i-1]
+        dp[i] += (h[i-1] * 2)
+        if i > 1:
+            dp[i] += dp[i-2]
+        h[i] %= mod
+        dp[i] %= mod
+    return dp[N]
+
+
 if __name__ == '__main__':
     addNegabinary([1,0,1], [1,0,1])
     # numTilePossibilities("AAB")

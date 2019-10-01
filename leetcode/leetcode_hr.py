@@ -504,6 +504,39 @@ def numPermsDISequence(S):
     return dp[0] % (10 ** 9 + 7)
 
 
+def longestValidParentheses(s):
+    """
+    32. 最长有效括号
+    给定一个只包含 '(' 和 ')' 的字符串，找出最长的包含有效括号的子串的长度。
+    示例 1:
+    输入: "(()"
+    输出: 2
+    解释: 最长有效括号子串为 "()"
+    示例 2:
+    输入: ")()())"
+    输出: 4
+    解释: 最长有效括号子串为 "()()"
+    :param s: str
+    :return: int
+    """
+    n = len(s)
+    stk, rec = [], [0] * n
+    for i, c in enumerate(s):
+        if c == '(':
+            stk.append(i)
+        elif stk:
+            j = stk.pop()
+            rec[j], rec[i] = 1, 1
+    ans, m = 0, 0
+    for i in rec:
+        if i == 1:
+            m += 1
+        else:
+            ans = max(m, ans)
+            m = 0
+    return max(m, ans)
+
+
 def shortestPalindrome(s):
     """
     214. 最短回文串

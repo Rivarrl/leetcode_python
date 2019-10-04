@@ -641,6 +641,46 @@ def numMusicPlaylists(N, L, K):
     return dp[L][N]
 
 
+
+def maxProfit(k, prices):
+    """
+    188. 买卖股票的最佳时机 IV
+    给定一个数组，它的第 i 个元素是一支给定的股票在第 i 天的价格。
+    设计一个算法来计算你所能获取的最大利润。你最多可以完成 k 笔交易。
+    注意: 你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
+    示例 1:
+    输入: [2,4,1], k = 2
+    输出: 2
+    解释: 在第 1 天 (股票价格 = 2) 的时候买入，在第 2 天 (股票价格 = 4) 的时候卖出，这笔交易所能获得利润 = 4-2 = 2 。
+    示例 2:
+    输入: [3,2,6,5,0,3], k = 2
+    输出: 7
+    解释: 在第 2 天 (股票价格 = 2) 的时候买入，在第 3 天 (股票价格 = 6) 的时候卖出, 这笔交易所能获得利润 = 6-2 = 4 。
+         随后，在第 5 天 (股票价格 = 0) 的时候买入，在第 6 天 (股票价格 = 3) 的时候卖出, 这笔交易所能获得利润 = 3-0 = 3 。
+    :param k: int
+    :param prices: List[int]
+    :return: int
+    """
+    n = len(prices)
+    if n == 0: return 0
+    if k > n // 2:
+        ans = 0
+        for i in range(1, n):
+            if prices[i] > prices[i-1]:
+                ans += prices[i] - prices[i-1]
+        return ans
+    else:
+        dp = [[[0] * 2 for _ in range(k+1)] for _ in range(n)]
+        for i in range(n):
+            for j in range(1, k+1):
+                if i == 0:
+                    dp[i][j][1] = -prices[i]
+                else:
+                    dp[i][j][0] = max(dp[i-1][j][0], dp[i-1][j][1] + prices[i])
+                    dp[i][j][1] = max(dp[i-1][j][1], dp[i-1][j-1][0] - prices[i])
+        return dp[n-1][k][0]
+
+
 def maxNumber(nums1, nums2, k):
     """
     321. 拼接最大数
@@ -675,9 +715,27 @@ def maxNumber(nums1, nums2, k):
     """
 
 
+def maxSumSubmatrix(matrix, k):
+    """
+    363. 矩形区域不超过 K 的最大数值和
+    给定一个非空二维矩阵 matrix 和一个整数 k，找到这个矩阵内部不大于 k 的最大矩形和。
+    示例:
+    输入: matrix = [[1,0,1],[0,-2,3]], k = 2
+    输出: 2
+    解释: 矩形区域 [[0, 1], [-2, 3]] 的数值和是 2，且 2 是不超过 k 的最大数字（k = 2）。
+    说明：
+    矩阵内的矩形区域面积必须大于 0。
+    如果行数远大于列数，你将如何解答呢？
+    :param matrix: List[List[int]]
+    :param k: int
+    :return: int
+    """
+    
+
 
 if __name__ == '__main__':
-    shortestPalindrome("aacecaaa")
+    maxProfit(2, [6,1,3,2,4,7])
+    # shortestPalindrome("aacecaaa")
     # makeArrayIncreasing([1,5,3,6,7], [4,3,1])
     # removeInvalidParentheses("()())()")
     # x = intersectionSizeTwo([[2,10],[3,7],[3,15],[4,11],[6,12],[6,16],[7,8],[7,11],[7,15],[11,12]])

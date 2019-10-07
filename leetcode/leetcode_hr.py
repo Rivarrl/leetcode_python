@@ -774,6 +774,49 @@ def maxSumSubmatrix(matrix, k):
     """
 
 
+def sumSubseqWidths(A):
+    """
+    891. 子序列宽度之和
+    给定一个整数数组 A ，考虑 A 的所有非空子序列。
+    对于任意序列 S ，设 S 的宽度是 S 的最大元素和最小元素的差。
+    返回 A 的所有子序列的宽度之和。
+    由于答案可能非常大，请返回答案模 10^9+7。
+    示例：
+    输入：[2,1,3]
+    输出：6
+    解释：
+    子序列为 [1]，[2]，[3]，[2,1]，[2,3]，[1,3]，[2,1,3] 。
+    相应的宽度是 0，0，0，1，1，2，2 。
+    这些宽度之和是 6 。
+    提示：
+    1 <= A.length <= 20000
+    1 <= A[i] <= 20000
+    :param A: List[int]
+    :return: int
+    """
+    """
+    # 先排序再计算以A[i]结尾 - 以A[i]开头的结果数 * A[i]
+    mod = 10 ** 9 + 7
+    A.sort()
+    n = len(A)
+    ans = 0
+    for i in range(n):
+        l, r = 2 ** i, 2 ** (n-1-i)
+        ans = (ans + (l - r) * A[i]) % mod
+    return ans
+    """
+    # https://leetcode-cn.com/problems/sum-of-subsequence-widths/solution/zi-xu-lie-kuan-du-zhi-he-by-leetcode/
+    mod = 10 ** 9 + 7
+    A.sort()
+    n = len(A)
+    ans = 0
+    p = 1
+    for i in range(n):
+        ans = (ans + (A[i] - A[n-1-i]) * p % mod) % mod
+        p = (p << 1) % mod
+    return ans
+
+
 if __name__ == '__main__':
     maxProfit(2, [6,1,3,2,4,7])
     # shortestPalindrome("aacecaaa")

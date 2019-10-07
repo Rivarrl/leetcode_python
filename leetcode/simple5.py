@@ -1000,6 +1000,43 @@ def smallestRangeI(A, K):
     return max(0, max(A) - min(A) - K * 2)
 
 
+def arraysIntersection(arr1, arr2, arr3):
+    """
+    5079. 三个有序数组的交集
+    给出三个均为 严格递增排列 的整数数组 arr1，arr2 和 arr3。
+    返回一个由 仅 在这三个数组中 同时出现 的整数所构成的有序数组。
+    示例：
+    输入: arr1 = [1,2,3,4,5], arr2 = [1,2,5,7,9], arr3 = [1,3,4,5,8]
+    输出: [1,5]
+    解释: 只有 1 和 5 同时在这三个数组中出现.
+    提示：
+    1 <= arr1.length, arr2.length, arr3.length <= 1000
+    1 <= arr1[i], arr2[i], arr3[i] <= 2000
+    :param arr1: List[int]
+    :param arr2: List[int]
+    :param arr3: List[int]
+    :return: List[int]
+    """
+    i, j, k = 0, 0, 0
+    n1, n2, n3 = len(arr1), len(arr2), len(arr3)
+    res = []
+    while i < n1 and j < n2 and k < n3:
+        if arr1[i] == arr2[j] == arr3[k]:
+            res.append(arr1[i])
+            i += 1
+            j += 1
+            k += 1
+        else:
+            m = max(arr1[i], arr2[j], arr3[k])
+            if arr1[i] < m:
+                i += 1
+            if arr2[j] < m:
+                j += 1
+            if arr3[k] < m:
+                k += 1
+    return res
+
+
 if __name__ == '__main__':
     x = construct_tree_node([1,null,2,null,null,2])
     findMode(x)

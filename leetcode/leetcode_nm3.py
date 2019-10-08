@@ -108,6 +108,43 @@ def reverseParentheses(s):
     return s
 
 
+def kConcatenationMaxSum(arr, k):
+    """
+    1191. K 次串联后最大子数组之和
+    给你一个整数数组 arr 和一个整数 k。
+    首先，我们要对该数组进行修改，即把原数组 arr 重复 k 次。
+    举个例子，如果 arr = [1, 2] 且 k = 3，那么修改后的数组就是 [1, 2, 1, 2, 1, 2]。
+    然后，请你返回修改后的数组中的最大的子数组之和。
+    注意，子数组长度可以是 0，在这种情况下它的总和也是 0。
+    由于 结果可能会很大，所以需要 模（mod） 10^9 + 7 后再返回。 
+    示例 1：
+    输入：arr = [1,2], k = 3
+    输出：9
+    示例 2：
+    输入：arr = [1,-2,1], k = 5
+    输出：2
+    示例 3：
+    输入：arr = [-1,-2], k = 7
+    输出：0
+    提示：
+    1 <= arr.length <= 10^5
+    1 <= k <= 10^5
+    -10^4 <= arr[i] <= 10^4
+    :param arr: List[int]
+    :param k: int
+    :return: int
+    """
+    mod = 10 ** 9 + 7
+    s, maxs = 0, 0
+    for a in arr * min(2, k):
+        s = a if s < 0 else s + a  # 连续和
+        if s > maxs:
+            maxs = s  # 最大连续和
+    if k <= 2:
+        return maxs  # 两个周期以内之间返回最大连续和
+    return (max(sum(arr), 0) * (k - 2) + maxs) % mod
+
+
 if __name__ == '__main__':
     # arr = [10,2]
     # res = largerstNumber(arr)

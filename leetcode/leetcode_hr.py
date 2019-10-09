@@ -894,8 +894,32 @@ def minRefuelStops(target, startFuel, stations):
     :param stations: List[List[int]]
     :return: int
     """
-
-
+    """
+    # 动态规划
+    dp = [startFuel] + [0] * len(stations)
+    for i, (location, capacity) in enumerate(stations):
+        for t in range(i, -1, -1):
+            if dp[t] >= location:
+                dp[t + 1] = max(dp[t + 1], dp[t] + capacity)
+    for i, d in enumerate(dp):
+        if d >= target: return i
+    return -1
+    """
+    # 优先队列 heapq默认最小堆，使用取两次负值来实现最大堆的效果
+    import heapq
+    pq = []
+    stations.append((target, float('inf')))
+    ans = prev = 0
+    tank = startFuel
+    for location, capacity in stations:
+        tank -= location - prev
+        while pq and tank < 0:
+            tank += -heapq.heappop(pq)
+            ans += 1
+        if tank < 0: return -1
+        heapq.heappush(pq, -capacity)
+        prev = location
+    return ans
 
 
 if __name__ == '__main__':

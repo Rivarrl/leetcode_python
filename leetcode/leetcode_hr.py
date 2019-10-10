@@ -922,6 +922,95 @@ def minRefuelStops(target, startFuel, stations):
     return ans
 
 
+def superEggDrop(K, N):
+    """
+    887. 鸡蛋掉落
+    你将获得 K 个鸡蛋，并可以使用一栋从 1 到 N  共有 N 层楼的建筑。
+    每个蛋的功能都是一样的，如果一个蛋碎了，你就不能再把它掉下去。
+    你知道存在楼层 F ，满足 0 <= F <= N 任何从高于 F 的楼层落下的鸡蛋都会碎，从 F 楼层或比它低的楼层落下的鸡蛋都不会破。
+    每次移动，你可以取一个鸡蛋（如果你有完整的鸡蛋）并把它从任一楼层 X 扔下（满足 1 <= X <= N）。
+    你的目标是确切地知道 F 的值是多少。
+    无论 F 的初始值如何，你确定 F 的值的最小移动次数是多少？
+    示例 1：
+    输入：K = 1, N = 2
+    输出：2
+    解释：
+    鸡蛋从 1 楼掉落。如果它碎了，我们肯定知道 F = 0 。
+    否则，鸡蛋从 2 楼掉落。如果它碎了，我们肯定知道 F = 1 。
+    如果它没碎，那么我们肯定知道 F = 2 。
+    因此，在最坏的情况下我们需要移动 2 次以确定 F 是多少。
+    示例 2：
+    输入：K = 2, N = 6
+    输出：3
+    示例 3：
+    输入：K = 3, N = 14
+    输出：4
+    提示：
+    1 <= K <= 100
+    1 <= N <= 10000
+    :param K: int
+    :param N: int
+    :return: int
+    """
+    """
+    # 暴力 超时
+    # 思路，无论K是何值都可以测试出来的尝试次数，等价于求所有情况中尝试次数最多的值
+    # 那么就从1-N楼分别开始扔第一颗蛋，在所有计算结果中取min+1就是答案
+    # 1-N楼分别扔蛋：
+    # 当我在i层楼扔了个蛋，如果在N层楼扔的时候还有K个蛋的状态记作dp[K][N]的话，会有两种情况：
+    # 1. 碎了：总数K-1，i层太高，从i-1层尝试：dp[K-1][i-1]
+    # 2. 没碎：蛋没碎就可以重复使用，i层低了，从dp[K][i+1 -> N]尝试，由于i+1->N又可以把i+1层视为第1层
+    #         等价于在总楼层数N-i的另一栋楼扔鸡蛋，也就是dp[K][N-i]
+    def helper(K, N):
+        # 只有1个鸡蛋需要试N次
+        if N == 0 or N == 1 or K == 1:
+            return N
+        ans = N
+        for i in range(1, N+1):
+            t = max(helper(K-1, i-1), helper(K, N-i))
+            ans = min(ans, 1+t)
+        return ans
+    return helper(K, N)
+    """
+    """
+    # 动态规划 + 二分查找
+    memo = {}
+    def dp(k, n):
+        if (k, n) not in memo:
+            if n == 0:
+                ans = 0
+            elif k == 1:
+                ans = n
+            else:
+                lo, hi = 1, n
+                # keep a gap of 2 X values to manually check later
+                while lo + 1 < hi:
+                    x = (lo + hi) / 2
+                    t1 = dp(k - 1, x - 1)
+                    t2 = dp(k, n - x)
+                    if t1 < t2:
+                        lo = x
+                    elif t1 > t2:
+                        hi = x
+                    else:
+                        lo = hi = x
+                ans = 1 + min(max(dp(k - 1, x - 1), dp(k, n - x))
+                              for x in (lo, hi))
+            memo[k, n] = ans
+        return memo[k, n]
+    return dp(K, N)
+    """
+    # 动态规划
+    # 思路：dp[k][n]表示k个鸡蛋在n步之内可以测出多少层
+    dp = [[0] * (N+1) for _ in range(K+1)]
+    for n in range(1, N+1):
+        for k in range(1, K+1):
+            dp[k][n] = dp[k][n-1] + dp[k-1][n-1] + 1
+            if dp[k][n] >= N:
+                return n
+    return N
+
+
 if __name__ == '__main__':
     findNumOfValidWords(["aaaa","asas","able","ability","actt","actor","access"],["aboveyz","abrodyz","abslute","absoryz","actresz","gaswxyz"])
     # maxProfit(2, [6,1,3,2,4,7])

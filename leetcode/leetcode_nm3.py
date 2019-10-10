@@ -145,6 +145,40 @@ def kConcatenationMaxSum(arr, k):
     return (max(sum(arr), 0) * (k - 2) + maxs) % mod
 
 
+def sortArray(nums):
+    """
+    912. 排序数组
+    给定一个整数数组 nums，将该数组升序排列。
+    示例 1：
+    输入：[5,2,3,1]
+    输出：[1,2,3,5]
+    示例 2：
+    输入：[5,1,1,2,0,0]
+    输出：[0,0,1,1,2,5]
+    提示：
+    1 <= A.length <= 10000
+    -50000 <= A[i] <= 50000
+    :param nums: List[int]
+    :return: List[int]
+    """
+    def sort(l, r, arr):
+        if l >= r: return
+        base = arr[l]
+        i, j = l, r - 1
+        while i < j:
+            while i <= j and arr[i] <= base:
+                i += 1
+            while i <= j and arr[j] >= base:
+                j -= 1
+            if i <= j:
+                arr[i], arr[j] = arr[j], arr[i]
+        arr[l], arr[i] = arr[i], arr[l]
+        sort(l, i, arr)
+        sort(i+1, r, arr)
+    sort(0, len(nums), nums)
+    return nums
+
+
 if __name__ == '__main__':
     # arr = [10,2]
     # res = largerstNumber(arr)

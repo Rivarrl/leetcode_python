@@ -179,6 +179,61 @@ def sortArray(nums):
     return nums
 
 
+def sumSubarrayMins(A):
+    """
+    907. 子数组的最小值之和
+    给定一个整数数组 A，找到 min(B) 的总和，其中 B 的范围为 A 的每个（连续）子数组。
+    由于答案可能很大，因此返回答案模 10^9 + 7。
+    示例：
+    输入：[3,1,2,4]
+    输出：17
+    解释：
+    子数组为 [3]，[1]，[2]，[4]，[3,1]，[1,2]，[2,4]，[3,1,2]，[1,2,4]，[3,1,2,4]。
+    最小值为 3，1，2，4，1，1，2，1，1，1，和为 17。
+    提示：
+    1 <= A <= 30000
+    1 <= A[i] <= 30000
+    :param A: List[int]
+    :return: int
+    """
+    len_A = len(A)
+    if len_A == 0:
+        return 0
+    if len_A == 1:
+        return A[0]
+
+    ans = 0
+    left = [0] * len_A
+    right = [0] * len_A
+
+    stack = []
+    for i in range(len_A):
+        while stack and A[stack[-1]] > A[i]:
+            stack.pop()
+        if not stack:
+            left[i] = -1
+        else:
+            left[i] = stack[-1]
+        stack.append(i)
+
+    stack = []
+    for i in range(len_A - 1, -1, -1):
+        while stack and A[stack[-1]] >= A[i]:
+            stack.pop()
+        if not stack:
+            right[i] = len_A
+        else:
+            right[i] = stack[-1]
+        stack.append(i)
+
+    for i in range(len_A):
+        ans += (i - left[i]) * (right[i] - i) * A[i]
+        ans %= 1000000007
+    return ans
+
+
+
+
 if __name__ == '__main__':
     # arr = [10,2]
     # res = largerstNumber(arr)

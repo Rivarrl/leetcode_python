@@ -240,9 +240,120 @@ def hasGroupsSizeX(deck):
     return s > 1
 
 
+def isMonotonic(A):
+    """
+    896. 单调数列
+    如果数组是单调递增或单调递减的，那么它是单调的。
+    如果对于所有 i <= j，A[i] <= A[j]，那么数组 A 是单调递增的。 如果对于所有 i <= j，A[i]> = A[j]，那么数组 A 是单调递减的。
+    当给定的数组 A 是单调数组时返回 true，否则返回 false。
+    示例 1：
+    输入：[1,2,2,3]
+    输出：true
+    示例 2：
+    输入：[6,5,4,4]
+    输出：true
+    示例 3：
+    输入：[1,3,2]
+    输出：false
+    示例 4：
+    输入：[1,2,4,5]
+    输出：true
+    示例 5：
+    输入：[1,1,1]
+    输出：true
+    提示：
+    1 <= A.length <= 50000
+    -100000 <= A[i] <= 100000
+    :param A: List[int]
+    :return: bool
+    """
+    d, i = False, False
+    for j in range(1, len(A)):
+        if A[j] < A[j-1]:
+            d = True
+        elif A[j] > A[j-1]:
+            i = True
+    return not (d and i)
+
+
+def findErrorNums(nums):
+    """
+    645. 错误的集合
+    集合 S 包含从1到 n 的整数。不幸的是，因为数据错误，导致集合里面某一个元素复制了成了集合里面的另外一个元素的值，导致集合丢失了一个整数并且有一个元素重复。
+    给定一个数组 nums 代表了集合 S 发生错误后的结果。你的任务是首先寻找到重复出现的整数，再找到丢失的整数，将它们以数组的形式返回。
+    示例 1:
+    输入: nums = [1,2,2,4]
+    输出: [2,3]
+    注意:
+    给定数组的长度范围是 [2, 10000]。
+    给定的数组是无序的。
+    :param nums: List[int]
+    :return: List[int]
+    """
+    n = len(nums)
+    arr = [0] * (n+1)
+    arr[0] = -1
+    res = []
+    for i in nums:
+        arr[i] += 1
+        if arr[i] == 2:
+            res.append(i)
+    res.append(arr.index(0))
+    return res
+
+
+def judgeSquareSum(c):
+    """
+    633. 平方数之和
+    给定一个非负整数 c ，你要判断是否存在两个整数 a 和 b，使得 a2 + b2 = c。
+    示例1:
+    输入: 5
+    输出: True
+    解释: 1 * 1 + 2 * 2 = 5
+    示例2:
+    输入: 3
+    输出: False
+    :param c: int
+    :return: bool
+    """
+    """
+    # 双指针法
+    import math
+    i, j = 0, int(math.sqrt(c))
+    while i <= j:
+        x = i ** 2 + j ** 2
+        if x > c:
+            j -= 1
+        elif x < c:
+            i += 1
+        else:
+            return True
+    return False
+    """
+    # 费马平方和
+    # 引理1：形如4k+3的自然数不能表示成2个整数的平方和
+    # 引理2：正整数n可被表示为两整数平方和的充要条件为n的一切形如4k+3形状的质因子的幂次均为偶数
+    # 素因数
+    if c <= 2:
+        return True
+    while c % 2 == 0:
+        c = c // 2
+    p = 3
+    while p * p <= c:
+        index = 0
+        while c % p == 0:
+            index += 1
+            c = c // p
+        if (p % 4 == 3) and (index % 2 == 1):
+            return False
+        p += 2
+    return c % 4 == 1
+
+
 if __name__ == '__main__':
-    x = [26,2,16,16,5,5,26,2,5,20,20,5,2,20,2,2,20,2,16,20,16,17,16,2,16,20,26,16]
-    uniqueOccurrences(x)
+    isMonotonic([6,5,4,4])
+    # x = [26,2,16,16,5,5,26,2,5,20,20,5,2,20,2,2,20,2,16,20,16,17,16,2,16,20,26,16]
+    # uniqueOccurrences(x)
     # a = [-2,-1,8,9,6]
     # b = [[-1,3],[0,1],[-1,5],[-2,-4],[5,4],[-2,-3],[5,-1],[1,-1],[5,5],[5,2]]
     # robotSim(a, b)

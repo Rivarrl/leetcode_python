@@ -232,11 +232,62 @@ def sumSubarrayMins(A):
     return ans
 
 
+def shoppingOffers(price, special, needs):
+    """
+    638. 大礼包
+    在LeetCode商店中， 有许多在售的物品。
+    然而，也有一些大礼包，每个大礼包以优惠的价格捆绑销售一组物品。
+    现给定每个物品的价格，每个大礼包包含物品的清单，以及待购物品清单。请输出确切完成待购清单的最低花费。
+    每个大礼包的由一个数组中的一组数据描述，最后一个数字代表大礼包的价格，其他数字分别表示内含的其他种类物品的数量。
+    任意大礼包可无限次购买。
+    示例 1:
+    输入: [2,5], [[3,0,5],[1,2,10]], [3,2]
+    输出: 14
+    解释:
+    有A和B两种物品，价格分别为¥2和¥5。
+    大礼包1，你可以以¥5的价格购买3A和0B。
+    大礼包2，你可以以¥10的价格购买1A和2B。
+    你需要购买3个A和2个B， 所以你付了¥10购买了1A和2B（大礼包2），以及¥4购买2A。
+    示例 2:
+    输入: [2,3,4], [[1,1,0,4],[2,2,1,9]], [1,2,1]
+    输出: 11
+    解释:
+    A，B，C的价格分别为¥2，¥3，¥4.
+    你可以用¥4购买1A和1B，也可以用¥9购买2A，2B和1C。
+    你需要买1A，2B和1C，所以你付了¥4买了1A和1B（大礼包1），以及¥3购买1B， ¥4购买1C。
+    你不可以购买超出待购清单的物品，尽管购买大礼包2更加便宜。
+    说明:
+    最多6种物品， 100种大礼包。
+    每种物品，你最多只需要购买6个。
+    你不可以购买超出待购清单的物品，即使更便宜。
+    :param price: List[int]
+    :param special: List[List[int]]
+    :param needs: List[int]
+    :return: int
+    """
+    # 回溯
+    def shopping(special, needs):  # 从special里刚好购买needs所需的最低花费
+        if not sum(needs):  # needs已没有
+            return 0
+        # 先过滤掉special里已经有某一种物品超过了needs的礼包
+        special = list(filter(lambda x: all(x[i] <= needs[i] for i in range(l)), special))
+        if not special:  # 如果过滤后为空，那么返回直接以单品购买needs的价格
+            return sum(needs[i] * price[i] for i in range(l))
+        res = []
+        for pac in special:  # 回溯，收集本次购买每种礼包的花费加上若购买该礼包后剩余needs递归的最低花费
+            res.append(pac[-1] + shopping(special, [needs[i] - pac[i] for i in range(l)]))
+        return min(res)  # 返回本次购买的几种选择中的最低花费
+
+    l = len(price)
+    # 先过滤掉不比原价买划算的礼包
+    special = list(filter(lambda x: x[-1] < sum(x[i] * price[i] for i in range(l)), special))
+    return shopping(special, needs)
 
 
 if __name__ == '__main__':
+    shoppingOffers([2,3,4], [[1,1,0,4],[2,2,1,9]], [1,2,1])
     # arr = [10,2]
     # res = largerstNumber(arr)
-    s = "(ed(et(oc))el)"
-    reverseParentheses(s)
+    # s = "(ed(et(oc))el)"
+    # reverseParentheses(s)
     pass

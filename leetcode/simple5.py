@@ -849,47 +849,6 @@ def maxNumberOfBalloons(text):
         j += 1
 
 
-def findMode(root):
-    """
-    501. 二叉搜索树中的众数
-    给定一个有相同值的二叉搜索树（BST），找出 BST 中的所有众数（出现频率最高的元素）。
-    假定 BST 有如下定义：
-    结点左子树中所含结点的值小于等于当前结点的值
-    结点右子树中所含结点的值大于等于当前结点的值
-    左子树和右子树都是二叉搜索树
-    例如：
-    给定 BST [1,null,2,2],
-       1
-        \
-         2
-        /
-       2
-    返回[2].
-    提示：如果众数超过1个，不需考虑输出顺序
-    进阶：你可以不使用额外的空间吗？（假设由递归产生的隐式调用栈的开销不被计算在内）
-    :param root: TreeNode
-    :return: List[int]
-    """
-    def helper(node, pre, cur, total):
-        if not node: return
-        helper(node.left, pre, cur, total)
-        if pre:
-            cur = cur + 1 if node.val == pre.val else 1
-        if cur == total:
-            res.append(node.val)
-        if cur > total:
-            res.clear()
-            res.append(node.val)
-            total = cur
-        pre = node
-        helper(node.right, pre, cur, total)
-    res = []
-    pre, cur, total = None, 1, 0
-    helper(root, pre, cur, total)
-    print(res)
-    return res
-
-
 def backspaceCompare(S, T):
     """
     844. 比较含退格的字符串
@@ -1037,8 +996,52 @@ def arraysIntersection(arr1, arr2, arr3):
     return res
 
 
+def findMode(root):
+    """
+    501. 二叉搜索树中的众数
+    给定一个有相同值的二叉搜索树（BST），找出 BST 中的所有众数（出现频率最高的元素）。
+    假定 BST 有如下定义：
+    结点左子树中所含结点的值小于等于当前结点的值
+    结点右子树中所含结点的值大于等于当前结点的值
+    左子树和右子树都是二叉搜索树
+    例如：
+    给定 BST [1,null,2,2],
+       1
+        \
+         2
+        /
+       2
+    返回[2].
+    提示：如果众数超过1个，不需考虑输出顺序
+    进阶：你可以不使用额外的空间吗？（假设由递归产生的隐式调用栈的开销不被计算在内）
+    :param root: TreeNode
+    :return: List[int]
+    """
+    if not root:
+        return []
+    dic = {}
+    stack = [root]
+    while stack:
+        node = stack.pop()
+        if node.val not in dic:
+            dic[node.val] = 1
+        dic[node.val] += 1
+        if node.right:
+            stack.append(node.right)
+        if node.left:
+            stack.append(node.left)
+    res = []
+    max_ele = max(dic.values())
+    for key, val in dic.items():
+        if val == max_ele:
+            res.append(key)
+    return res
+
+
 if __name__ == '__main__':
     x = construct_tree_node([1,null,2,null,null,2])
+    findMode(x)
+    x = construct_tree_node([1,null,2])
     findMode(x)
     # maxNumberOfBalloons("nlaebolko")
     # distanceBetweenBusStops([0,11,6,1,4,3], 0, 5)

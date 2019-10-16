@@ -390,8 +390,28 @@ def findUnsortedSubarray(nums):
     return q - p + 1
 
 
+def maximumProduct(nums):
+    """
+    628. 三个数的最大乘积
+    给定一个整型数组，在数组中找出由三个数组成的最大乘积，并输出这个乘积。
+    示例 1:
+    输入: [1,2,3]
+    输出: 6
+    示例 2:
+    输入: [1,2,3,4]
+    输出: 24
+    注意:
+    给定的整型数组长度范围是[3,104]，数组中所有的元素范围是[-1000, 1000]。
+    输入的数组中任意三个数的乘积不会超出32位有符号整数的范围。
+    :param nums: List[int]
+    :return: int
+    """
+    nums.sort()
+    return max(nums[-1] * nums[-2] * nums[-3], nums[0] * nums[1] * nums[-1])
+
 if __name__ == '__main__':
-    isMonotonic([6,5,4,4])
+    maximumProduct([1,2,3,4])
+    # isMonotonic([6,5,4,4])
     # x = [26,2,16,16,5,5,26,2,5,20,20,5,2,20,2,2,20,2,16,20,16,17,16,2,16,20,26,16]
     # uniqueOccurrences(x)
     # a = [-2,-1,8,9,6]

@@ -50,7 +50,6 @@ def q2():
     AABA
     3 2 3 3
     """
-
     line1 = sys.stdin.readline().strip()
     m, n = list(map(int, line1.split()))
     chess = []

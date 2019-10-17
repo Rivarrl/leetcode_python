@@ -372,10 +372,137 @@ def findPaths(m, n, N, i, j):
     return res
 
 
+def triangleNumber(nums):
+    """
+    611. 有效三角形的个数
+    给定一个包含非负整数的数组，你的任务是统计其中可以组成三角形三条边的三元组个数。
+    示例 1:
+    输入: [2,2,3,4]
+    输出: 3
+    解释:
+    有效的组合是:
+    2,3,4 (使用第一个 2)
+    2,3,4 (使用第二个 2)
+    2,2,3
+    注意:
+    数组长度不超过1000。
+    数组里整数的范围为 [0, 1000]。
+    :param nums: List[int]
+    :return: int
+    """
+    nums.sort()
+    res = 0
+    for k in range(2, len(nums)):
+        i, j = 0, k-1
+        while i < j:
+            if nums[i] + nums[j] > nums[k]:
+                res += j - i
+                j -= 1
+            else:
+                i += 1
+    return res
+
+
+def validSquare(p1, p2, p3, p4):
+    """
+    593. 有效的正方形
+    给定二维空间中四点的坐标，返回四点是否可以构造一个正方形。
+    一个点的坐标（x，y）由一个有两个整数的整数数组表示。
+    示例:
+    输入: p1 = [0,0], p2 = [1,1], p3 = [1,0], p4 = [0,1]
+    输出: True
+    注意:
+    所有输入整数都在 [-10000，10000] 范围内。
+    一个有效的正方形有四个等长的正长和四个等角（90度角）。
+    输入点没有顺序。
+    :param p1: List[int]
+    :param p2: List[int]
+    :param p3: List[int]
+    :param p4: List[int]
+    :return: bool
+    """
+    arr = [tuple(p1), tuple(p2), tuple(p3), tuple(p4)]
+    if len(set(arr)) != 4: return False
+    dis = lambda p1, p2: (p1[0]-p2[0]) ** 2 + (p1[1] - p2[1]) ** 2
+    s = set()
+    for i in range(1, 4):
+        for j in range(i):
+            d = dis(arr[i], arr[j])
+            if not d in s:
+                s.add(d)
+    return len(s) == 2
+
+
+def minDistance(word1, word2):
+    """
+    583. 两个字符串的删除操作
+    给定两个单词 word1 和 word2，找到使得 word1 和 word2 相同所需的最小步数，
+    每步可以删除任意一个字符串中的一个字符。
+    示例 1:
+    输入: "sea", "eat"
+    输出: 2
+    解释: 第一步将"sea"变为"ea"，第二步将"eat"变为"ea"
+    说明:
+    给定单词的长度不超过500。
+    给定单词中的字符只含有小写字母。
+    :param word1: str
+    :param word2: str
+    :return: int
+    """
+    """
+    # 方法一
+    # 当作 72 编辑距离 题做
+    n1, n2 = len(word1), len(word2)
+    dp = [[0] * (n2+1) for _ in range(n1+1)]
+    for i in range(n1+1):
+        dp[i][0] = i
+    for j in range(n2+1):
+        dp[0][j] = j
+    for i in range(1, n1+1):
+        for j in range(1, n2+1):
+            if word1[i-1] == word2[j-1]:
+                dp[i][j] = dp[i-1][j-1]
+            else:
+                dp[i][j] = min(dp[i-1][j], dp[i][j-1]) + 1
+    return dp[n1][n2]
+    """
+    """
+    # 方法二
+    # 当作最长公共子串 lcs 做 (超时)
+    def lcs(k1, k2):
+        # 返回word1(0-k1) 和 word2(0-k2)的lcs长度
+        if k1 == 0 or k2 == 0:
+            return 0
+        if memo[k1][k2] > 0:
+            return memo[k1][k2]
+        if word1[k1-1] == word2[k2-1]:
+            memo[k1][k2] = 1 + lcs(k1-1, k2-1)
+        else:
+            memo[k1][k2] = max(lcs(k1-1, k2), lcs(k1, k2-1))
+        return memo[k1][k2]
+
+    n1, n2 = len(word1), len(word2)
+    memo = [[0] * (n2+1) for _ in range(n1+1)]
+    return n1 + n2 - 2 * lcs(n1, n2)
+    """
+    # 方法二，用自底向上的动态规划做
+    n1, n2 = len(word1), len(word2)
+    dp = [[0] * (n2+1) for _ in range(n1+1)]
+    for i in range(1, n1+1):
+        for j in range(1, n2+1):
+            if word1[i-1] == word2[j-1]:
+                dp[i][j] = dp[i-1][j-1] + 1
+            else:
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+    return n1 + n2 - 2 * dp[n1][n2]
+
 
 if __name__ == '__main__':
-    a = findPaths(1,3,3,0,1)
+    a = minDistance("sea", "eat")
     print(a)
+    # triangleNumber([2,2,3,4])
+    # a = findPaths(1,3,3,0,1)
+    # print(a)
     # countNumbersWithUniqueDigits(10)
     # shoppingOffers([2,3,4], [[1,1,0,4],[2,2,1,9]], [1,2,1])
     # arr = [10,2]

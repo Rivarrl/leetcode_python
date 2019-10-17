@@ -7,6 +7,8 @@
 import sys
 import heapq
 
+# 美团点评算法岗2
+
 # def q2(n, arr1, arr2):
 #     total = sum(arr1)
 #     pq = []

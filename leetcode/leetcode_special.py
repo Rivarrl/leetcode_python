@@ -119,26 +119,37 @@ class MyQueue:
         """
         Initialize your data structure here.
         """
+        self.stk1 = []
+        self.stk2 = []
 
     def push(self, x: int) -> None:
         """
         Push element x to the back of queue.
         """
+        self.stk1.append(x)
 
     def pop(self) -> int:
         """
         Removes the element from in front of queue and returns that element.
         """
+        if self.stk2:
+            return self.stk2.pop()
+        while self.stk1:
+            self.stk2.append(self.stk1.pop())
+        res = self.stk2.pop()
+        return res
 
     def peek(self) -> int:
         """
         Get the front element.
         """
+        return self.stk1[0] if self.stk1 else self.stk2[-1]
 
     def empty(self) -> bool:
         """
         Returns whether the queue is empty.
         """
+        return self.stk1 == [] and self.stk2 == []
 
 
 
@@ -149,27 +160,47 @@ class MyStack:
         """
         Initialize your data structure here.
         """
+        self.q1 = []
+        self.q2 = []
 
     def push(self, x: int) -> None:
         """
         Push element x onto stack.
         """
+        self.q1.append(x)
 
     def pop(self) -> int:
         """
         Removes the element on top of the stack and returns that element.
         """
+        if self.q1:
+            while self.q1:
+                a = self.q1.pop(0)
+                if self.q1:
+                    self.q2.append(a)
+                else:
+                    return a
+        else:
+            while self.q2:
+                a = self.q2.pop(0)
+                if self.q2:
+                    self.q1.append(a)
+                else:
+                    return a
 
     def top(self) -> int:
         """
         Get the top element.
         """
+        if self.q1:
+            return self.q1[-1]
+        return self.q2[-1]
 
     def empty(self) -> bool:
         """
         Returns whether the stack is empty.
         """
-
+        return self.q1 == [] and self.q2 == []
 
 
 # 297. 二叉树的序列化与反序列化

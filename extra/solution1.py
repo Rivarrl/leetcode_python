@@ -586,8 +586,25 @@ def lx_alg1():
             break
 
 
+def yt_2_ensemble(arr):
+    # arr: label A0 A1 B0 B1
+    res = 0.0
+    for e in arr:
+        label, A0, A1, B0, B1 = e
+        a, b = B1 - B0, A0 - A1 + B1 - B0
+        if b == 0: continue
+        n = min(1, max(a/b, 0))
+        if (label == 0) ^ (b < 0):
+            res += 1 - n
+        else:
+            res += n
+    print(res)
+    return res
+
+
 if __name__ == '__main__':
-    lx_alg1()
+    yt_2_ensemble([[0, 750, 250, 250, 750], [1, 500, 500, 500, 500], [0, 450, 550, 800, 200], [1, 340, 660, 410, 590]])
+    # lx_alg1()
     # res = sc_dev1("a((ur)oi)b")
     # print(res)
     # sf_dev2(3, 3, 2, [[1,2], [2,3]])

@@ -4,6 +4,7 @@
 # @Time    : 2019/10/3 22:54
 # @Author  : Rivarrl
 # ======================================
+from algorithm_utils import *
 
 def findPeakElement(nums):
     """
@@ -497,9 +498,122 @@ def minDistance(word1, word2):
     return n1 + n2 - 2 * dp[n1][n2]
 
 
+def removeDuplicates(nums):
+    """
+    80. 删除排序数组中的重复项 II
+    给定一个排序数组，你需要在原地删除重复出现的元素，使得每个元素最多出现两次，返回移除后数组的新长度。
+    不要使用额外的数组空间，你必须在原地修改输入数组并在使用 O(1) 额外空间的条件下完成。
+    示例 1:
+    给定 nums = [1,1,1,2,2,3],
+    函数应返回新长度 length = 5, 并且原数组的前五个元素被修改为 1, 1, 2, 2, 3 。
+    你不需要考虑数组中超出新长度后面的元素。
+    示例 2:
+    给定 nums = [0,0,1,1,1,1,2,3,3],
+    函数应返回新长度 length = 7, 并且原数组的前五个元素被修改为 0, 0, 1, 1, 2, 3, 3 。
+    你不需要考虑数组中超出新长度后面的元素。
+    :param nums: List[int]
+    :return: int
+    """
+    """
+    # pop 50%
+    c = 0
+    for i in range(len(nums)-2, -1, -1):
+        if nums[i] == nums[i+1]:
+            c += 1
+        else:
+            c = 0
+        if c >= 2:
+            nums.pop(i)
+    print(nums)
+    return len(nums)
+    """
+    # swap 90%
+    i = 0
+    for e in nums:
+        if i < 2 or e != nums[i-2]:
+            nums[i] = e
+            i += 1
+    return i
+
+
+def deleteDuplicates(head):
+    """
+    82. 删除排序链表中的重复元素 II
+    给定一个排序链表，删除所有含有重复数字的节点，只保留原始链表中 没有重复出现 的数字。
+    示例 1:
+    输入: 1->2->3->3->4->4->5
+    输出: 1->2->5
+    示例 2:
+    输入: 1->1->1->2->3
+    输出: 2->3
+    :param head: ListNode
+    :return: ListNode
+    """
+    p, q = head, ListNode(0.0)
+    res = q
+    while p:
+        if p.next == None:
+            q.next = p
+            q = q.next
+            break
+        if p.val == p.next.val:
+            while p.next and p.val == p.next.val:
+                p = p.next
+        else:
+            q.next = p
+            q = q.next
+        p = p.next
+    q.next = None
+    return res.next
+
+
+def search(nums, target):
+    """
+    81. 搜索旋转排序数组 II
+    假设按照升序排序的数组在预先未知的某个点上进行了旋转。
+    ( 例如，数组 [0,0,1,2,2,5,6] 可能变为 [2,5,6,0,0,1,2] )。
+    编写一个函数来判断给定的目标值是否存在于数组中。若存在返回 true，否则返回 false。
+    示例 1:
+    输入: nums = [2,5,6,0,0,1,2], target = 0
+    输出: true
+    示例 2:
+    输入: nums = [2,5,6,0,0,1,2], target = 3
+    输出: false
+    进阶:
+    这是 搜索旋转排序数组 的延伸题目，本题中的 nums  可能包含重复元素。
+    这会影响到程序的时间复杂度吗？会有怎样的影响，为什么？
+    :param nums: List[int]
+    :param target: int
+    :return: bool
+    """
+    i, j = 0, len(nums) - 1
+    while i <= j:
+        m = i + (j - i) // 2
+        if nums[m] == target: return True
+        if nums[m] == nums[i] == nums[j]:
+            i += 1
+            j -= 1
+        elif nums[i] <= nums[m]:
+            if nums[i] <= target < nums[m]:
+                j = m - 1
+            else:
+                i = m + 1
+        else:
+            if nums[m] < target <= nums[j]:
+                i = m + 1
+            else:
+                j = m - 1
+    return False
+
+
 if __name__ == '__main__':
-    a = minDistance("sea", "eat")
-    print(a)
+    b = search([1,3,1,1,1], 3)
+    print(b)
+    # x = construct_list_node([1,1,2,3,3,4,5,5])
+    # deleteDuplicates(x)
+    # removeDuplicates([0,0,1,1,1,1,2,3,3,3])
+    # a = minDistance("sea", "eat")
+    # print(a)
     # triangleNumber([2,2,3,4])
     # a = findPaths(1,3,3,0,1)
     # print(a)

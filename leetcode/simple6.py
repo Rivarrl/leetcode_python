@@ -4,7 +4,10 @@
 # @Time    : 2019/10/8 10:05
 # @Author  : Rivarrl
 # ======================================
+from typing import List
+
 from algorithm_utils import *
+
 
 def numPrimeArrangements(n):
     """
@@ -24,15 +27,17 @@ def numPrimeArrangements(n):
     :param n: int
     :return: int
     """
+
     def f(x):
         ans = 1
-        for i in range(1, x+1):
+        for i in range(1, x + 1):
             ans = (ans * i) % mod
         return ans
-    prime = {2,3,5,7,11,13,17,19,23,29,31,37,41,43,47,53,59,61,67,71,73,79,83,89,97}
-    mod = 10**9 + 7
+
+    prime = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97}
+    mod = 10 ** 9 + 7
     p = 0
-    for i in range(1, n+1):
+    for i in range(1, n + 1):
         if i in prime:
             p += 1
     return (f(n - p) * f(p)) % mod
@@ -97,11 +102,11 @@ def robotSim(commands, obstacles):
                         if d[1] == 1:
                             # 上
                             if e > n[1]:
-                                dst = min(e-1, dst)
+                                dst = min(e - 1, dst)
                         else:
                             # 下
                             if e < n[1]:
-                                dst = max(e+1, dst)
+                                dst = max(e + 1, dst)
                 n[1] = dst
             else:
                 # 左右
@@ -111,11 +116,11 @@ def robotSim(commands, obstacles):
                         if d[0] == 1:
                             # 右
                             if e > n[0]:
-                                dst = min(e-1, dst)
+                                dst = min(e - 1, dst)
                         else:
                             # 左
                             if e < n[0]:
-                                dst = max(e+1, dst)
+                                dst = max(e + 1, dst)
                 n[0] = dst
             ans = max(n[0] ** 2 + n[1] ** 2, ans)
     return ans
@@ -182,7 +187,7 @@ def powerfulIntegers(x, y, bound):
     while y ** i <= bound:
         j = 0
         while x ** j + y ** i <= bound:
-            res.append(x**j + y**i)
+            res.append(x ** j + y ** i)
             if x == 1:
                 break
             j += 1
@@ -230,8 +235,10 @@ def hasGroupsSizeX(deck):
     d = defaultdict(int)
     for c in deck:
         d[c] += 1
+
     def gcd(x, y):
-        return y if x == 0 else gcd(y%x, x)
+        return y if x == 0 else gcd(y % x, x)
+
     s = -1
     for i, v in enumerate(d.values()):
         if s == -1:
@@ -270,9 +277,9 @@ def isMonotonic(A):
     """
     d, i = False, False
     for j in range(1, len(A)):
-        if A[j] < A[j-1]:
+        if A[j] < A[j - 1]:
             d = True
-        elif A[j] > A[j-1]:
+        elif A[j] > A[j - 1]:
             i = True
     return not (d and i)
 
@@ -292,7 +299,7 @@ def findErrorNums(nums):
     :return: List[int]
     """
     n = len(nums)
-    arr = [0] * (n+1)
+    arr = [0] * (n + 1)
     arr[0] = -1
     res = []
     for i in nums:
@@ -384,7 +391,7 @@ def findUnsortedSubarray(nums):
             p = min(stk1.pop(), p)
         stk1.append(i)
     if len(stk1) == len(nums): return 0
-    for i in range(len(nums)-1, -1, -1):
+    for i in range(len(nums) - 1, -1, -1):
         while stk2 and nums[i] > nums[stk2[-1]]:
             q = max(stk2.pop(), q)
         stk2.append(i)
@@ -481,8 +488,33 @@ def missingNumber(arr):
             return arr[i] + last
 
 
+def checkStraightLine(coordinates: List[List[int]]) -> bool:
+    """
+    5230. 缀点成线
+    在一个 XY 坐标系中有一些点，我们用数组 coordinates 来分别记录它们的坐标，其中 coordinates[i] = [x, y] 表示横坐标为 x、纵坐标为 y 的点。
+    请你来判断，这些点是否在该坐标系中属于同一条直线上，是则返回 true 否则返回false
+    提示：
+    2 <= coordinates.length <= 1000
+    coordinates[i].length == 2
+    -10^4 <= coordinates[i][0], coordinates[i][1] <= 10^4
+    coordinates 中不含重复的点
+    """
+    n = len(coordinates)
+    if n <= 2: return True
+    coordinates.sort()
+    x1, y1 = coordinates[0]
+    x2, y2 = coordinates[1]
+    k = (y2 - y1) / (x2 - x1) if x2 != x1 else float('inf')
+    for i in range(2, n):
+        x1, y1, x2, y2 = x2, y2, coordinates[i][0], coordinates[i][1]
+        k1 = (y2 - y1) / (x2 - x1) if x2 != x1 else float('inf')
+        if k != k1: return False
+    return True
+
+
 if __name__ == '__main__':
-    maximumProduct([1,2,3,4])
+    checkStraightLine([[-1, 1], [-6, -4], [-6, 2], [2, 0], [-1, -2], [0, -4]])
+    # maximumProduct([1,2,3,4])
     # isMonotonic([6,5,4,4])
     # x = [26,2,16,16,5,5,26,2,5,20,20,5,2,20,2,2,20,2,16,20,16,17,16,2,16,20,26,16]
     # uniqueOccurrences(x)

@@ -4,6 +4,8 @@
 # @Time    : 2019/10/3 22:54
 # @Author  : Rivarrl
 # ======================================
+from typing import List
+
 from algorithm_utils import *
 
 def findPeakElement(nums):
@@ -606,9 +608,90 @@ def search(nums, target):
     return False
 
 
+def minAvailableDuration(slots1: List[List[int]], slots2: List[List[int]], duration: int) -> List[int]:
+    """
+    5089. 安排会议日程
+    你是一名行政助理，手里有两位客户的空闲时间表：slots1 和 slots2，以及会议的预计持续时间 duration，请你为他们安排合适的会议时间。
+    「会议时间」是两位客户都有空参加，并且持续时间能够满足预计时间 duration 的 最早的时间间隔。
+    如果没有满足要求的会议时间，就请返回一个 空数组。
+    「空闲时间」的格式是 [start, end]，由开始时间 start 和结束时间 end 组成，表示从 start 开始，到 end 结束。 
+    题目保证数据有效：同一个人的空闲时间不会出现交叠的情况，
+    也就是说，对于同一个人的两个空闲时间 [start1, end1] 和 [start2, end2]，要么 start1 > end2，要么 start2 > end1。
+    示例 1：
+    输入：slots1 = [[10,50],[60,120],[140,210]], slots2 = [[0,15],[60,70]], duration = 8
+    输出：[60,68]
+    示例 2：
+    输入：slots1 = [[10,50],[60,120],[140,210]], slots2 = [[0,15],[60,70]], duration = 12
+    输出：[]
+    提示：
+    1 <= slots1.length, slots2.length <= 10^4
+    slots1[i].length, slots2[i].length == 2
+    slots1[i][0] < slots1[i][1]
+    slots2[i][0] < slots2[i][1]
+    0 <= slots1[i][j], slots2[i][j] <= 10^9
+    1 <= duration <= 10^6 
+    """
+    def crossrange(e1, e2, duration):
+        m1, m2 = max(e1[0], e2[0]), min(e1[1], e2[1])
+        if m2 - m1 >= duration:
+            return [m1, m1+duration]
+    import heapq
+    q1, q2 = [], []
+    for s1 in slots1:
+        heapq.heappush(q1, tuple(s1))
+    for s2 in slots2:
+        heapq.heappush(q2, tuple(s2))
+    e1, e2 = None, None
+    while (q1 or e1) and (q2 or e2):
+        if e1 == None: e1 = heapq.heappop(q1)
+        if e2 == None: e2 = heapq.heappop(q2)
+        print(e1, e2)
+        c = crossrange(e1, e2, duration)
+        if c != None: return c
+        if e1[1] == e2[1]: e1, e2 = None, None
+        elif e1[1] < e2[1]: e1 = None
+        else: e2 = None
+    return []
+
+
+def probabilityOfHeads(prob: List[float], target: int) -> float:
+    """
+    5090. 抛掷硬币
+    有一些不规则的硬币。在这些硬币中，prob[i] 表示第 i 枚硬币正面朝上的概率。
+    请对每一枚硬币抛掷 一次，然后返回正面朝上的硬币数等于 target 的概率。
+    示例 1：
+    输入：prob = [0.4], target = 1
+    输出：0.40000
+    示例 2：
+    输入：prob = [0.5,0.5,0.5,0.5,0.5], target = 0
+    输出：0.03125
+    提示：
+    1 <= prob.length <= 1000
+    0 <= prob[i] <= 1
+    0 <= target <= prob.length
+    如果答案与标准答案的误差在 10^-5 内，则被视为正确答案。
+    """
+    n = len(prob)
+    dp = [[0] * (n+1) for _ in range(n+1)]
+    dp[0][0] = dp[0][1] = 1.0
+    for i in range(1, n+1):
+        k = min(target, i)
+        for j in range(k+1):
+            if j > 0:
+                dp[i][j] += dp[i-1][j-1] * prob[i-1]
+            if j < i:
+                dp[i][j] += dp[i-1][j] * (1-prob[i-1])
+    print(dp)
+    return dp[n][target]
+
+
 if __name__ == '__main__':
-    b = search([1,3,1,1,1], 3)
-    print(b)
+    res = probabilityOfHeads([0.5], 0)
+    print(res)
+    # res = minAvailableDuration([[10,50],[60,120],[140,210]], [[0,15],[60,70]], 8)
+    # print(res)
+    # b = search([1,3,1,1,1], 3)
+    # print(b)
     # x = construct_list_node([1,1,2,3,3,4,5,5])
     # deleteDuplicates(x)
     # removeDuplicates([0,0,1,1,1,1,2,3,3,3])

@@ -685,9 +685,104 @@ def probabilityOfHeads(prob: List[float], target: int) -> float:
     return dp[n][target]
 
 
+def removeSubfolders(folder: List[str]) -> List[str]:
+    """
+    5231. 删除子文件夹
+    你是一位系统管理员，手里有一份文件夹列表 folder，你的任务是要删除该列表中的所有 子文件夹，并以 任意顺序 返回剩下的文件夹。
+    我们这样定义「子文件夹」：
+    如果文件夹 folder[i] 位于另一个文件夹 folder[j] 下，那么 folder[i] 就是 folder[j] 的子文件夹。
+    文件夹的「路径」是由一个或多个按以下格式串联形成的字符串：
+    / 后跟一个或者多个小写英文字母。
+    例如，/leetcode 和 /leetcode/problems 都是有效的路径，而空字符串和 / 不是。
+    示例 1：
+    输入：folder = ["/a","/a/b","/c/d","/c/d/e","/c/f"]
+    输出：["/a","/c/d","/c/f"]
+    解释："/a/b/" 是 "/a" 的子文件夹，而 "/c/d/e" 是 "/c/d" 的子文件夹。
+    示例 2：
+    输入：folder = ["/a","/a/b/c","/a/b/d"]
+    输出：["/a"]
+    解释：文件夹 "/a/b/c" 和 "/a/b/d/" 都会被删除，因为它们都是 "/a" 的子文件夹。
+    示例 3：
+    输入：folder = ["/a/b/c","/a/b/d","/a/b/ca"]
+    输出：["/a/b/c","/a/b/ca","/a/b/d"]
+    提示：
+    1 <= folder.length <= 4 * 10^4
+    2 <= folder[i].length <= 100
+    folder[i] 只包含小写字母和 /
+    folder[i] 总是以字符 / 起始
+    每个文件夹名都是唯一的
+    """
+    folder.sort(key=lambda x:len(x))
+    parent = []
+    for f in folder:
+        isc = False
+        for p in parent:
+            idx = f.find(p)
+            if idx >= 0 and f[idx+len(p)] == '/':
+                isc = True
+                break
+        if not isc: parent.append(f)
+    print(parent)
+    return parent
+
+
+def balancedString(s: str) -> int:
+    """
+    5232. 替换子串得到平衡字符串
+    有一个只含有 'Q', 'W', 'E', 'R' 四种字符，且长度为 n 的字符串。
+    假如在该字符串中，这四个字符都恰好出现 n/4 次，那么它就是一个「平衡字符串」。
+    给你一个这样的字符串 s，请通过「替换子串」的方式，使原字符串 s 变成一个「平衡字符串」。
+    你可以用和「待替换子串」长度相同的 任何 其他字符串来完成替换。
+    请返回待替换子串的最小可能长度。
+    如果原字符串自身就是一个平衡字符串，则返回 0。
+    示例 1：
+    输入：s = "QWER"
+    输出：0
+    解释：s 已经是平衡的了。
+    示例 2：
+    输入：s = "QQWE"
+    输出：1
+    解释：我们需要把一个 'Q' 替换成 'R'，这样得到的 "RQWE" (或 "QRWE") 是平衡的。
+    示例 3：
+    输入：s = "QQQW"
+    输出：2
+    解释：我们可以把前面的 "QQ" 替换成 "ER"。
+    示例 4：
+    输入：s = "QQQQ"
+    输出：3
+    解释：我们可以替换后 3 个 'Q'，使 s = "QWER"。
+    提示：
+    1 <= s.length <= 10^5
+    s.length 是 4 的倍数
+    s 中只含有 'Q', 'W', 'E', 'R' 四种字符
+    """
+    def ok(l, r):
+        for i in range(4):
+            if A[-1][i] + A[l][i] - A[r][i] > avg:
+                return False
+        return True
+    ctr = [0] * 4
+    A = [tuple(ctr)]
+    for c in s:
+        ctr['QWER'.index(c)] += 1
+        A.append(tuple(ctr))
+    n = len(s)
+    avg = n // 4
+    if max(ctr) == avg: return 0
+    l, r = 0, n - 1
+    while r <= n:
+        if ok(l, r):
+            r -= 1
+        else:
+            l += 1
+            r += 1
+    return r - l + 1
+
+
 if __name__ == '__main__':
-    res = probabilityOfHeads([0.5], 0)
-    print(res)
+    removeSubfolders(["/a/b/c","/a/b/d","/a/b/ca","/a/b/d/c"])
+    # res = probabilityOfHeads([0.5], 0)
+    # print(res)
     # res = minAvailableDuration([[10,50],[60,120],[140,210]], [[0,15],[60,70]], 8)
     # print(res)
     # b = search([1,3,1,1,1], 3)

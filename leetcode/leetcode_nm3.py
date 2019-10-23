@@ -927,9 +927,95 @@ def removeNearDuplicates(s: str, k: int) -> str:
     return ''.join(e[0]*e[1] for e in stk)
 
 
+def queensAttacktheKing(queens: List[List[int]], king: List[int]) -> List[List[int]]:
+    """
+    1222. 可以攻击国王的皇后
+    在一个 8x8 的棋盘上，放置着若干「黑皇后」和一个「白国王」。
+    「黑皇后」在棋盘上的位置分布用整数坐标数组 queens 表示，「白国王」的坐标用数组 king 表示。
+    「黑皇后」的行棋规定是：横、直、斜都可以走，步数不受限制，但是，不能越子行棋。
+    请你返回可以直接攻击到「白国王」的所有「黑皇后」的坐标（任意顺序）。
+    示例 1：
+    输入：queens = [[0,1],[1,0],[4,0],[0,4],[3,3],[2,4]], king = [0,0]
+    输出：[[0,1],[1,0],[3,3]]
+    解释：
+    [0,1] 的皇后可以攻击到国王，因为他们在同一行上。
+    [1,0] 的皇后可以攻击到国王，因为他们在同一列上。
+    [3,3] 的皇后可以攻击到国王，因为他们在同一条对角线上。
+    [0,4] 的皇后无法攻击到国王，因为她被位于 [0,1] 的皇后挡住了。
+    [4,0] 的皇后无法攻击到国王，因为她被位于 [1,0] 的皇后挡住了。
+    [2,4] 的皇后无法攻击到国王，因为她和国王不在同一行/列/对角线上。
+    示例 2：
+    输入：queens = [[0,0],[1,1],[2,2],[3,4],[3,5],[4,4],[4,5]], king = [3,3]
+    输出：[[2,2],[3,4],[4,4]]
+    示例 3：
+    输入：queens = [[5,6],[7,7],[2,1],[0,7],[1,6],[5,1],[3,7],[0,3],[4,0],[1,2],[6,3],[5,0],[0,4],[2,2],[1,1],[6,4],[5,4],[0,0],[2,6],[4,5],[5,2],[1,4],[7,5],[2,3],[0,5],[4,2],[1,0],[2,7],[0,1],[4,6],[6,1],[0,6],[4,3],[1,7]], king = [3,4]
+    输出：[[2,3],[1,4],[1,6],[3,7],[4,3],[5,4],[4,5]]
+    提示：
+    1 <= queens.length <= 63
+    queens[0].length == 2
+    0 <= queens[i][j] < 8
+    king.length == 2
+    0 <= king[0], king[1] < 8
+    一个棋盘格上最多只能放置一枚棋子。
+    """
+    direction = ((1,0), (0,1), (1,1), (1,-1), (-1,-1), (-1,1), (-1,0), (0,-1))
+    q = set(tuple(x) for x in queens)
+    res = []
+    for dx, dy in direction:
+        x, y = king
+        while 0 <= x < 8 and 0 <= y < 8:
+            x, y = x + dx, y + dy
+            if (x, y) in q:
+                res.append([x, y])
+                break
+    return res
+
+
+def equalSubstring(s: str, t: str, maxCost: int) -> int:
+    """
+    1208. 尽可能使字符串相等
+    给你两个长度相同的字符串，s 和 t。
+    将 s 中的第 i 个字符变到 t 中的第 i 个字符需要 |s[i] - t[i]| 的开销（开销可能为 0），也就是两个字符的 ASCII 码值的差的绝对值。
+    用于变更字符串的最大预算是 maxCost。在转化字符串时，总开销应当小于等于该预算，这也意味着字符串的转化可能是不完全的。
+    如果你可以将 s 的子字符串转化为它在 t 中对应的子字符串，则返回可以转化的最大长度。
+    如果 s 中没有子字符串可以转化成 t 中对应的子字符串，则返回 0。
+    示例 1：
+    输入：s = "abcd", t = "bcdf", cost = 3
+    输出：3
+    解释：s 中的 "abc" 可以变为 "bcd"。开销为 3，所以最大长度为 3。
+    示例 2：
+    输入：s = "abcd", t = "cdef", cost = 3
+    输出：1
+    解释：s 中的任一字符要想变成 t 中对应的字符，其开销都是 2。因此，最大长度为 1。
+    示例 3：
+    输入：s = "abcd", t = "acde", cost = 0
+    输出：1
+    解释：你无法作出任何改动，所以最大长度为 1。
+    提示：
+    1 <= s.length, t.length <= 10^5
+    0 <= maxCost <= 10^6
+    s 和 t 都只含小写英文字母。
+    """
+    n = len(s)
+    p = [0] * n
+    for i, (x, y) in enumerate(zip(s, t)):
+        p[i] = abs(ord(x) - ord(y))
+    i, j, c, q, r = 0, 0, 0, 0, 0
+    for i in range(n):
+        while j < n and c+p[j] <= maxCost:
+            c += p[j]
+            j += 1
+        r = max(r, j - i)
+        c -= p[i]
+    print(maxCost)
+    print(r)
+    return r
+
+
 if __name__ == '__main__':
-    res = removeNearDuplicates("yfttttfbbbbnnnnffbgffffgbbbbgssssgthyyyy", 4)
-    print(res)
+    equalSubstring("abcd", "cdef", 1)
+    # res = removeNearDuplicates("yfttttfbbbbnnnnffbgffffgbbbbgssssgthyyyy", 4)
+    # print(res)
     # getMaximumGold([[1,0,7,0,0,0],[2,0,6,0,1,0],[3,5,6,7,4,2],[4,3,1,0,2,0],[3,0,5,0,20,0]])
     # longestSubsequence([4,12,10,0,-2,7,-8,9,-9,-12,-12,8,8], 0)
     # removeSubfolders(["/a/b/c","/a/b/d","/a/b/ca","/a/b/d/c"])

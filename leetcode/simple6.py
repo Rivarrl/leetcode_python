@@ -572,6 +572,45 @@ def minCostToMoveChips(chips: List[int]) -> int:
     return min(r)
 
 
+def minimumAbsDifference(arr: List[int]) -> List[List[int]]:
+    """
+    1200. 最小绝对差
+    给你个整数数组 arr，其中每个元素都 不相同。
+    请你找到所有具有最小绝对差的元素对，并且按升序的顺序返回。
+    示例 1：
+    输入：arr = [4,2,1,3]
+    输出：[[1,2],[2,3],[3,4]]
+    示例 2：
+    输入：arr = [1,3,6,10,15]
+    输出：[[1,3]]
+    示例 3：
+    输入：arr = [3,8,-10,23,19,-4,-14,27]
+    输出：[[-14,-10],[19,23],[23,27]]
+    提示：
+    2 <= arr.length <= 10^5
+    -10^6 <= arr[i] <= 10^6
+    """
+    """
+    arr.sort()
+    res = []
+    m = float('inf')
+    for i in range(1, len(arr)):
+        m = min(m, arr[i] - arr[i-1])
+    for i in range(1, len(arr)):
+        if arr[i] - arr[i-1] == m:
+            res.append([arr[i-1], arr[i]])
+    return res
+    """
+    # 不sort的方法, 复杂度随最小间距变化
+    s = set(arr)
+    res = []
+    d = 0
+    while not res:
+        d += 1
+        res = [e for e in s if e + d in s]
+    return [[e, e+d] for e in sorted(res)]
+
+
 if __name__ == '__main__':
     minCostToMoveChips([2,3,3,3,3])
     # checkStraightLine([[-1, 1], [-6, -4], [-6, 2], [2, 0], [-1, -2], [0, -4]])

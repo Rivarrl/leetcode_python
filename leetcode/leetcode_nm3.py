@@ -808,8 +808,130 @@ def longestSubsequence(arr: List[int], difference: int) -> int:
     return max(d.values())
 
 
+def getMaximumGold(grid: List[List[int]]) -> int:
+    """
+    1219. 黄金矿工
+    你要开发一座金矿，地质勘测学家已经探明了这座金矿中的资源分布，并用大小为 m * n 的网格 grid 进行了标注。每个单元格中的整数就表示这一单元格中的黄金数量；如果该单元格是空的，那么就是 0。
+    为了使收益最大化，矿工需要按以下规则来开采黄金：
+    每当矿工进入一个单元，就会收集该单元格中的所有黄金。
+    矿工每次可以从当前位置向上下左右四个方向走。
+    每个单元格只能被开采（进入）一次。
+    不得开采（进入）黄金数目为 0 的单元格。
+    矿工可以从网格中 任意一个 有黄金的单元格出发或者是停止。
+    示例 1：
+    输入：grid = [[0,6,0],[5,8,7],[0,9,0]]
+    输出：24
+    解释：
+    [[0,6,0],
+     [5,8,7],
+     [0,9,0]]
+    一种收集最多黄金的路线是：9 -> 8 -> 7。
+    示例 2：
+    输入：grid = [[1,0,7],[2,0,6],[3,4,5],[0,3,0],[9,0,20]]
+    输出：28
+    解释：
+    [[1,0,7],
+     [2,0,6],
+     [3,4,5],
+     [0,3,0],
+     [9,0,20]]
+    一种收集最多黄金的路线是：1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7。
+    提示：
+    1 <= grid.length, grid[i].length <= 15
+    0 <= grid[i][j] <= 100
+    最多 25 个单元格中有黄金。
+    """
+    def dfs(i, j):
+        if i < 0 or i == n or j < 0 or j == m or grid[i][j] == 0 or vis[i][j]:
+            return 0
+        vis[i][j] = True
+        res = grid[i][j]
+        ma = 0
+        for dx, dy in d:
+            x, y = i + dx, j + dy
+            ma = max(dfs(x, y), ma)
+        res += ma
+        vis[i][j] = False
+        return res
+
+    n = len(grid)
+    m = len(grid[0])
+    d = ((1, 0), (-1, 0), (0, 1), (0, -1))
+    res = 0
+    for i in range(n):
+        for j in range(m):
+            vis = [[False] * m for _ in range(n)]
+            res = max(dfs(i, j), res)
+    # print(res)
+    return res
+
+
+def removeNearDuplicates(s: str, k: int) -> str:
+    """
+    1209. 删除字符串中的所有相邻重复项 II
+    给你一个字符串 s，「k 倍重复项删除操作」将会从 s 中选择 k 个相邻且相等的字母，并删除它们，使被删去的字符串的左侧和右侧连在一起。
+    你需要对 s 重复进行无限次这样的删除操作，直到无法继续为止。
+    在执行完所有删除操作后，返回最终得到的字符串。
+    本题答案保证唯一。
+    示例 1：
+    输入：s = "abcd", k = 2
+    输出："abcd"
+    解释：没有要删除的内容。
+    示例 2：
+    输入：s = "deeedbbcccbdaa", k = 3
+    输出："aa"
+    解释：
+    先删除 "eee" 和 "ccc"，得到 "ddbbbdaa"
+    再删除 "bbb"，得到 "dddaa"
+    最后删除 "ddd"，得到 "aa"
+    示例 3：
+    输入：s = "pbbcggttciiippooaais", k = 2
+    输出："ps"
+    提示：
+    1 <= s.length <= 10^5
+    2 <= k <= 10^4
+    s 中只含有小写英文字母。
+    """
+    """
+    # 递归
+    def helper(s, k):
+        if not s: return s
+        last = s[0]
+        sign = False
+        ctr = 1
+        i, n = 1, len(s)
+        while i < n:
+            if last == s[i]:
+                ctr += 1
+            else:
+                last = s[i]
+                ctr = 1
+            i += 1
+            if ctr == k:
+                sign = True
+                s = s[:i - ctr] + s[i:]
+                i -= ctr
+                n -= ctr
+        return helper(s, k) if sign else s
+    return helper(s, k)
+    """
+    # 栈
+    stk = []
+    for c in s:
+        if not stk or stk[-1][0] != c:
+            stk.append([c, 1])
+        else:
+            stk[-1][1] += 1
+            if stk[-1][1] == k:
+                stk.pop()
+    return ''.join(e[0]*e[1] for e in stk)
+
+
 if __name__ == '__main__':
-    longestSubsequence([4,12,10,0,-2,7,-8,9,-9,-12,-12,8,8], 0)
+    res = removeNearDuplicates("yfttttfbbbbnnnnffbgffffgbbbbgssssgthyyyy", 4)
+    print(res)
+    # getMaximumGold([[1,0,7,0,0,0],[2,0,6,0,1,0],[3,5,6,7,4,2],[4,3,1,0,2,0],[3,0,5,0,20,0]])
+    # longestSubsequence([4,12,10,0,-2,7,-8,9,-9,-12,-12,8,8], 0)
     # removeSubfolders(["/a/b/c","/a/b/d","/a/b/ca","/a/b/d/c"])
     # res = probabilityOfHeads([0.5], 0)
     # print(res)

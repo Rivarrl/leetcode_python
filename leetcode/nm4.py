@@ -84,8 +84,128 @@ def dieSimulator(n: int, rollMax: List[int]) -> int:
     return res % mod
 
 
+def reorderList(head: ListNode) -> None:
+    """
+    143. 重排链表
+    给定一个单链表 L：L0->L1->...->Ln-1->Ln ，
+    将其重新排列后变为： L0->Ln->L1->Ln-1->L2->Ln-2->...
+    你不能只是单纯的改变节点内部的值，而是需要实际的进行节点交换。
+    示例 1:
+    给定链表 1->2->3->4, 重新排列为 1->4->2->3.
+    示例 2:
+    给定链表 1->2->3->4->5, 重新排列为 1->5->2->4->3.
+    """
+    if not head or not head.next: return
+    slow, fast = head, head.next
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    p, q = slow.next, None
+    while p:
+        tmp = p.next
+        p.next = q
+        q = p
+        p = tmp
+    p = head
+    slow.next = None
+    while q:
+        tmp = q.next
+        q.next = p.next
+        p.next = q
+        p = p.next.next
+        q = tmp
+
+
+def ladderLength(beginWord: str, endWord: str, wordList: List[str]) -> int:
+    """
+    127. 单词接龙
+    给定两个单词（beginWord 和 endWord）和一个字典，找到从 beginWord 到 endWord 的最短转换序列的长度。转换需遵循如下规则：
+    每次转换只能改变一个字母。
+    转换过程中的中间单词必须是字典中的单词。
+    说明:
+    如果不存在这样的转换序列，返回 0。
+    所有单词具有相同的长度。
+    所有单词只由小写字母组成。
+    字典中不存在重复的单词。
+    你可以假设 beginWord 和 endWord 是非空的，且二者不相同。
+    示例 1:
+    输入:
+    beginWord = "hit",
+    endWord = "cog",
+    wordList = ["hot","dot","dog","lot","log","cog"]
+    输出: 5
+    解释: 一个最短转换序列是 "hit" -> "hot" -> "dot" -> "dog" -> "cog",
+         返回它的长度 5。
+    示例 2:
+    输入:
+    beginWord = "hit"
+    endWord = "cog"
+    wordList = ["hot","dot","dog","lot","log"]
+    输出: 0
+    解释: endWord "cog" 不在字典中，所以无法进行转换。
+    """
+    """
+    # 一般的bfs，每次计算字符距离的话会超时，需要先把所有距离为1的单词汇总存到字典中
+    from collections import defaultdict
+    if endWord not in wordList or not endWord or not beginWord or not wordList:
+        return 0
+    d = defaultdict(list)
+    l = len(beginWord)
+    for w in wordList:
+        for i in range(l):
+            d[w[:i] + '*' + w[i+1:]].append(w)
+    vis = set()
+    stk = [(beginWord, 1)]
+    while stk:
+        word, step = stk.pop()
+        for i in range(l):
+            c = word[:i] + '*' + word[i + 1:]
+            if endWord in d[c]: return step + 1
+            for e in d[c]:
+                if not e in vis:
+                    stk.insert(0, (e, step+1))
+                    vis.add(e)
+    return 0
+    """
+    # 上面解法的基础上，双向bfs加速
+    from collections import defaultdict
+    def visit(stk, vis, vis_other):
+        word, step = stk.pop()
+        for i in range(l):
+            c = word[:i] + '*' + word[i + 1:]
+            for e in d[c]:
+                if e in vis_other:
+                    return step + vis_other[e]
+                if not e in vis:
+                    vis[e] = step + 1
+                    stk.insert(0, (e, step+1))
+
+    if endWord not in wordList or not endWord or not beginWord or not wordList:
+        return 0
+    d = defaultdict(list)
+    l = len(beginWord)
+    for w in wordList:
+        for i in range(l):
+            d[w[:i] + '*' + w[i+1:]].append(w)
+    stk_start = [(beginWord, 1)]
+    stk_end = [(endWord, 1)]
+    vis_start = {beginWord: 1}
+    vis_end = {endWord: 1}
+    while stk_start and stk_end:
+        res = visit(stk_start, vis_start, vis_end)
+        if res: return res
+        res = visit(stk_end, vis_end, vis_start)
+        if res: return res
+    return 0
+
+
+
 if __name__ == '__main__':
-    dieSimulator(3, [1,1,1,2,2,3])
+    x = ladderLength("hit", "cog", ["hot","dot","dog","lot","log","cog"])
+    print(x)
+    # x = construct_list_node([1,2,3,4,5])
+    # reorderList(x)
+    # dieSimulator(3, [1,1,1,2,2,3])
     # x = numRollsToTarget(30,30,500)
     # print(x)
     pass

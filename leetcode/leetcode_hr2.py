@@ -170,9 +170,85 @@ def countVowelPermutation(n: int) -> int:
     return sum((a,e,i,o,u)) % mod
 
 
+def findLadders(beginWord: str, endWord: str, wordList: List[str]) -> List[List[str]]:
+    """
+    126. 单词接龙 II
+    给定两个单词（beginWord 和 endWord）和一个字典 wordList，找出所有从 beginWord 到 endWord 的最短转换序列。转换需遵循如下规则：
+    每次转换只能改变一个字母。
+    转换过程中的中间单词必须是字典中的单词。
+    说明:
+    如果不存在这样的转换序列，返回一个空列表。
+    所有单词具有相同的长度。
+    所有单词只由小写字母组成。
+    字典中不存在重复的单词。
+    你可以假设 beginWord 和 endWord 是非空的，且二者不相同。
+    示例 1:
+    输入:
+    beginWord = "hit",
+    endWord = "cog",
+    wordList = ["hot","dot","dog","lot","log","cog"]
+    输出:
+    [
+      ["hit","hot","dot","dog","cog"],
+      ["hit","hot","lot","log","cog"]
+    ]
+    示例 2:
+    输入:
+    beginWord = "hit"
+    endWord = "cog"
+    wordList = ["hot","dot","dog","lot","log"]
+    输出: []
+    解释: endWord "cog" 不在字典中，所以不存在符合要求的转换序列。
+    """
+    from collections import defaultdict
+    if endWord not in wordList or not endWord or not beginWord or not wordList:
+        return []
+    # 构造下一步的字典，将每个字符替换成*在wordList查找模式串相匹配的所有单词
+    d = defaultdict(list)
+    l = len(beginWord)
+    for w in wordList:
+        for i in range(l):
+            d[w[:i] + '*' + w[i+1:]].append(w)
+    # 双向bfs求解res数组
+    stk_start = {beginWord: [[beginWord]]}
+    stk_end = {endWord: [[endWord]]}
+    # 初始值为(begin -> end):2
+    step = 2
+    vis = set()
+    res = []
+    while stk_start:
+        # 每次进入循环是一个step
+        # 如果对向分支更少，则优先执行对向的step
+        if len(stk_end) < len(stk_start):
+            stk_end, stk_start = stk_start, stk_end
+        tmp = {}
+        while stk_start:
+            word, paths = stk_start.popitem()
+            vis.add(word)
+            for i in range(l):
+                c = word[:i] + '*' + word[i+1:]
+                for e in d[c]:
+                    if e in stk_end:
+                        # 通过path的首元素是否为beginWord判断当前是正向还是反向
+                        if paths[0][0] == beginWord: # forward
+                            res.extend(head + tail[::-1] for head in paths for tail in stk_end[e])
+                        else: # backward
+                            res.extend(head + tail[::-1] for tail in paths for head in stk_end[e])
+                    # bfs特性，被访问过的step一定当前step小
+                    if not e in vis:
+                        tmp[e] = tmp.get(e, []) + [path + [e] for path in paths]
+        step += 1
+        if res and step > len(res[0]): break
+        stk_start = tmp
+    return res
+
+
+
 if __name__ == '__main__':
-    x = countVowelPermutation(5)
+    x = findLadders("hit", "cog", ["hot","dot","dog","lot","log","cog"])
     print(x)
+    # x = countVowelPermutation(5)
+    # print(x)
     # jobScheduling(startTime = [1,2,3,3], endTime = [3,4,5,6], profit = [50,10,40,70])
     # maximizeSweetness([8,13,20,1,16], 3)
     # numberToWords(1000)

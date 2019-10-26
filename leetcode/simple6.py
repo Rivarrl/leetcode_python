@@ -4,6 +4,7 @@
 # @Time    : 2019/10/8 10:05
 # @Author  : Rivarrl
 # ======================================
+import math
 from typing import List
 
 from algorithm_utils import *
@@ -645,8 +646,39 @@ def numSmallerByFrequency(queries: List[str], words: List[str]) -> List[int]:
         res[i] = cmp[f(s)]
     return res
 
+
+def reachNumber(target: int) -> int:
+    """
+    754. 到达终点数字
+    在一根无限长的数轴上，你站在0的位置。终点在target的位置。
+    每次你可以选择向左或向右移动。第 n 次移动（从 1 开始），可以走 n 步。
+    返回到达终点需要的最小移动次数。
+    示例 1:
+    输入: target = 3
+    输出: 2
+    解释:
+    第一次移动，从 0 到 1 。
+    第二次移动，从 1 到 3 。
+    示例 2:
+    输入: target = 2
+    输出: 3
+    解释:
+    第一次移动，从 0 到 1 。
+    第二次移动，从 1 到 -1 。
+    第三次移动，从 -1 到 2 。
+    注意:
+    target是在[-10^9, 10^9]范围中的非零整数。
+    """
+    target = abs(target)
+    n = int(math.ceil((-1 + math.sqrt(1 + 8 * target)) / 2))
+    target -= n * (n + 1) // 2
+    return n if target % 2 == 0 else n + 1 + n % 2
+
+
 if __name__ == '__main__':
-    numSmallerByFrequency(queries = ["bbb","cc"], words = ["a","aa","aaa","aaaa"])
+    x = reachNumber(4)
+    print(x)
+    # numSmallerByFrequency(queries = ["bbb","cc"], words = ["a","aa","aaa","aaaa"])
     # minCostToMoveChips([2,3,3,3,3])
     # checkStraightLine([[-1, 1], [-6, -4], [-6, 2], [2, 0], [-1, -2], [0, -4]])
     # maximumProduct([1,2,3,4])

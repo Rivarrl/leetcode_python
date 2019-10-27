@@ -199,10 +199,112 @@ def ladderLength(beginWord: str, endWord: str, wordList: List[str]) -> int:
     return 0
 
 
+def nthPersonGetsNthSeat(n: int) -> float:
+    """
+    1227. 飞机座位分配概率
+    有 n 位乘客即将登机，飞机正好有 n 个座位。第一位乘客的票丢了，他随便选了一个座位坐下。
+    剩下的乘客将会：
+    如果他们自己的座位还空着，就坐到自己的座位上，
+    当他们自己的座位被占用时，随机选择其他座位
+    第 n 位乘客坐在自己的座位上的概率是多少？
+    示例 1：
+    输入：n = 1
+    输出：1.00000
+    解释：第一个人只会坐在自己的位置上。
+    示例 2：
+    输入: n = 2
+    输出: 0.50000
+    解释：在第一个人选好座位坐下后，第二个人坐在自己的座位上的概率是 0.5。
+    提示：
+    1 <= n <= 10^5
+    """
+    return 1.0 if n == 1 else 0.5
+
+
+def solve(board: List[List[str]]) -> None:
+    """
+    130. 被围绕的区域
+    给定一个二维的矩阵，包含 'X' 和 'O'（字母 O）。
+    找到所有被 'X' 围绕的区域，并将这些区域里所有的 'O' 用 'X' 填充。
+    示例:
+    X X X X
+    X O O X
+    X X O X
+    X O X X
+    运行你的函数后，矩阵变为：
+    X X X X
+    X X X X
+    X X X X
+    X O X X
+    解释:
+    被围绕的区间不会存在于边界上，换句话说，任何边界上的 'O' 都不会被填充为 'X'。 任何不在边界上，或不与边界上的 'O' 相连的 'O' 最终都会被填充为 'X'。如果两个元素在水平或垂直方向相邻，则称它们是“相连”的。
+    """
+    # 先在边缘dfs找O记录，再遍历把不在记录中的O改为X
+    def dfs(i, j):
+        if board[i][j] == 'X': return
+        memo.add((i, j))
+        for dx, dy in axis:
+            x, y = i + dx, j + dy
+            if x < 0 or x == n or y < 0 or y == m or (x, y) in memo: continue
+            dfs(x, y)
+
+    n = len(board)
+    if n == 0: return
+    m = len(board[0])
+    memo = set()
+    axis = ((0, 1), (1, 0), (0, -1), (-1, 0))
+    for i in range(n):
+        for j in (0, m-1):
+            if not (i, j) in memo:
+                dfs(i, j)
+    for j in range(m):
+        for i in (0, n-1):
+            if not (i, j) in memo:
+                dfs(i, j)
+    for i in range(n):
+        for j in range(m):
+            if board[i][j] == 'O' and not (i, j) in memo:
+                board[i][j] = 'X'
+    matrix_pretty_print(board)
+
+
+def insertionSortList(head: ListNode) -> ListNode:
+    """
+    147. 对链表进行插入排序
+    对链表进行插入排序。
+    插入排序的动画演示如上。从第一个元素开始，该链表可以被认为已经部分排序（用黑色表示）。
+    每次迭代时，从输入数据中移除一个元素（用红色表示），并原地将其插入到已排好序的链表中。
+    插入排序算法：
+    插入排序是迭代的，每次只移动一个元素，直到所有元素可以形成一个有序的输出列表。
+    每次迭代中，插入排序只从输入数据中移除一个待排序的元素，找到它在序列中适当的位置，并将其插入。
+    重复直到所有输入数据插入完为止。
+    示例 1：
+    输入: 4->2->1->3
+    输出: 1->2->3->4
+    示例 2：
+    输入: -1->5->3->4->0
+    输出: -1->0->3->4->5
+    """
+    def sort(node):
+        if not node: return
+        sort(node.next)
+        p, last = node, None
+        while p.next and p.val > p.next.val:
+            last, node = p, p.next
+        if last:
+            tmp = last.next
+            last.next = node
+            node.next = tmp
+    sort(head)
+    return head
+
 
 if __name__ == '__main__':
-    x = ladderLength("hit", "cog", ["hot","dot","dog","lot","log","cog"])
-    print(x)
+    x = construct_list_node([1,2,3])
+    insertionSortList(x)
+    # solve([["O","X","X","O","X"], ["X","O","O","X","O"], ["X","O","X","O","X"], ["O","X","O","O","O"], ["X","X","O","X","O"]])
+    # x = ladderLength("hit", "cog", ["hot","dot","dog","lot","log","cog"])
+    # print(x)
     # x = construct_list_node([1,2,3,4,5])
     # reorderList(x)
     # dieSimulator(3, [1,1,1,2,2,3])

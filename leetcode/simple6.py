@@ -750,9 +750,97 @@ def nextGreaterElement(nums1: List[int], nums2: List[int]) -> List[int]:
     return [d[e] if e in d else -1 for e in nums1]
 
 
+def matrixReshape(nums: List[List[int]], r: int, c: int) -> List[List[int]]:
+    """
+    566. 重塑矩阵
+    在MATLAB中，有一个非常有用的函数 reshape，它可以将一个矩阵重塑为另一个大小不同的新矩阵，但保留其原始数据。
+    给出一个由二维数组表示的矩阵，以及两个正整数r和c，分别表示想要的重构的矩阵的行数和列数。
+    重构后的矩阵需要将原始矩阵的所有元素以相同的行遍历顺序填充。
+    如果具有给定参数的reshape操作是可行且合理的，则输出新的重塑矩阵；否则，输出原始矩阵。
+    示例 1:
+    输入:
+    nums =
+    [[1,2],
+     [3,4]]
+    r = 1, c = 4
+    输出:
+    [[1,2,3,4]]
+    解释:
+    行遍历nums的结果是 [1,2,3,4]。新的矩阵是 1 * 4 矩阵, 用之前的元素值一行一行填充新矩阵。
+    示例 2:
+    输入:
+    nums =
+    [[1,2],
+     [3,4]]
+    r = 2, c = 4
+    输出:
+    [[1,2],
+     [3,4]]
+    解释:
+    没有办法将 2 * 2 矩阵转化为 2 * 4 矩阵。 所以输出原矩阵。
+    注意：
+    给定矩阵的宽和高范围在 [1, 100]。
+    给定的 r 和 c 都是正数。
+    """
+    n = len(nums)
+    if n == 0: return nums
+    m = len(nums[0])
+    if r * c != n * m: return nums
+    x, y = 0, 0
+    res = [[0] * c for _ in range(r)]
+    for i in range(n):
+        for j in range(m):
+            res[x][y] = nums[i][j]
+            y += 1
+            if y == c:
+                y = 0
+                x += 1
+    return res
+
+
+def maxCount(m: int, n: int, ops: List[List[int]]) -> int:
+    """
+    598. 范围求和 II
+    给定一个初始元素全部为 0，大小为 m*n 的矩阵 M 以及在 M 上的一系列更新操作。
+    操作用二维数组表示，其中的每个操作用一个含有两个正整数 a 和 b 的数组表示，含义是将所有符合 0 <= i < a 以及 0 <= j < b 的元素 M[i][j] 的值都增加 1。
+    在执行给定的一系列操作后，你需要返回矩阵中含有最大整数的元素个数。
+    示例 1:
+    输入:
+    m = 3, n = 3
+    operations = [[2,2],[3,3]]
+    输出: 4
+    解释:
+    初始状态, M =
+    [[0, 0, 0],
+     [0, 0, 0],
+     [0, 0, 0]]
+    执行完操作 [2,2] 后, M =
+    [[1, 1, 0],
+     [1, 1, 0],
+     [0, 0, 0]]
+    执行完操作 [3,3] 后, M =
+    [[2, 2, 1],
+     [2, 2, 1],
+     [1, 1, 1]]
+    M 中最大的整数是 2, 而且 M 中有4个值为2的元素。因此返回 4。
+    注意:
+    m 和 n 的范围是 [1,40000]。
+    a 的范围是 [1,m]，b 的范围是 [1,n]。
+    操作数目不超过 10000。
+    """
+    mx, my = float('inf'), float('inf')
+    for op in ops:
+        if op == [0, 0]: continue
+        mx, my = min(mx, op[0]), min(my, op[1])
+    return mx * my if mx != float('inf') else m * n
+
+
 if __name__ == '__main__':
-    res = nextGreaterElement([4,1,2], [1,3,4,2])
+    res = maxCount(3, 3, [[2,2],[3,3]])
     print(res)
+    # matrixReshape([[1,2],[3,4]], 1, 4)
+    # res = nextGreaterElement([4,1,2], [1,3,4,2])
+    # print(res)
     # x = reachNumber(4)
     # print(x)
     # numSmallerByFrequency(queries = ["bbb","cc"], words = ["a","aa","aaa","aaaa"])

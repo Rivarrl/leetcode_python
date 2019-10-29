@@ -675,9 +675,86 @@ def reachNumber(target: int) -> int:
     return n if target % 2 == 0 else n + 1 + n % 2
 
 
+def findSolution(customfunction: 'CustomFunction', z: int) -> List[List[int]]:
+    """
+    5238. 找出给定方程的正整数解
+    给出一个函数  f(x, y) 和一个目标结果 z，请你计算方程 f(x,y) == z 所有可能的正整数 数对 x 和 y。
+    给定函数是严格单调的，也就是说：
+    f(x, y) < f(x + 1, y)
+    f(x, y) < f(x, y + 1)
+    函数接口定义如下：
+    interface CustomFunction {
+    public:
+      // Returns positive integer f(x, y) for any given positive integer x and y.
+      int f(int x, int y);
+    };
+    如果你想自定义测试，你可以输入整数 function_id 和一个目标结果 z 作为输入，其中 function_id 表示一个隐藏函数列表中的一个函数编号，题目只会告诉你列表中的 2 个函数。  
+    你可以将满足条件的 结果数对 按任意顺序返回。
+    示例 1：
+    输入：function_id = 1, z = 5
+    输出：[[1,4],[2,3],[3,2],[4,1]]
+    解释：function_id = 1 表示 f(x, y) = x + y
+    示例 2：
+    输入：function_id = 2, z = 5
+    输出：[[1,5],[5,1]]
+    解释：function_id = 2 表示 f(x, y) = x * y
+    提示：
+    1 <= function_id <= 9
+    1 <= z <= 100
+    题目保证 f(x, y) == z 的解处于 1 <= x, y <= 1000 的范围内。
+    在 1 <= x, y <= 1000 的前提下，题目保证 f(x, y) 是一个 32 位有符号整数。
+    """
+    # 双指针
+    i, j = 1, 1000
+    res = []
+    while i <= 1000 and j >= 1:
+        cur = customfunction.f(i, j)
+        if cur == z:
+            res.append([i, j])
+            i += 1
+        elif cur < z:
+            i += 1
+        else:
+            j -= 1
+    return res
+
+
+def nextGreaterElement(nums1: List[int], nums2: List[int]) -> List[int]:
+    """
+    496. 下一个更大元素 I
+    给定两个没有重复元素的数组 nums1 和 nums2 ，其中nums1 是 nums2 的子集。找到 nums1 中每个元素在 nums2 中的下一个比其大的值。
+    nums1 中数字 x 的下一个更大元素是指 x 在 nums2 中对应位置的右边的第一个比 x 大的元素。如果不存在，对应位置输出-1。
+    示例 1:
+    输入: nums1 = [4,1,2], nums2 = [1,3,4,2].
+    输出: [-1,3,-1]
+    解释:
+        对于num1中的数字4，你无法在第二个数组中找到下一个更大的数字，因此输出 -1。
+        对于num1中的数字1，第二个数组中数字1右边的下一个较大数字是 3。
+        对于num1中的数字2，第二个数组中没有下一个更大的数字，因此输出 -1。
+    示例 2:
+    输入: nums1 = [2,4], nums2 = [1,2,3,4].
+    输出: [3,-1]
+    解释:
+        对于num1中的数字2，第二个数组中的下一个较大数字是3。
+        对于num1中的数字4，第二个数组中没有下一个更大的数字，因此输出 -1。
+    注意:
+    nums1和nums2中所有元素是唯一的。
+    nums1和nums2 的数组大小都不超过1000。
+    """
+    stk = []
+    d = {}
+    for x in nums2:
+        while stk and stk[-1] < x:
+            d[stk.pop()] = x
+        stk.append(x)
+    return [d[e] if e in d else -1 for e in nums1]
+
+
 if __name__ == '__main__':
-    x = reachNumber(4)
-    print(x)
+    res = nextGreaterElement([4,1,2], [1,3,4,2])
+    print(res)
+    # x = reachNumber(4)
+    # print(x)
     # numSmallerByFrequency(queries = ["bbb","cc"], words = ["a","aa","aaa","aaaa"])
     # minCostToMoveChips([2,3,3,3,3])
     # checkStraightLine([[-1, 1], [-6, -4], [-6, 2], [2, 0], [-1, -2], [0, -4]])

@@ -285,23 +285,149 @@ def insertionSortList(head: ListNode) -> ListNode:
     输入: -1->5->3->4->0
     输出: -1->0->3->4->5
     """
-    def sort(node):
-        if not node: return
-        sort(node.next)
-        p, last = node, None
-        while p.next and p.val > p.next.val:
-            last, node = p, p.next
-        if last:
-            tmp = last.next
-            last.next = node
-            node.next = tmp
-    sort(head)
+    if not head or not head.next: return head
+    p, pre = head.next, head
+    while p:
+        last, t, q = None, head, p.next
+        while t and t.val < p.val:
+             last, t = t, t.next
+        if t != p:
+            if last:
+                p.next, last.next, pre.next = last.next, p, q
+            else:
+                p.next, head, pre.next = head, p, q
+        else:
+            pre = p
+        p = q
     return head
 
 
+def circularPermutation(n: int, start: int) -> List[int]:
+    """
+    5239. 循环码排列
+    给你两个整数 n 和 start。你的任务是返回任意 (0,1,2,,...,2^n-1) 的排列 p，并且满足：
+    p[0] = start
+    p[i] 和 p[i+1] 的二进制表示形式只有一位不同
+    p[0] 和 p[2^n -1] 的二进制表示形式也只有一位不同
+    示例 1：
+    输入：n = 2, start = 3
+    输出：[3,2,0,1]
+    解释：这个排列的二进制表示是 (11,10,00,01)
+         所有的相邻元素都有一位是不同的，另一个有效的排列是 [3,1,0,2]
+    示例 2：
+    输出：n = 3, start = 2
+    输出：[2,6,7,5,4,0,1,3]
+    解释：这个排列的二进制表示是 (010,110,111,101,100,000,001,011)
+    提示：
+    1 <= n <= 16
+    0 <= start < 2^n
+    """
+    res = ['0', '1']
+    for i in range(2, n+1):
+        tmp = ['0' + e for e in res] + ['1' + e for e in res[::-1]]
+        res = tmp
+    res = [int('0b' + e, 2) for e in res]
+    s = res.index(start)
+    return res[s:] + res[:s]
+
+
+def maxLength(arr: List[str]) -> int:
+    """
+    5240. 串联字符串的最大长度
+    给定一个字符串数组 arr，字符串 s 是将 arr 某一子序列字符串连接所得的字符串，如果 s 中的每一个字符都只出现过一次，那么它就是一个可行解。
+    请返回所有可行解 s 中最长长度。
+    示例 1：
+    输入：arr = ["un","iq","ue"]
+    输出：4
+    解释：所有可能的串联组合是 "","un","iq","ue","uniq" 和 "ique"，最大长度为 4。
+    示例 2：
+    输入：arr = ["cha","r","act","ers"]
+    输出：6
+    解释：可能的解答有 "chaers" 和 "acters"。
+    示例 3：
+    输入：arr = ["abcdefghijklmnopqrstuvwxyz"]
+    输出：26
+    提示：
+    1 <= arr.length <= 16
+    1 <= arr[i].length <= 26
+    arr[i] 中只含有小写英文字母
+    """
+    def helper(i, c):
+        if i == len(arr): return bin(c).count('1')
+        res = helper(i+1, c)
+        for s in arr[i]:
+            d = ord(s) - ord('a')
+            if c & (1 << d):
+                return res
+        for s in arr[i]:
+            d = ord(s) - ord('a')
+            c |= 1 << d
+        return max(res, helper(i+1, c))
+    arr = [e for e in arr if len(set(e)) == len(e)]
+    if len(arr) == 0: return 0
+    return helper(0, 0)
+
+
+def cloneGraph(node: NeighborNode) -> NeighborNode:
+    """
+    133. 克隆图
+    给定无向连通图中一个节点的引用，返回该图的深拷贝（克隆）。图中的每个节点都包含它的值 val（Int） 和其邻居的列表（list[Node]）。
+    示例：
+    输入：
+    {"$id":"1","neighbors":[{"$id":"2","neighbors":[{"$ref":"1"},{"$id":"3","neighbors":[{"$ref":"2"},{"$id":"4","neighbors":[{"$ref":"3"},{"$ref":"1"}],"val":4}],"val":3}],"val":2},{"$ref":"4"}],"val":1}
+    解释：
+    节点 1 的值是 1，它有两个邻居：节点 2 和 4 。
+    节点 2 的值是 2，它有两个邻居：节点 1 和 3 。
+    节点 3 的值是 3，它有两个邻居：节点 2 和 4 。
+    节点 4 的值是 4，它有两个邻居：节点 1 和 3 。
+    提示：
+    节点数介于 1 到 100 之间。
+    无向图是一个简单图，这意味着图中没有重复的边，也没有自环。
+    由于图是无向的，如果节点 p 是节点 q 的邻居，那么节点 q 也必须是节点 p 的邻居。
+    必须将给定节点的拷贝作为对克隆图的引用返回。
+    """
+    """
+    # bfs
+    stk = [node]
+    d = {}
+    while stk:
+        p = stk.pop()
+        q = NeighborNode(p.val, [])
+        d[p] = q
+        for t in p.neighbors:
+            if not t in d:
+                stk.insert(0, t)
+    for k, v in d.items():
+        for q in k.neighbors:
+            v.neighbors.append(d[q])
+    return d[node]
+    """
+    # dfs
+    d = {}
+    def dfs(node):
+        if node in d: return d[node]
+        q = NeighborNode(node.val, [])
+        d[node] = q
+        for t in node.neighbors:
+            q.neighbors.append(dfs(t))
+        return q
+    return dfs(node)
+
+
 if __name__ == '__main__':
-    x = construct_list_node([1,2,3])
-    insertionSortList(x)
+    n1 = NeighborNode(1, None)
+    n2 = NeighborNode(2, None)
+    n3 = NeighborNode(3, None)
+    n4 = NeighborNode(4, None)
+    n1.neighbors, n2.neighbors, n3.neighbors, n4.neighbors = [n2, n4], [n1, n3], [n2, n4], [n1, n3]
+    cloneGraph(n1)
+    # r = circularPermutation(3, 2)
+    # print(r)
+    # r = maxLength(["jnfbyktlrqumowxd","mvhgcpxnjzrdei"])
+    # print(r)
+    # x = construct_list_node([4,2,1,3])
+    # y = insertionSortList(x)
+    # print_list_node(y)
     # solve([["O","X","X","O","X"], ["X","O","O","X","O"], ["X","O","X","O","X"], ["O","X","O","O","O"], ["X","X","O","X","O"]])
     # x = ladderLength("hit", "cog", ["hot","dot","dog","lot","log","cog"])
     # print(x)

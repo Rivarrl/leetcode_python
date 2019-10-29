@@ -99,6 +99,42 @@ def q2():
     return sum(line.count('') for line in chess)
 
 
+def loop(arr):
+    """
+    例如传入arr->[2,2,2], 需返回遍历2*2*2，三层的索引顺序
+    [0,0,0], [0,0,1], [0,1,0] ...
+    """
+    n = len(arr)
+    t = [0] * n
+    while t[0] < arr[0]:
+        print(t)
+        t[-1] += 1
+        for i in range(n-1, 0, -1):
+            if t[i] == arr[i]:
+                t[i-1] += 1
+                t[i] = 0
+            else:
+                break
+
+
+def loop2(arr):
+    """
+    递归版loop
+    """
+    def f(i, s):
+        if i == n:
+            res.append(s)
+            return
+        for j in range(arr[i]):
+            f(i+1, s+[j])
+    n = len(arr)
+    res = []
+    f(0, [])
+    print(res)
+
+
 if __name__ == '__main__':
-    a = q2()
-    print(a)
+    loop2([2,2,2])
+    # a = q2()
+    # print(a)
+    pass

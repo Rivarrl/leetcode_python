@@ -1,5 +1,6 @@
 # -*- coding:utf-8 -*-
 # 算法辅助类
+import time
 
 null = None
 
@@ -43,6 +44,11 @@ class NextNode:
         self.left = left
         self.right = right
         self.next = next
+
+class NeighborNode:
+    def __init__(self, val, neighbors):
+        self.val = val
+        self.neighbors = neighbors
 
 class QuadNode:
     def __init__(self, val, isLeaf, topLeft, topRight, bottomLeft, bottomRight):
@@ -194,6 +200,7 @@ def matrix_pretty_print(matrix):
         for j in range(len(matrix[i])):
             print(matrix[i][j], end=' ')
         print()
+    print()
 
 def build_max_heap(arr):
     for i in range(len(arr)//2, -1, -1):
@@ -222,6 +229,16 @@ def heap_sort(arr):
         swap(arr, 0, i)
         arr_size -= 1
         heapify(arr, 0)
+
+
+def timeit(f):
+    def inner(*args, **kwargs):
+        t1 = time.time()
+        x = f(*args, **kwargs)
+        t2 = time.time()
+        print("process runs: {0:.4f} sec".format(t2 - t1))
+        return x
+    return inner
 
 
 if __name__ == '__main__':

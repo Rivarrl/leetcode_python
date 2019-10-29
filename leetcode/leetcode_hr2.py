@@ -243,10 +243,85 @@ def findLadders(beginWord: str, endWord: str, wordList: List[str]) -> List[List[
     return res
 
 
+def tilingRectangle(n: int, m: int) -> int:
+    """
+    5241. 铺瓷砖
+    你是一位施工队的工长，根据设计师的要求准备为一套设计风格独特的房子进行室内装修。
+    房子的客厅大小为 n x m，为保持极简的风格，需要使用尽可能少的 正方形 瓷砖来铺盖地面。
+    假设正方形瓷砖的规格不限，边长都是整数。
+    请你帮设计师计算一下，最少需要用到多少块方形瓷砖？
+    示例 1：
+    输入：n = 2, m = 3
+    输出：3
+    解释：3 块地砖就可以铺满卧室。
+         2 块 1x1 地砖
+         1 块 2x2 地砖
+    示例 2：
+    输入：n = 5, m = 8
+    输出：5
+    示例 3：
+    输入：n = 11, m = 13
+    输出：6
+    提示：
+    1 <= n <= 13
+    1 <= m <= 13
+    """
+    def fit(x, y, size):
+        xs, ys = x + size, y + size
+        for i in range(x, xs+1):
+            for j in range(y, ys+1):
+                if table[i] & (1 << j) != 0:
+                    return False
+        return True
+
+    def dfs(table, count):
+        nonlocal res
+        # 剪枝
+        if count >= res: return
+        # 找本次需要拼图的左上角坐标
+        x, y = -1, -1
+        flag = False
+        for i in range(n):
+            for j in range(m):
+                if table[i] & (1 << j) == 0:
+                    x, y = i, j
+                    flag = True
+                    break
+            if flag: break
+        if flag == False:
+            res = min(res, count)
+            return
+        # 找能放的最大块
+        k = 0
+        while x + k < n and y + k < m and fit(x, y, k):
+            k += 1
+        k -= 1
+        # 通常选择较大的块容易先得到最优解，所以从大到小尝试，方便剪枝
+        while k >= 0:
+            # 放入瓷砖
+            for i in range(x, x+k+1):
+                for j in range(y, y+k+1):
+                    table[i] |= (1 << j)
+            # 递归
+            dfs(table, count+1)
+            # 回溯，取下瓷砖
+            for i in range(x, x+k+1):
+                for j in range(y, y+k+1):
+                    table[i] -= (1 << j)
+            k -= 1
+
+    table = [0] * n
+    # 13*13=169
+    res = 170
+    dfs(table, 0)
+    return res
+
 
 if __name__ == '__main__':
-    x = findLadders("hit", "cog", ["hot","dot","dog","lot","log","cog"])
-    print(x)
+    r = tilingRectangle(11, 13)
+    print(r)
+    # x = findLadders("hit", "cog", ["hot","dot","dog","lot","log","cog"])
+    # print(x)
     # x = countVowelPermutation(5)
     # print(x)
     # jobScheduling(startTime = [1,2,3,3], endTime = [3,4,5,6], profit = [50,10,40,70])

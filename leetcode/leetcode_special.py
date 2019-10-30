@@ -447,6 +447,110 @@ class RandomIndex2:
         self.map[target] = self.map[target].next
         return ans
 
+# 构造hashset
+# 链地址法
+class MyHashSet:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.size = 1000
+        self.d = [ListNode(None) for _ in range(self.size)]
+
+    def add(self, key: int) -> None:
+        i = key % self.size
+        p = self.d[i]
+        node = p.next
+        while node:
+            if node.val == key:
+                break
+            p = node
+            node = node.next
+        else:
+            p.next = ListNode(key)
+
+
+    def remove(self, key: int) -> None:
+        i = key % self.size
+        p = self.d[i]
+        node = p.next
+        while node:
+            if node.val == key:
+                p.next = node.next
+                break
+            p = node
+            node = node.next
+
+    def contains(self, key: int) -> bool:
+        """
+        Returns true if this set contains the specified element
+        """
+        i = key % self.size
+        node = self.d[i]
+        while node:
+            if node.val == key:
+                return True
+            node = node.next
+        return False
+
+class KVNode:
+    def __init__(self, k, v):
+        self.key = k
+        self.val = v
+        self.next = None
+
+class MyHashMap:
+
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.size = 1000
+        self.d = [KVNode(None, None) for _ in range(self.size)]
+
+    def put(self, key: int, value: int) -> None:
+        """
+        value will always be non-negative.
+        """
+        i = key % self.size
+        p = self.d[i]
+        node = p.next
+        while node:
+            if node.key == key:
+                node.val = value
+                return
+            node, p = node.next, node
+        p.next = KVNode(key, value)
+
+
+    def get(self, key: int) -> int:
+        """
+        Returns the value to which the specified key is mapped, or -1 if this map contains no mapping for the key
+        """
+        i = key % self.size
+        p = self.d[i]
+        node = p.next
+        while node:
+            if node.key == key:
+                return node.val
+            node, p = node.next, node
+        return -1
+
+
+    def remove(self, key: int) -> None:
+        """
+        Removes the mapping of the specified value key if this map contains a mapping for the key
+        """
+        i = key % self.size
+        p = self.d[i]
+        node = p.next
+        while node:
+            if node.key == key:
+                p.next = node.next
+                break
+            node, p = node.next, node
+
 
 if __name__ == '__main__':
     x = construct_tree_node([4,2,6,1,3,5,7])

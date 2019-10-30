@@ -429,13 +429,13 @@ def findRestaurant(list1, list2):
     ["Shogun", "Tapioca Express", "Burger King", "KFC"]
     ["Piatti", "The Grill at Torrey Pines", "Hungry Hunter Steakhouse", "Shogun"]
     输出: ["Shogun"]
-    解释: 他们唯一共同喜爱的餐厅是“Shogun”。
+    解释: 他们唯一共同喜爱的餐厅是'Shogun'。
     示例 2:
     输入:
     ["Shogun", "Tapioca Express", "Burger King", "KFC"]
     ["KFC", "Shogun", "Burger King"]
     输出: ["Shogun"]
-    解释: 他们共同喜爱且具有最小索引和的餐厅是“Shogun”，它有最小的索引和1(0+1)。
+    解释: 他们共同喜爱且具有最小索引和的餐厅是'Shogun'，它有最小的索引和1(0+1)。
     提示:
     两个列表的长度范围都在 [1, 1000]内。
     两个列表中的字符串的长度将在[1，30]的范围内。
@@ -835,9 +835,40 @@ def maxCount(m: int, n: int, ops: List[List[int]]) -> int:
     return mx * my if mx != float('inf') else m * n
 
 
+def countBinarySubstrings(s: str) -> int:
+    """
+    696. 计数二进制子串
+    给定一个字符串 s，计算具有相同数量0和1的非空(连续)子字符串的数量，并且这些子字符串中的所有0和所有1都是组合在一起的。
+    重复出现的子串要计算它们出现的次数。
+    示例 1 :
+    输入: "00110011"
+    输出: 6
+    解释: 有6个子串具有相同数量的连续1和0：'0011'，'01'，'1100'，'10'，'0011' 和 '01'。
+    请注意，一些重复出现的子串要计算它们出现的次数。
+    另外，'00110011'不是有效的子串，因为所有的0（和1）没有组合在一起。
+    示例 2 :
+    输入: "10101"
+    输出: 4
+    解释: 有4个子串：'10'，'01'，'10'，'01'，它们具有相同数量的连续1和0。
+    注意：
+    s.length 在1到50,000之间。
+    s 只包含'0'或'1'字符。
+    """
+    cur, last, res = 1, 0, 0
+    for i in range(1, len(s)):
+        if s[i] == s[i-1]:
+            cur += 1
+        else:
+            last, cur = cur, 1
+        if cur <= last: res += 1
+    return res
+
+
 if __name__ == '__main__':
-    res = maxCount(3, 3, [[2,2],[3,3]])
+    res = countBinarySubstrings("00110011")
     print(res)
+    # res = maxCount(3, 3, [[2,2],[3,3]])
+    # print(res)
     # matrixReshape([[1,2],[3,4]], 1, 4)
     # res = nextGreaterElement([4,1,2], [1,3,4,2])
     # print(res)

@@ -337,16 +337,197 @@ def findMin(nums: List[int]) -> int:
     i, j = 0, len(nums) - 1
     while i < j:
         m = i + (j - i) // 2
-        if nums[i] <= nums[m] <= nums[j]:
+        if nums[m] > nums[j]:
             i = m + 1
-        else:
+        elif nums[m] < nums[j]:
             j = m
+        else:
+            j -= 1
     return nums[i]
 
 
+def maxPoints(points: List[List[int]]) -> int:
+    """
+    149. 直线上最多的点数
+    给定一个二维平面，平面上有 n 个点，求最多有多少个点在同一条直线上。
+    示例 1:
+    输入: [[1,1],[2,2],[3,3]]
+    输出: 3
+    解释:
+    ^
+    |
+    |        o
+    |     o
+    |  o  
+    +------------->
+    0  1  2  3  4
+    示例 2:
+    输入: [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
+    输出: 4
+    解释:
+    ^
+    |
+    |  o
+    |     o        o
+    |        o
+    |  o        o
+    +------------------->
+    0  1  2  3  4  5  6
+    """
+    # 先把重复的点统计出来，再对不重复的每个点分别用字典存储斜率和次数，记录整体点数最高者
+    def gcd(x, y):
+        if x == 0: return y
+        return gcd(y%x, x)
+    from collections import Counter, defaultdict
+    ctr = Counter(tuple(point) for point in points)
+    unique_points = list(ctr.keys())
+    n = len(unique_points)
+    if n == 1: return ctr[unique_points[0]]
+    res = 0
+    for i in range(n-1):
+        x1, y1 = unique_points[i]
+        d = defaultdict(int)
+        for j in range(i+1, n):
+            x2, y2 = unique_points[j]
+            dx, dy = x1 - x2, y1 - y2
+            key = "inf"
+            if dx != 0:
+                g = gcd(dx, dy)
+                key = "{}/{}".format(dy//g, dx//g)
+            d[key] += ctr[unique_points[j]]
+        # 加上自身重复的点数
+        res = max(res, max(d.values()) + ctr[unique_points[i]])
+        print(res)
+    return res
+
+
+def lastSubstring(s: str) -> str:
+    """
+    1163. 按字典序排在最后的子串
+    给你一个字符串 s，找出它的所有子串并按字典序排列，返回排在最后的那个子串。
+    示例 1：
+    输入："abab"
+    输出："bab"
+    解释：我们可以找出 7 个子串 ["a", "ab", "aba", "abab", "b", "ba", "bab"]。按字典序排在最后的子串是 "bab"。
+    示例 2：
+    输入："leetcode"
+    输出："tcode"
+    提示：
+    1 <= s.length <= 10^5
+    s 仅含有小写英文字符。
+    """
+    # 找最大后缀字符串
+    # left找全局最大字典序子串的起始点，right尝试找比left更大的字典序作为新起始点
+    n, left, right, step = len(s), 0, 1, 0
+    while right + step < n:
+        if s[right + step] > s[left + step]:
+            left, right, step = right, right + 1, 0
+        elif s[right + step] < s[left + step]:
+            right, step = right + step + 1, 0
+        else:
+            step += 1
+    return s[left:]
+
+
+def sortItems(n: int, m: int, group: List[int], beforeItems: List[List[int]]) -> List[int]:
+    """
+    1203. 项目管理
+    公司共有 n 个项目和  m 个小组，每个项目要不没有归属，要不就由其中的一个小组负责。
+    我们用 group[i] 代表第 i 个项目所属的小组，如果这个项目目前无人接手，那么 group[i] 就等于 -1。（项目和小组都是从零开始编号的）
+    请你帮忙按要求安排这些项目的进度，并返回排序后的项目列表：
+    同一小组的项目，排序后在列表中彼此相邻。
+    项目之间存在一定的依赖关系，我们用一个列表 beforeItems 来表示，其中 beforeItems[i] 表示在进行第 i 个项目前（位于第 i 个项目左侧）应该完成的所有项目。
+    结果要求：
+    如果存在多个解决方案，只需要返回其中任意一个即可。
+    如果没有合适的解决方案，就请返回一个 空列表。
+    示例 1：
+    输入：n = 8, m = 2, group = [-1,-1,1,0,0,1,0,-1], beforeItems = [[],[6],[5],[6],[3,6],[],[],[]]
+    输出：[6,3,4,1,5,2,0,7]
+    示例 2：
+    输入：n = 8, m = 2, group = [-1,-1,1,0,0,1,0,-1], beforeItems = [[],[6],[5],[6],[3],[],[4],[]]
+    输出：[]
+    解释：与示例 1 大致相同，但是在排序后的列表中，4 必须放在 6 的前面。
+    提示：
+    1 <= m <= n <= 3*10^4
+    group.length == beforeItems.length == n
+    -1 <= group[i] <= m-1
+    0 <= beforeItems[i].length <= n-1
+    0 <= beforeItems[i][j] <= n-1
+    i != beforeItems[i][j]
+    """
+    # 项目间有依赖关系，可以用拓扑排序解决
+    # 但由于项目属于不同分组，最后要求同组项目相邻，也就是每组也有依赖关系
+    # 分别对组间依赖和组内依赖做拓扑排序即可，任一环节出现环就返回空数组
+    # 由于无组的项目可以随意被依赖，可视为每个项目单独一组
+    for i in range(n):
+        if group[i] == -1:
+            group[i] = m
+            m += 1
+    indegree_group = [0 for _ in range(m)] # 组间入度
+    indegree_item = [0 for _ in range(n)]
+    graph_group = [set() for _ in range(m)]
+    graph_item = [set() for _ in range(n)]
+    group_data = [set() for _ in range(m)]
+    # 存放组与项目的关系
+    for i in range(n):
+        group_data[group[i]].add(i)
+
+    work_group = [i for i in range(m) if len(group_data[i]) > 0]
+
+    for i in range(n):
+        for j in beforeItems[i]:
+            if group[i] == group[j]:
+                # 属于组内图
+                indegree_item[i] += 1
+                graph_item[j].add(i)
+            else:
+                # 属于组间图
+                if not group[i] in graph_group[group[j]]:
+                    indegree_group[group[i]] += 1
+                    graph_group[group[j]].add(group[i])
+    q = [i for i in range(m) if indegree_group[i] == 0]
+    print(q)
+    if len(q) == 0: return []
+    seq = []
+    while q:
+        p = q.pop()
+        seq.append(p)
+        for i in graph_group[p]:
+            indegree_group[i] -= 1
+            if indegree_group[i] == 0:
+                q.insert(0, i)
+    print(seq)
+    print(indegree_group)
+    if len(seq) < len(indegree_group): return []
+    for k in work_group:
+        q = [i for i in group_data[k] if indegree_item[i] == 0]
+        if len(q) == 0: return []
+        _seq = []
+        while q:
+            p = q.pop()
+            _seq.append(p)
+            for i in graph_item[p]:
+                indegree_item[i] -= 1
+                if indegree_item[i] == 0:
+                    q.insert(0, i)
+        if len(_seq) < len(group_data[k]): return []
+        group_data[k] = _seq
+    res = []
+    for i in range(m):
+        res += group_data[seq[i]]
+    return res
+
+
+
 if __name__ == '__main__':
-    r = tilingRectangle(11, 13)
-    print(r)
+    res = sortItems(5, 5, [2,0,-1,3,0], [[2,1,3],[2,4],[],[],[]])
+    print(res)
+    # res = lastSubstring("cacacb")
+    # print(res)
+    # r = maxPoints([[0,0],[94911151,94911150],[94911152,94911151]])
+    # print(r)
+    # r = tilingRectangle(11, 13)
+    # print(r)
     # x = findLadders("hit", "cog", ["hot","dot","dog","lot","log","cog"])
     # print(x)
     # x = countVowelPermutation(5)

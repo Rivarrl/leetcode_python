@@ -438,9 +438,130 @@ def findMin(nums: List[int]) -> int:
     return nums[i]
 
 
+def reverseWords(s: str) -> str:
+    """
+    151. 翻转字符串里的单词
+    给定一个字符串，逐个翻转字符串中的每个单词。
+    示例 1：
+    输入: "the sky is blue"
+    输出: "blue is sky the"
+    示例 2：
+    输入: "  hello world!  "
+    输出: "world! hello"
+    解释: 输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。
+    示例 3：
+    输入: "a good   example"
+    输出: "example good a"
+    解释: 如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。
+    说明：
+    无空格字符构成一个单词。
+    输入字符串可以在前面或者后面包含多余的空格，但是反转后的字符不能包括。
+    如果两个单词间有多余的空格，将反转后单词间的空格减少到只含一个。
+    进阶：
+    请选用 C 语言的用户尝试使用 O(1) 额外空间复杂度的原地解法。
+    """
+    # 一行
+    # return ' '.join([e for e in s.strip().split(' ') if e][::-1])
+    # 伪O(1)空间思路, 反向遍历，双指针停留到每个单词的首尾再向中心做交换
+    chars = [c for c in s.strip()]
+    i, j, n = 0, 0, len(chars)
+    while j < n:
+        if (chars[j] == ' ' or j == n - 1) and chars[i] != ' ':
+            k = j - int(chars[j] == ' ')
+            while i < k:
+                swap(chars, i, k)
+                i += 1
+                k -= 1
+            i = j
+        elif chars[i] == ' ' and chars[j] != ' ':
+            i = j
+        j += 1
+    for i in range(n//2):
+        j = n - 1 - i
+        swap(chars, i, j)
+    e = 0
+    for i in range(1, n):
+        if e > 0 and chars[i] != ' ':
+            swap(chars, i, i-e)
+        elif chars[i] == ' ' and chars[i-e-1] == ' ':
+            e += 1
+    chars = chars[:-e] if e else chars
+    return ''.join(chars)
+
+
+def smallestStringWithSwaps(s: str, pairs: List[List[int]]) -> str:
+    """
+    1202. 交换字符串中的元素
+    给你一个字符串 s，以及该字符串中的一些「索引对」数组 pairs，其中 pairs[i] = [a, b] 表示字符串中的两个索引（编号从 0 开始）。
+    你可以 任意多次交换 在 pairs 中任意一对索引处的字符。
+    返回在经过若干次交换后，s 可以变成的按字典序最小的字符串。
+    示例 1:
+    输入：s = "dcab", pairs = [[0,3],[1,2]]
+    输出："bacd"
+    解释：
+    交换 s[0] 和 s[3], s = "bcad"
+    交换 s[1] 和 s[2], s = "bacd"
+    示例 2：
+    输入：s = "dcab", pairs = [[0,3],[1,2],[0,2]]
+    输出："abcd"
+    解释：
+    交换 s[0] 和 s[3], s = "bcad"
+    交换 s[0] 和 s[2], s = "acbd"
+    交换 s[1] 和 s[2], s = "abcd"
+    示例 3：
+    输入：s = "cba", pairs = [[0,1],[1,2]]
+    输出："abc"
+    解释：
+    交换 s[0] 和 s[1], s = "bca"
+    交换 s[1] 和 s[2], s = "bac"
+    交换 s[0] 和 s[1], s = "abc"
+    提示：
+    1 <= s.length <= 10^5
+    0 <= pairs.length <= 10^5
+    0 <= pairs[i][0], pairs[i][1] < s.length
+    s 中只含有小写英文字母
+    """
+    # 找连通分量，用union-find，相同连接中的位置的字符相对字典序最低
+    from collections import defaultdict
+    def find(p):
+        while parent[p] != p:
+            p = parent[p]
+        return p
+
+    def union(i, j):
+        root_i = find(i)
+        root_j = find(j)
+        if root_i == root_j: return
+        if sz[root_i] > sz[root_j]:
+            parent[root_j] = root_i
+            sz[root_i] += sz[root_j]
+        else:
+            parent[root_i] = root_j
+            sz[root_j] += sz[root_i]
+
+    n = len(s)
+    parent = [i for i in range(n)]
+    sz = [1 for _ in range(n)]
+    for i, j in pairs:
+        union(i, j)
+    d = defaultdict(list)
+    for i in range(n):
+        d[find(i)].append(i)
+    ls = [e for e in s]
+    for v in d.values():
+        tmp = sorted([ls[e] for e in v])
+        for i in range(len(v)):
+            ls[v[i]] = tmp[i]
+    s = ''.join(ls)
+    return s
+
+
 if __name__ == '__main__':
-    ans = findMin([1,2,3])
-    print(ans)
+    smallestStringWithSwaps("dcab", [[0,3],[1,2]])
+    # r = reverseWords("a good   example")
+    # print(r)
+    # ans = findMin([1,2,3])
+    # print(ans)
     # n1 = NeighborNode(1, None)
     # n2 = NeighborNode(2, None)
     # n3 = NeighborNode(3, None)

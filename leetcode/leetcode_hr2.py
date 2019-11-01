@@ -474,6 +474,7 @@ def sortItems(n: int, m: int, group: List[int], beforeItems: List[List[int]]) ->
 
     work_group = [i for i in range(m) if len(group_data[i]) > 0]
 
+    # 以组和项目为单位分别构图并计算各节点入度
     for i in range(n):
         for j in beforeItems[i]:
             if group[i] == group[j]:
@@ -485,8 +486,10 @@ def sortItems(n: int, m: int, group: List[int], beforeItems: List[List[int]]) ->
                 if not group[i] in graph_group[group[j]]:
                     indegree_group[group[i]] += 1
                     graph_group[group[j]].add(group[i])
+    # 组间拓扑排序
     q = [i for i in range(m) if indegree_group[i] == 0]
     print(q)
+    # 判断有无环
     if len(q) == 0: return []
     seq = []
     while q:
@@ -498,9 +501,13 @@ def sortItems(n: int, m: int, group: List[int], beforeItems: List[List[int]]) ->
                 q.insert(0, i)
     print(seq)
     print(indegree_group)
+    # 判断有无环
     if len(seq) < len(indegree_group): return []
+
+    # 各组组内拓扑排序
     for k in work_group:
         q = [i for i in group_data[k] if indegree_item[i] == 0]
+        # 判断有无环
         if len(q) == 0: return []
         _seq = []
         while q:
@@ -510,6 +517,7 @@ def sortItems(n: int, m: int, group: List[int], beforeItems: List[List[int]]) ->
                 indegree_item[i] -= 1
                 if indegree_item[i] == 0:
                     q.insert(0, i)
+        # 判断有无环
         if len(_seq) < len(group_data[k]): return []
         group_data[k] = _seq
     res = []
@@ -518,10 +526,92 @@ def sortItems(n: int, m: int, group: List[int], beforeItems: List[List[int]]) ->
     return res
 
 
+def minimumMoves(grid: List[List[int]]) -> int:
+    """
+    1210. 穿过迷宫的最少移动次数
+    你还记得那条风靡全球的贪吃蛇吗？
+    我们在一个 n*n 的网格上构建了新的迷宫地图，蛇的长度为 2，也就是说它会占去两个单元格。蛇会从左上角（(0, 0) 和 (0, 1)）开始移动。我们用 0 表示空单元格，用 1 表示障碍物。蛇需要移动到迷宫的右下角（(n-1, n-2) 和 (n-1, n-1)）。
+    每次移动，蛇可以这样走：
+    如果没有障碍，则向右移动一个单元格。并仍然保持身体的水平／竖直状态。
+    如果没有障碍，则向下移动一个单元格。并仍然保持身体的水平／竖直状态。
+    如果它处于水平状态并且其下面的两个单元都是空的，就顺时针旋转 90 度。蛇从（(r, c)、(r, c+1)）移动到 （(r, c)、(r+1, c)）。
+    如果它处于竖直状态并且其右面的两个单元都是空的，就逆时针旋转 90 度。蛇从（(r, c)、(r+1, c)）移动到（(r, c)、(r, c+1)）。
+    返回蛇抵达目的地所需的最少移动次数。
+    如果无法到达目的地，请返回 -1。
+    示例 1：
+    输入：grid = [[0,0,0,0,0,1],
+                 [1,1,0,0,1,0],
+                 [0,0,0,0,1,1],
+                 [0,0,1,0,1,0],
+                 [0,1,1,0,0,0],
+                 [0,1,1,0,0,0]]
+    输出：11
+    解释：
+    一种可能的解决方案是 [右, 右, 顺时针旋转, 右, 下, 下, 下, 下, 逆时针旋转, 右, 下]。
+    示例 2：
+    输入：grid = [[0,0,1,1,1,1],
+                 [0,0,0,0,1,1],
+                 [1,1,0,0,0,1],
+                 [1,1,1,0,0,1],
+                 [1,1,1,0,0,1],
+                 [1,1,1,0,0,0]]
+    输出：9
+    提示：
+    2 <= n <= 100
+    0 <= grid[i][j] <= 1
+    蛇保证从空单元格开始出发。
+    """
+    def no_barrier(*args):
+        for x, y in args:
+            if grid[x][y] == 1:
+                return False
+        return True
+    n = len(grid)
+    if grid[n-1][n-1] == 1 or grid[n-1][n-2] == 1: return -1
+    snake_pos = (0, 0, 0, 1)
+    stk = [[snake_pos, 0]]
+    dxy = ((0, 1), (1, 0))
+    end = (n-1, n-2, n-1, n-1)
+    visit = {snake_pos}
+    while stk:
+        place, step = stk.pop()
+        x1, y1, x2, y2 = place
+        if place == end: return step
+        # 平移
+        for dx, dy in dxy:
+            m1, m2 = (x1 + dx, y1 + dy), (x2 + dx, y2 + dy)
+            move = m1 + m2
+            if n > move[0] >= 0 and n > move[1] >= 0 and n > move[2] >= 0 and n > move[3] >= 0 and not move in visit and no_barrier(m1, m2):
+                visit.add(move)
+                stk.insert(0, [move, step+1])
+        # 旋转
+        if x1 == x2:
+            move = (x1, y1, x1 + 1, y1)
+            if not move in visit and x1 + 1 < n and no_barrier((x1+1, y1), (x2+1, y2)):
+                visit.add(move)
+                stk.insert(0, [move, step+1])
+        else:
+            move = (x1, y1, x1, y1 + 1)
+            if not move in visit and y1 + 1 < n and no_barrier((x1, y1+1), (x2, y2+1)):
+                visit.add(move)
+                stk.insert(0, [move, step+1])
+    return -1
+
 
 if __name__ == '__main__':
-    res = sortItems(5, 5, [2,0,-1,3,0], [[2,1,3],[2,4],[],[],[]])
+    res = minimumMoves([[0,0,0,0,0,0,0,0,0,1],
+                        [0,1,0,0,0,0,0,1,0,1],
+                        [1,0,0,1,0,0,1,0,1,0],
+                        [0,0,0,1,0,1,0,1,0,0],
+                        [0,0,0,0,1,0,0,0,0,1],
+                        [0,0,1,0,0,0,0,0,0,0],
+                        [1,0,0,1,0,0,0,0,0,0],
+                        [0,0,0,0,0,0,0,0,0,0],
+                        [0,0,0,0,0,0,0,0,0,0],
+                        [1,1,0,0,0,0,0,0,0,0]])
     print(res)
+    # res = sortItems(5, 5, [2,0,-1,3,0], [[2,1,3],[2,4],[],[],[]])
+    # print(res)
     # res = lastSubstring("cacacb")
     # print(res)
     # r = maxPoints([[0,0],[94911151,94911150],[94911152,94911151]])

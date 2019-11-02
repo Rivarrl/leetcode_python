@@ -590,9 +590,123 @@ def maxSatisfied(customers: List[int], grumpy: List[int], X: int) -> int:
     return res
 
 
+def nthUglyNumber(n: int, a: int, b: int, c: int) -> int:
+    """
+    1201. 丑数 III
+    请你帮忙设计一个程序，用来找出第 n 个丑数。
+    丑数是可以被 a 或 b 或 c 整除的 正整数。
+    示例 1：
+    输入：n = 3, a = 2, b = 3, c = 5
+    输出：4
+    解释：丑数序列为 2, 3, 4, 5, 6, 8, 9, 10... 其中第 3 个是 4。
+    示例 2：
+    输入：n = 4, a = 2, b = 3, c = 4
+    输出：6
+    解释：丑数序列为 2, 3, 4, 6, 8, 9, 12... 其中第 4 个是 6。
+    示例 3：
+    输入：n = 5, a = 2, b = 11, c = 13
+    输出：10
+    解释：丑数序列为 2, 4, 6, 8, 10, 11, 12, 13... 其中第 5 个是 10。
+    示例 4：
+    输入：n = 1000000000, a = 2, b = 217983653, c = 336916467
+    输出：1999999984
+    提示：
+    1 <= n, a, b, c <= 10^9
+    1 <= a * b * c <= 10^18
+    本题结果在 [1, 2 * 10^9] 的范围内
+    """
+    def gcd(x, y):
+        if x == 0: return y
+        return gcd(y%x, x)
+    ab, ac, bc = a // gcd(a, b) * b, a // gcd(a, c) * c, b // gcd(b, c) * c
+    abc = ab // gcd(ab, c) * c
+    mi = min(a, b, c)
+    lo, hi = mi, mi * n
+    while lo < hi:
+        mid = lo + (hi - lo) // 2
+        m = mid // a + mid // b + mid // c - (mid // ab + mid // ac + mid // bc) + mid // abc
+        if m >= n:
+            hi = mid
+        else:
+            lo = mid + 1
+    return lo
+
+
+def reorganizeString(S: str) -> str:
+    """
+    767. 重构字符串
+    给定一个字符串S，检查是否能重新排布其中的字母，使得两相邻的字符不同。
+    若可行，输出任意可行的结果。若不可行，返回空字符串。
+    示例 1:
+    输入: S = "aab"
+    输出: "aba"
+    示例 2:
+    输入: S = "aaab"
+    输出: ""
+    注意:
+    S 只包含小写字母并且长度在[1, 500]区间内。
+    """
+    from collections import defaultdict
+    import heapq
+    n = (len(S) + 1) // 2
+    d = defaultdict(int)
+    for c in S:
+        d[c] += 1
+        if d[c] > n:
+            return ""
+    pq = [(-v, k) for k, v in d.items()]
+    heapq.heapify(pq)
+    res = []
+    while pq:
+        v1, k1 = heapq.heappop(pq)
+        res.append(k1)
+        v1 += 1
+        if pq:
+            v2, k2 = heapq.heappop(pq)
+            res.append(k2)
+            v2 += 1
+            if v2 < 0:
+                heapq.heappush(pq, (v2, k2))
+        if v1 < 0:
+            heapq.heappush(pq, (v1, k1))
+    return "".join(res)
+
+
+def maxRepOpt1(text: str) -> int:
+    """
+    1156. 单字符重复子串的最大长度
+    如果字符串中的所有字符都相同，那么这个字符串是单字符重复的字符串。
+    给你一个字符串 text，你只能交换其中两个字符一次或者什么都不做，然后得到一些单字符重复的子串。返回其中最长的子串的长度。
+    示例 1：
+    输入：text = "ababa"
+    输出：3
+    示例 2：
+    输入：text = "aaabaaa"
+    输出：6
+    示例 3：
+    输入：text = "aaabbaaa"
+    输出：4
+    示例 4：
+    输入：text = "aaaaa"
+    输出：5
+    示例 5：
+    输入：text = "abcdef"
+    输出：1
+    提示：
+    1 <= text.length <= 20000
+    text 仅由小写英文字母组成。
+    """
+    res, cur = 0, 0
+    # for s in text:
+
+
 if __name__ == '__main__':
-    res = maxSatisfied(customers = [1,0,1,2,1,1,7,5], grumpy = [0,1,0,1,0,1,0,1], X = 3)
+    res = reorganizeString("aaaaaaabcdwcc")
     print(res)
+    # res = nthUglyNumber(4,2,3,4)
+    # print(res)
+    # res = maxSatisfied(customers = [1,0,1,2,1,1,7,5], grumpy = [0,1,0,1,0,1,0,1], X = 3)
+    # print(res)
     # smallestStringWithSwaps("dcab", [[0,3],[1,2]])
     # r = reverseWords("a good   example")
     # print(r)

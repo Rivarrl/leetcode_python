@@ -22,7 +22,7 @@ print(ds)
 n, m = len(ds), len(ds[0])
 d = defaultdict()
 
-def bfs(col, start, end):
+def dfs(col, start, end):
     res = []
     if col == m - 1:
         res = [ds[i][col] for i in range(start, end+1) if ds[i][col]]
@@ -30,10 +30,10 @@ def bfs(col, start, end):
         last = end
         for i in range(end, start-1, -1):
             if ds[i][col]:
-                res.insert(0, {ds[i][col]: bfs(col+1, i, last)})
+                res.insert(0, {ds[i][col]: dfs(col + 1, i, last)})
                 last = i - 1
     return res
 
-res = bfs(0, 0, n-1)
+res = dfs(0, 0, n - 1)
 res_str = json.dumps(res[0], ensure_ascii=False)
 print(res_str)

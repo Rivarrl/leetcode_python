@@ -601,9 +601,54 @@ def yt_2_ensemble(arr):
     print(res)
     return res
 
+def yt_3_party(arr, t, n):
+    dp = [[0] * (t+1) for _ in range(n+1)]
+    for i in range(n-1, -1, -1):
+        a, b, c = arr[i]
+        for j in range(t, -1, -1):
+            if j < c:
+                dp[i][j] = dp[i+1][j]
+            else:
+                dp[i][j] = max(dp[i+1][j], dp[i+1][j-c] + a + b * (j - c))
+    return dp[0][t]
+
+
+def yt_4_beam_search(arr, n, m, k):
+    def strcmp(s1, s2, i=0):
+        if i == len(s1): return False
+        if s1[i] == s2[i]: return strcmp(s1, s2, i+1)
+        else: return ord(s1[i]) > ord(s2[i]) # 字典序 => ascii码值高的更小
+
+    class Beam:
+        def __init__(self, key, val):
+            self.key = key
+            self.val = val
+
+        def __lt__(self, other):
+            return strcmp(self.key, other.key) if self.val == other.val else self.val < other.val
+
+    import heapq
+    letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    origin = [Beam(letter[i], arr[0][i]) for i in range(m)]
+    heapq.heapify(origin)
+    status = heapq.nlargest(k, origin)
+    print([st.key for st in status])
+    for i in range(1, n):
+        tmp = []
+        for j in range(m):
+            for st in status:
+                tmp.append(Beam(st.key + letter[j], st.val+arr[i][j]))
+        heapq.heapify(tmp)
+        status = heapq.nlargest(k, tmp)
+    return [st.key for st in status]
+
 
 if __name__ == '__main__':
-    yt_2_ensemble([[0, 750, 250, 250, 750], [1, 500, 500, 500, 500], [0, 450, 550, 800, 200], [1, 340, 660, 410, 590]])
+    res = yt_3_party([[3, 2, 2], [2, 3, 4]], 7, 2)
+    print(res)
+    # res = yt_4_beam_search([[500, 500],[900, 100],[100, 900]], 3, 2, 3)
+    # print(res)
+    # yt_2_ensemble([[0, 750, 250, 250, 750], [1, 500, 500, 500, 500], [0, 450, 550, 800, 200], [1, 340, 660, 410, 590]])
     # lx_alg1()
     # res = sc_dev1("a((ur)oi)b")
     # print(res)

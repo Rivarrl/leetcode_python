@@ -672,6 +672,7 @@ def reorganizeString(S: str) -> str:
     return "".join(res)
 
 
+@timeit
 def maxRepOpt1(text: str) -> int:
     """
     1156. 单字符重复子串的最大长度
@@ -696,13 +697,86 @@ def maxRepOpt1(text: str) -> int:
     1 <= text.length <= 20000
     text 仅由小写英文字母组成。
     """
-    res, cur = 0, 0
-    # for s in text:
+    # 计算可以容忍一个字符不同的最长重复字符串长度，和该字符的总个数，如果不相等答案+1
+    from collections import defaultdict
+    d = defaultdict(list)
+    i, n = 0, len(text)
+    while i < n:
+        j = 1
+        c = text[i]
+        while i + j < n and c == text[i+j]:
+            j += 1
+        d[c].append([j, (i, i+j)])
+        i += j
+    res = 0
+    for k, v in d.items():
+        f1, f2 = int(len(v) > 1), int(len(v) > 2)
+        cur = v[len(v) - 1][0] + f1
+        for i in range(len(v) - 1):
+            cur = max(cur, v[i][0] + f1)
+            if v[i][1][1] + 1 == v[i+1][1][0]:
+                cur = max(cur, v[i][0] + v[i+1][0] + f2)
+        res = max(res, cur)
+    return res
+
+
+def subarraySum(nums: List[int], k: int) -> int:
+    """
+    560. 和为K的子数组
+    给定一个整数数组和一个整数 k，你需要找到该数组中和为 k 的连续的子数组的个数。
+    示例 1 :
+    输入:nums = [1,1,1], k = 2
+    输出: 2 , [1,1] 与 [1,1] 为两种不同的情况。
+    说明 :
+    数组的长度为 [1, 20,000]。
+    数组中元素的范围是 [-1000, 1000] ，且整数 k 的范围是 [-1e7, 1e7]。
+    """
+    from collections import defaultdict
+    s = defaultdict(int)
+    s[0] += 1
+    res, c = 0, 0
+    for x in nums:
+        c += x
+        print(c, c-k)
+        res += s[c-k]
+        s[c] += 1
+    return res
+
+
+def subarraysDivByK(A: List[int], K: int) -> int:
+    """
+    974. 和可被 K 整除的子数组
+    给定一个整数数组 A，返回其中元素之和可被 K 整除的（连续、非空）子数组的数目。
+    示例：
+    输入：A = [4,5,0,-2,-3,1], K = 5
+    输出：7
+    解释：
+    有 7 个子数组满足其元素之和可被 K = 5 整除：
+    [4, 5, 0, -2, -3, 1], [5], [5, 0], [5, 0, -2, -3], [0], [0, -2, -3], [-2, -3]
+    提示：
+    1 <= A.length <= 30000
+    -10000 <= A[i] <= 10000
+    2 <= K <= 10000
+    """
+    from collections import defaultdict
+    s = defaultdict(int)
+    s[0] += 1
+    res, x = 0, 0
+    for a in A:
+        x = (x + a) % K
+        res += s[x]
+        s[x] += 1
+    return res
 
 
 if __name__ == '__main__':
-    res = reorganizeString("aaaaaaabcdwcc")
+    res = subarraysDivByK(A = [4,5,0,-2,-3,1], K = 5)
     print(res)
+    # subarraySum([1,2,2,0,-1,5], 4)
+    # res = maxRepOpt1("babbaaabbbbbaa")
+    # print(res)
+    # res = reorganizeString("aaaaaaabcdwcc")
+    # print(res)
     # res = nthUglyNumber(4,2,3,4)
     # print(res)
     # res = maxSatisfied(customers = [1,0,1,2,1,1,7,5], grumpy = [0,1,0,1,0,1,0,1], X = 3)

@@ -236,7 +236,7 @@ def timeit(f):
         t1 = time.time()
         x = f(*args, **kwargs)
         t2 = time.time()
-        print("process runs: {0:.4f} sec".format(t2 - t1))
+        print("{0} runs: {1:.4f} sec".format(f.__name__, t2 - t1))
         return x
     return inner
 

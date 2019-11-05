@@ -99,9 +99,122 @@ def isGoodArray(nums: List[int]) -> bool:
     return False
 
 
+@timeit
+def numDupDigitsAtMostN(N: int) -> int:
+    """
+    1012. 至少有 1 位重复的数字
+    给定正整数 N，返回小于等于 N 且具有至少 1 位重复数字的正整数。
+    示例 1：
+    输入：20
+    输出：1
+    解释：具有至少 1 位重复数字的正数（<= 20）只有 11 。
+    示例 2：
+    输入：100
+    输出：10
+    解释：具有至少 1 位重复数字的正数（<= 100）有 11，22，33，44，55，66，77，88，99 和 100 。
+    示例 3：
+    输入：1000
+    输出：262
+    提示：
+    1 <= N <= 10^9
+    """
+    def f1(n):
+        res, x = 0, 1
+        for i in range(n):
+            x *= q[i]
+            res += x
+        return res
+
+    def f2(k, base):
+        res = base
+        for i in range(k+1, n):
+            res *= q[i]
+        return res
+
+    def f3(i):
+        m = int(sn[i])
+        if i == n - 1: return m + 1 - sum(visit[:m+1])
+        res = 0
+        base = m - sum(visit[:m])
+        if visit[m] == 0:
+            visit[m] = 1
+            res += f3(i + 1)
+        if base > 0:
+            res += f2(i, base)
+        return res
+
+    if N < 10: return 0
+    sn = str(N)
+    n = len(sn)
+    q = [9] + [i for i in range(9, 0, -1)]
+    visit = [0] * 11
+    res = N
+    if n - 1 >= 10:
+        res -= f1(10)
+    else:
+        x = int(sn[0])
+        res -= f1(n-1)
+        if x - 1 > 0:
+            res -= f2(0, x - 1)
+        visit[x] += 1
+        res -= f3(1)
+    return res
+
+
+@timeit
+def wordBreak(s: str, wordDict: List[str]) -> List[str]:
+    """
+    140. 单词拆分 II
+    给定一个非空字符串 s 和一个包含非空单词列表的字典 wordDict，在字符串中增加空格来构建一个句子，使得句子中所有的单词都在词典中。返回所有这些可能的句子。
+    说明：
+    分隔时可以重复使用字典中的单词。
+    你可以假设字典中没有重复的单词。
+    示例 1：
+    输入:
+    s = "catsanddog"
+    wordDict = ["cat", "cats", "and", "sand", "dog"]
+    输出:
+    [
+      "cats and dog",
+      "cat sand dog"
+    ]
+    示例 2：
+    输入:
+    s = "pineapplepenapple"
+    wordDict = ["apple", "pen", "applepen", "pine", "pineapple"]
+    输出:
+    [
+      "pine apple pen apple",
+      "pineapple pen apple",
+      "pine applepen apple"
+    ]
+    解释: 注意你可以重复使用字典中的单词。
+    示例 3：
+    输入:
+    s = "catsandog"
+    wordDict = ["cats", "dog", "sand", "and", "cat"]
+    输出:
+    []
+    """
+    def _possible(s, words):
+        n = len(s)
+        dp = [False] * (n+1)
+        dp[0] = True
+        for i in range(n+1):
+            for j in range(i-1, -1, -1):
+                if dp[j] and s[j:i] in words:
+                    dp[i] = True
+                    break
+        return dp[n]
+    if not _possible(s, set(wordDict)): return []
+
+
+
 if __name__ == '__main__':
-    res = isGoodArray([1])
-    print(res)
+    wordBreak("catsanddog", ["cat", "cats", "and", "sand", "dog"])
+    # res = numDupDigitsAtMostN(1962)
+    # res = isGoodArray([1])
+    # print(res)
     # res = minimumMoves([16,6,14,6,7,6,20,6,5,4,20,19,8,13,11,7,7,5,2,19,14,6,20,10,10,4,9,5,19,10,11,16,3,9,9,6,18,1,3,12,12,11,17,3,11,11,7,16,12,12,5,8,7,10,15,20,3,15,9,10,11,11,2,1,15,19,4,11,15,19,17,13,10,20,20,19,8,6,2,14,12,5,2,4,16,10,3,4,4,12,2,6,5,9,15,4,10,2,15,15])
     # print(res)
     # res = minimumMoves2([16,6,14,6,7,6,20,6,5,4,20,19,8,13,11,7,7,5,2,19,14,6,20,10,10,4,9,5,19,10,11,16,3,9,9,6,18,1,3,12,12,11,17,3,11,11,7,16,12,12,5,8,7,10,15,20,3,15,9,10,11,11,2,1,15,19,4,11,15,19,17,13,10,20,20,19,8,6,2,14,12,5,2,4,16,10,3,4,4,12,2,6,5,9,15,4,10,2,15,15])

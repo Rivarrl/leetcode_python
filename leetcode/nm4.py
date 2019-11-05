@@ -237,7 +237,7 @@ def solve(board: List[List[str]]) -> None:
     X X X X
     X O X X
     解释:
-    被围绕的区间不会存在于边界上，换句话说，任何边界上的 'O' 都不会被填充为 'X'。 任何不在边界上，或不与边界上的 'O' 相连的 'O' 最终都会被填充为 'X'。如果两个元素在水平或垂直方向相邻，则称它们是“相连”的。
+    被围绕的区间不会存在于边界上，换句话说，任何边界上的 'O' 都不会被填充为 'X'。 任何不在边界上，或不与边界上的 'O' 相连的 'O' 最终都会被填充为 'X'。如果两个元素在水平或垂直方向相邻，则称它们是"相连"的。
     """
     # 先在边缘dfs找O记录，再遍历把不在记录中的O改为X
     def dfs(i, j):
@@ -769,9 +769,125 @@ def subarraysDivByK(A: List[int], K: int) -> int:
     return res
 
 
+@timeit
+def findSubstringInWraproundString(p: str) -> int:
+    """
+    467. 环绕字符串中唯一的子字符串
+    把字符串 s 看作是"abcdefghijklmnopqrstuvwxyz"的无限环绕字符串，所以 s 看起来是这样的："...zabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcd....". 
+    现在我们有了另一个字符串 p 。你需要的是找出 s 中有多少个唯一的 p 的非空子串，尤其是当你的输入是字符串 p ，你需要输出字符串 s 中 p 的不同的非空子串的数目。 
+    注意: p 仅由小写的英文字母组成，p 的大小可能超过 10000。
+    示例 1:
+    输入: "a"
+    输出: 1
+    解释: 字符串 S 中只有一个"a"子字符。
+    示例 2:
+    输入: "cac"
+    输出: 2
+    解释: 字符串 S 中的字符串"cac"只有两个子串"a"、"c"。
+    示例 3:
+    输入: "zab"
+    输出: 6
+    解释: 在字符串 S 中有六个子串"z"、"a"、"b"、"za"、"ab"、"zab"。
+    """
+    # 记录最长连续字符串中的字母标号
+    if len(p) <= 1: return len(p)
+    last = ord(p[0])
+    d = {p[0]: 1}
+    ctr = 1
+    for c in p[1:]:
+        if (ord(c) - last + 26) % 26 == 1:
+            ctr += 1
+        else:
+            ctr = 1
+        d[c] = max(d.get(c, 0), ctr)
+        last = ord(c)
+    print(d)
+    return sum(d.values())
+
+@timeit
+def maxSumAfterPartitioning(A: List[int], K: int) -> int:
+    """
+    1043. 分隔数组以得到最大和
+    给出整数数组 A，将该数组分隔为长度最多为 K 的几个（连续）子数组。分隔完成后，每个子数组的中的值都会变为该子数组中的最大值。
+    返回给定数组完成分隔后的最大和。
+    示例：
+    输入：A = [1,15,7,9,2,5,10], K = 3
+    输出：84
+    解释：A 变为 [15,15,15,9,10,10,10]
+    提示：
+    1 <= K <= A.length <= 500
+    0 <= A[i] <= 10^6
+    """
+    # 动态规划
+    n = len(A)
+    dp = [0] * (n+1)
+    for i in range(1, n+1):
+        j = i - 1
+        cur_max = float('-inf')
+        while i - j <= K and j >= 0:
+            cur_max = max(cur_max, A[j])
+            dp[i] = max(dp[i], dp[j] + cur_max * (i-j))
+            j -= 1
+    return dp[n]
+
+
+@timeit
+def canPartition(nums: List[int]) -> bool:
+    """
+    416. 分割等和子集
+    给定一个只包含正整数的非空数组。是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
+    注意:
+    每个数组中的元素不会超过 100
+    数组的大小不会超过 200
+    示例 1:
+    输入: [1, 5, 11, 5]
+    输出: true
+    解释: 数组可以分割成 [1, 5, 5] 和 [11].
+    示例 2:
+    输入: [1, 2, 3, 5]
+    输出: false
+    解释: 数组不能分割成两个元素和相等的子集.
+    """
+    """
+    # 自顶向下记忆化搜索
+    x = sum(nums)
+    if x & 1: return False
+    def dfs(v, i):
+        if i == 0: return v == nums[0]
+        if dp[i][v] != None:
+            return dp[i][v]
+        dp[i][v] = dfs(v-nums[i], i-1) or dfs(v, i-1)
+        return dp[i][v]
+
+    hf = x // 2
+    n = len(nums)
+    dp = [[None] * (hf+1) for _ in range(n+1)]
+    return dfs(hf, n-1)
+    """
+    # 自底向上动态规划
+    n = len(nums)
+    if n < 2: return False
+    x = sum(nums)
+    if x & 1: return False
+    hf = x // 2
+    dp = [[False] * (hf+1) for _ in range(n+1)]
+    for i in range(n):
+        dp[i][0] = True
+    if nums[0] == hf: return True
+    elif nums[0] < hf:
+        dp[0][nums[0]] = False
+    for i in range(1, n):
+        for v in range(1, hf+1):
+            dp[i][v] = dp[i-1][v-nums[i]] or dp[i-1][v]
+    return dp[n-1][hf]
+
+
 if __name__ == '__main__':
-    res = subarraysDivByK(A = [4,5,0,-2,-3,1], K = 5)
-    print(res)
+    canPartition([100])
+    # maxSumAfterPartitioning([1,15,7,9,2,5,10], 3)
+    # findSubstringInWraproundString("zabcefghicdefgh")
+    # res = subarraysDivByK(A = [4,5,0,-2,-3,1], K = 5)
+    # print(res)
     # subarraySum([1,2,2,0,-1,5], 4)
     # res = maxRepOpt1("babbaaabbbbbaa")
     # print(res)

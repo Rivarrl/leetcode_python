@@ -83,9 +83,63 @@ def minimumSwap(s1: str, s2: str) -> int:
             d[c1] += 1
     return sum(d.values()) // 2 + int(d['x'] & 1)
 
+
+def repeatedStringMatch(A: str, B: str) -> int:
+    """
+    686. 重复叠加字符串匹配
+    给定两个字符串 A 和 B, 寻找重复叠加字符串A的最小次数，使得字符串B成为叠加后的字符串A的子串，如果不存在则返回 -1。
+    举个例子，A = "abcd"，B = "cdabcdab"。
+    答案为 3， 因为 A 重复叠加三遍后为 “abcdabcdabcd”，此时 B 是其子串；A 重复叠加两遍后为"abcdabcd"，B 并不是其子串。
+    注意:
+     A 与 B 字符串的长度在1和10000区间范围内。
+    """
+    x = len(B) // len(A)
+    if str(A*x).find(B): return x
+    if str(A*(x+1)).find(B): return x+1
+    if str(A*(x+2)).find(B): return x+2
+    return -1
+
+
+@timeit
+def minDiffInBST(root: TreeNode) -> int:
+    """
+    783. 二叉搜索树结点最小距离
+    给定一个二叉搜索树的根结点 root, 返回树中任意两节点的差的最小值。
+    示例：
+    输入: root = [4,2,6,1,3,null,null]
+    输出: 1
+    解释:
+    注意，root是树结点对象(TreeNode object)，而不是数组。
+    给定的树 [4,2,6,1,3,null,null] 可表示为下图:
+              4
+            /   \
+          2      6
+         / \
+        1   3
+    最小的差值是 1, 它是节点1和节点2的差值, 也是节点3和节点2的差值。
+    注意：
+    二叉树的大小范围在 2 到 100。
+    二叉树总是有效的，每个节点的值都是整数，且不重复。
+    """
+    def dfs(p):
+        if not p: return
+        nonlocal last, res
+        dfs(p.left)
+        if last != None:
+            res = min(res, p.val - last.val)
+        last = p
+        dfs(p.right)
+    res = float('inf')
+    last = None
+    dfs(root)
+    return res
+
+
 if __name__ == '__main__':
-    res = minimumSwap("yyxyxxx", "xyyyxxx")
-    print(res)
+    x = construct_tree_node([4,2,6,1,3])
+    minDiffInBST(x)
+    # res = minimumSwap("yyxyxxx", "xyyyxxx")
+    # print(res)
     # res = transformArray([6,5,8,6,7,7,3,9,8,8,3,1,2,9,8,3])
     # print(res)
     pass

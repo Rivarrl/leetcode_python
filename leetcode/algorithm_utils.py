@@ -231,12 +231,14 @@ def heap_sort(arr):
         heapify(arr, 0)
 
 
-def timeit(f):
+def timeit(f, res_print=True):
     def inner(*args, **kwargs):
         t1 = time.time()
         x = f(*args, **kwargs)
         t2 = time.time()
         print("{0} runs: {1:.4f} sec".format(f.__name__, t2 - t1))
+        if res_print:
+            print(x)
         return x
     return inner
 

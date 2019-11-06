@@ -804,6 +804,7 @@ def findSubstringInWraproundString(p: str) -> int:
     print(d)
     return sum(d.values())
 
+
 @timeit
 def maxSumAfterPartitioning(A: List[int], K: int) -> int:
     """
@@ -943,8 +944,9 @@ def checkSubarraySum(nums: List[int], k: int) -> bool:
     return False
 
 
+
 if __name__ == '__main__':
-    checkSubarraySum([23,2,6,4,7], -6)
+    checkSubarraySum([0,3,5], 3)
     # wiggleMaxLength([1,17,5,10,13,15,10,5,16,8])
     # canPartition([100])
     # maxSumAfterPartitioning([1,15,7,9,2,5,10], 3)

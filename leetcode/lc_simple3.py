@@ -395,13 +395,13 @@ def pathSum(root, sum):
         if not node:
             return
         s += node.val
-        ans[0] += lookup[s - sum]
-        lookup[s] += 1
+        ans[0] += d[s - sum]
+        d[s] += 1
         helper(node.left, s)
         helper(node.right, s)
-        lookup[s] -= 1
-    lookup = defaultdict(int)
-    lookup[0] = 1
+        d[s] -= 1
+    d = defaultdict(int)
+    d[0] = 1
     ans = [0]
     helper(root, 0)
     return ans[0]

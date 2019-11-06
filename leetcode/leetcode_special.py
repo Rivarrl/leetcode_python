@@ -600,18 +600,113 @@ class Leaderboard:
         self.board[playerId][0] = 0
 
 
+class TrieNode:
+    def __init__(self, a=None, is_word=False):
+        self.a = a
+        self.is_word = is_word
+        self.children = []
+
+class Trie:
+    """
+    208. 实现 Trie (前缀树)
+    实现一个 Trie (前缀树)，包含 insert, search, 和 startsWith 这三个操作。
+    示例:
+    Trie trie = new Trie();
+    trie.insert("apple");
+    trie.search("apple");   // 返回 true
+    trie.search("app");     // 返回 false
+    trie.startsWith("app"); // 返回 true
+    trie.insert("app");
+    trie.search("app");     // 返回 true
+    说明:
+    你可以假设所有的输入都是由小写字母 a-z 构成的。
+    保证所有输入均为非空字符串。
+    """
+    def __init__(self):
+        """
+        Initialize your data structure here.
+        """
+        self.root = TrieNode()
+
+    def insert(self, word: str) -> None:
+        """
+        Inserts a word into the trie.
+        """
+        if len(word) == 0: return
+        p = self.root
+        for w in word:
+            for c in p.children:
+                if w == c.a:
+                    q = c
+                    break
+            else:
+                q = TrieNode(w)
+                p.children.append(q)
+            p = q
+        p.is_word = True
+
+
+    def search(self, word: str) -> bool:
+        """
+        Returns if the word is in the trie.
+        """
+        p = self.root
+        for w in word:
+            for c in p.children:
+                if w == c.a:
+                    p = c
+                    break
+            else:
+                break
+        else:
+            return p.is_word
+        return False
+
+
+    def startsWith(self, prefix: str) -> bool:
+        """
+        Returns if there is any word in the trie that starts with the given prefix.
+        """
+        p = self.root
+        for w in prefix:
+            for c in p.children:
+                if w == c.a:
+                    p = c
+                    break
+            else:
+                break
+        else:
+            return True
+        return False
+
+
 if __name__ == '__main__':
-    lb = Leaderboard()
-    lb.addScore(1,73)
-    lb.addScore(2,56)
-    lb.addScore(3,39)
-    lb.addScore(4,51)
-    lb.addScore(5,4)
-    print(lb.top(1))
-    lb.reset(1)
-    lb.reset(2)
-    lb.addScore(2,51)
-    print(lb.top(3))
+    # trie = Trie()
+    # a = trie.insert("apple")
+    # print(a)
+    # a = trie.search("apple")
+    # print(a)
+    # a = trie.search("app")
+    # print(a)
+    # a = trie.startsWith("app")
+    # print(a)
+    # a = trie.insert("app")
+    # print(a)
+    # a = trie.search("app")
+    # print(a)
+
+
+    # lb = Leaderboard()
+    # lb.addScore(1,73)
+    # lb.addScore(2,56)
+    # lb.addScore(3,39)
+    # lb.addScore(4,51)
+    # lb.addScore(5,4)
+    # print(lb.top(1))
+    # lb.reset(1)
+    # lb.reset(2)
+    # lb.addScore(2,51)
+    # print(lb.top(3))
 
     # x = construct_tree_node([4,2,6,1,3,5,7])
     # bs = BSTIterator_Morris(x)

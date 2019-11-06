@@ -295,6 +295,7 @@ def bd_alg1(n):
     :param n: int
     :return: int
     """
+    # 卡塔兰数
     dp = [0] * (n+1)
     dp[0] = 1
     dp[2] = 1
@@ -544,13 +545,36 @@ def sc_dev1(s):
 def sc_dev2(m, arr):
     """
     分布式计算 (携程2019开发岗算法题3)
-    在m个节点的分布式计算系统中, 有一批任务需要执行, 每个任务需要的时间是arr[i], 每个节点同一时间只能执行一个任务, 每个节点只能执行连续的任务
+    在m个节点的分布式计算系统中, 有一批任务需要执行, 每个任务需要的时间是arr[i],
+    每个节点同一时间只能执行一个任务, 每个节点只能执行连续的任务
     给定的任务列表arr和节点数m, 求最短的执行时间
     例如:
     输入: 3, [1,5,3,4,2]
     输出: 6
     解释: 最短时间的分配方式是15|3|42
     """
+    # 最大值最小化
+    def judge(x):
+        cur = line = 0
+        for a in arr:
+            if cur + a > x:
+                line += 1
+                cur = a
+            else:
+                cur += a
+        if line >= m:
+            return False
+        return True
+    lo, hi = max(arr), sum(arr)
+    ans = 0
+    while lo <= hi:
+        mid = lo + (hi - lo) // 2
+        if judge(mid):
+            ans = mid
+            hi = mid - 1
+        else:
+            lo = mid + 1
+    return ans
 
 
 def lx_alg1():
@@ -644,8 +668,10 @@ def yt_4_beam_search(arr, n, m, k):
 
 
 if __name__ == '__main__':
-    res = yt_3_party([[3, 2, 2], [2, 3, 4]], 7, 2)
+    res = sc_dev2(3, [1,5,3,4,2])
     print(res)
+    # res = yt_3_party([[3, 2, 2], [2, 3, 4]], 7, 2)
+    # print(res)
     # res = yt_4_beam_search([[500, 500],[900, 100],[100, 900]], 3, 2, 3)
     # print(res)
     # yt_2_ensemble([[0, 750, 250, 250, 750], [1, 500, 500, 500, 500], [0, 450, 550, 800, 200], [1, 340, 660, 410, 590]])

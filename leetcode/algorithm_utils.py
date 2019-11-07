@@ -59,6 +59,12 @@ class QuadNode:
         self.bottomLeft = bottomLeft
         self.bottomRight = bottomRight
 
+class RandomNode:
+    def __init__(self, val, next, random):
+        self.val = val
+        self.next = next
+        self.random = random
+
 class Bucket:
     def __init__(self,m=0,M=0,isempty=True):
         self.m = m

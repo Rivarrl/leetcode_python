@@ -944,9 +944,114 @@ def checkSubarraySum(nums: List[int], k: int) -> bool:
     return False
 
 
+def copyRandomList(head: 'RandomNode') -> 'RandomNode':
+    """
+    138. 复制带随机指针的链表
+    给定一个链表，每个节点包含一个额外增加的随机指针，该指针可以指向链表中的任何节点或空节点。
+    要求返回这个链表的深拷贝。 
+    示例：
+    输入：
+    {"$id":"1","next":{"$id":"2","next":null,"random":{"$ref":"2"},"val":2},"random":{"$ref":"2"},"val":1}
+    解释：
+    节点 1 的值是 1，它的下一个指针和随机指针都指向节点 2 。
+    节点 2 的值是 2，它的下一个指针指向 null，随机指针指向它自己。
+    提示：
+    你必须返回给定头的拷贝作为对克隆列表的引用。
+    """
+    from collections import defaultdict
+    def helper(node):
+        if not node: return
+        p = RandomNode(node.val, None, None)
+        d[node.random].append(p)
+        dr[node] = p
+        p.next = helper(node.next)
+        return p
+    d = defaultdict(list)
+    dr = {}
+    p = helper(head)
+    while head:
+        if head in d:
+            for q in d[head]:
+                q.random = dr[head]
+        head = head.next
+    return p
+
+
+def longestSubstring(s: str, k: int) -> int:
+    """
+    395. 至少有K个重复字符的最长子串
+    找到给定字符串（由小写字符组成）中的最长子串 T ， 要求 T 中的每一字符出现次数都不少于 k 。输出 T 的长度。
+    示例 1:
+    输入:
+    s = "aaabb", k = 3
+    输出:
+    3
+    最长子串为 "aaa" ，其中 'a' 重复了 3 次。
+    示例 2:
+    输入:
+    s = "ababbc", k = 2
+    输出:
+    5
+    最长子串为 "ababb" ，其中 'a' 重复了 2 次， 'b' 重复了 3 次。
+    """
+    if len(s) < k: return 0
+    from collections import Counter
+    for c, v in Counter(s).items():
+        if v < k:
+            return max(longestSubstring(e, k) for e in s.split(c))
+    return len(s)
+
+
+
+def alphabetBoardPath(target: str) -> str:
+    """
+    1138. 字母板上的路径
+    我们从一块字母板上的位置 (0, 0) 出发，该坐标对应的字符为 board[0][0]。
+    在本题里，字母板为board = ["abcde", "fghij", "klmno", "pqrst", "uvwxy", "z"].
+    我们可以按下面的指令规则行动：
+    如果方格存在，'U' 意味着将我们的位置上移一行；
+    如果方格存在，'D' 意味着将我们的位置下移一行；
+    如果方格存在，'L' 意味着将我们的位置左移一列；
+    如果方格存在，'R' 意味着将我们的位置右移一列；
+    '!' 会把在我们当前位置 (r, c) 的字符 board[r][c] 添加到答案中。
+    返回指令序列，用最小的行动次数让答案和目标 target 相同。你可以返回任何达成目标的路径。
+    示例 1：
+    输入：target = "leet"
+    输出："DDR!UURRR!!DDD!"
+    示例 2：
+    输入：target = "code"
+    输出："RR!DDRR!UUL!R!"
+    提示：
+    1 <= target.length <= 100
+    target 仅含有小写英文字母。
+    """
+    def get_pos(c):
+        n = ord(c) - ord('a')
+        return n // 5, n % 5
+    def get_move(x1, y1, x2, y2):
+        s1, s2 = x2 - x1, y2 - y1
+        d1 = 'D' * s1 if s1 > 0 else 'U' * (-s1)
+        d2 = 'R' * s2 if s2 > 0 else 'L' * (-s2)
+        if x2 == 5:
+            return d1[:-1] + d2 + d1[-1]
+        return d1 + d2
+    res = []
+    last = 0, 0
+    for i in range(len(target)):
+        cur = get_pos(target[i])
+        if last == cur:
+            res.append("!")
+            continue
+        res.append(get_move(*last, *cur))
+        res.append("!")
+        last = cur
+    return "".join(res)
+
 
 if __name__ == '__main__':
-    checkSubarraySum([0,3,5], 3)
+    alphabetBoardPath("zdz")
+    # longestSubstring("ababbc", 2)
+    # checkSubarraySum([0,3,5], 3)
     # wiggleMaxLength([1,17,5,10,13,15,10,5,16,8])
     # canPartition([100])
     # maxSumAfterPartitioning([1,15,7,9,2,5,10], 3)

@@ -246,9 +246,9 @@ def maximizeSweetness(sweetness: List[int], K: int) -> int:
             if piece >= K+1:
                 return True
         return False
-    lo, hi = 1, sum(sweetness) // (K+1) + 1
+    lo, hi = 1, sum(sweetness) // (K+1)
     while lo < hi:
-        mid = lo + (hi - lo) // 2
+        mid = lo + (hi + 1 - lo) // 2
         if judge(mid):
             lo = mid
         else:

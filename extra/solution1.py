@@ -626,15 +626,16 @@ def yt_2_ensemble(arr):
     return res
 
 def yt_3_party(arr, t, n):
+    arr.sort(key= lambda x:(x[2] / x[1]), reverse=True)
     dp = [[0] * (t+1) for _ in range(n+1)]
-    for i in range(n-1, -1, -1):
+    for i in range(n):
         a, b, c = arr[i]
         for j in range(t, -1, -1):
             if j < c:
-                dp[i][j] = dp[i+1][j]
+                dp[i+1][j] = dp[i][j]
             else:
-                dp[i][j] = max(dp[i+1][j], dp[i+1][j-c] + a + b * (j - c))
-    return dp[0][t]
+                dp[i+1][j] = max(dp[i][j], dp[i][j-c] + a + b * (j - c))
+    return dp[n][t]
 
 
 def yt_4_beam_search(arr, n, m, k):
@@ -668,10 +669,10 @@ def yt_4_beam_search(arr, n, m, k):
 
 
 if __name__ == '__main__':
-    res = sc_dev2(3, [1,5,3,4,2])
-    print(res)
-    # res = yt_3_party([[3, 2, 2], [2, 3, 4]], 7, 2)
+    # res = sc_dev2(3, [1,5,3,4,2])
     # print(res)
+    res = yt_3_party([[2, 3, 4], [3, 2, 2]], 7, 2)
+    print(res)
     # res = yt_4_beam_search([[500, 500],[900, 100],[100, 900]], 3, 2, 3)
     # print(res)
     # yt_2_ensemble([[0, 750, 250, 250, 750], [1, 500, 500, 500, 500], [0, 450, 550, 800, 200], [1, 340, 660, 410, 590]])

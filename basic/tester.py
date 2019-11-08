@@ -6,6 +6,6 @@ def init_array(n, m):
 
 
 if __name__ == '__main__':
-    init_array(10, 100000)
-    init_array(100000, 10)
+    init_array(10, 600000)
+    init_array(600000, 10)
     pass

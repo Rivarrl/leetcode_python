@@ -256,8 +256,102 @@ def maximizeSweetness(sweetness: List[int], K: int) -> int:
     return lo
 
 
+@timeit
+def countRangeSum(nums: List[int], lower: int, upper: int) -> int:
+    """
+    327. 区间和的个数
+    给定一个整数数组 nums，返回区间和在 [lower, upper] 之间的个数，包含 lower 和 upper。
+    区间和 S(i, j) 表示在 nums 中，位置从 i 到 j 的元素之和，包含 i 和 j (i ≤ j)。
+    说明:
+    最直观的算法复杂度是 O(n2) ，请在此基础上优化你的算法。
+    示例:
+    输入: nums = [-2,5,-1], lower = -2, upper = 2,
+    输出: 3
+    解释: 3个区间分别是: [0,0], [2,2], [0,2]，它们表示的和分别为: -2, -1, 2。
+    """
+    """
+    # 前缀和遍历 O(n^2)
+    from collections import defaultdict
+    d = defaultdict(int)
+    d[0] = 1
+    res, c = 0, 0
+    for x in nums:
+        c += x
+        for i in range(lower, upper+1):
+            res += d[c - i]
+        d[c] += 1
+    return res
+    """
+    """
+    # 前缀和 + 二分查找 O(nlogn)
+    import bisect
+    # 计算前缀和
+    pre = [0]
+    for e in nums:
+        pre += [pre[-1] + e]
+    # 将前缀和，二分查找计算范围内的命中数，并使其变为有序
+    res = 0
+    q = []
+    # 一定要倒序遍历，因为边界是要较小的前缀和分别加lower和upper
+    for k in pre[::-1]:
+        i, j = k + lower, k + upper
+        left = bisect.bisect_left(q, i)
+        right = bisect.bisect_right(q, j)
+        res += right - left
+        bisect.insort(q, k)
+    return res
+    """
+    # 前缀和 + 归并排序
+    def merge(lo, hi):
+        if lo >= hi: return 0
+        mid = lo + (hi - lo) // 2
+        res = merge(lo, mid) + merge(mid+1, hi)
+        # 计数，落入区间[lower, upper] = [0, upper] - [0, lower)
+        left = lo
+        _lower = _upper = mid + 1
+        while left < mid + 1:
+            # [0, lower)
+            while _lower <= hi and pre[_lower] - pre[left] < lower:
+                _lower += 1
+            # [0, upper]
+            while _upper <= hi and pre[_upper] - pre[left] <= upper:
+                _upper += 1
+            res += _upper - _lower
+            left += 1
+        # 归并
+        left, right = lo, mid + 1
+        i = lo
+        while left <= mid or right <= hi:
+            if left > mid:
+                aux[i] = pre[right]
+                right += 1
+            elif right > hi:
+                aux[i] = pre[left]
+                left += 1
+            elif pre[left] > pre[right]:
+                aux[i] = pre[right]
+                right += 1
+            else:
+                aux[i] = pre[left]
+                left += 1
+            i += 1
+        for i in range(lo, hi+1):
+            pre[i] = aux[i]
+        return res
+
+    pre = [0]
+    for e in nums:
+        pre += [pre[-1] + e]
+    # 归并用的辅助数组
+    n = len(pre)
+    aux = [0] * n
+    res = merge(0, n-1)
+    return res
+
+
 if __name__ == '__main__':
-    maximizeSweetness([1,2,3,4,5,6,7,8,9], 5)
+    countRangeSum([-2,5,-1,0],-2,0)
+    # maximizeSweetness([1,2,3,4,5,6,7,8,9], 5)
     # wordBreak("catsanddog", ["cat", "cats", "and", "sand", "dog"])
     # res = numDupDigitsAtMostN(1962)
     # res = isGoodArray([1])

@@ -1,5 +1,4 @@
 from typing import List
-
 from algorithm_utils import *
 
 @timeit
@@ -162,56 +161,6 @@ def numDupDigitsAtMostN(N: int) -> int:
 
 
 @timeit
-def wordBreak(s: str, wordDict: List[str]) -> List[str]:
-    """
-    140. 单词拆分 II
-    给定一个非空字符串 s 和一个包含非空单词列表的字典 wordDict，在字符串中增加空格来构建一个句子，使得句子中所有的单词都在词典中。返回所有这些可能的句子。
-    说明：
-    分隔时可以重复使用字典中的单词。
-    你可以假设字典中没有重复的单词。
-    示例 1：
-    输入:
-    s = "catsanddog"
-    wordDict = ["cat", "cats", "and", "sand", "dog"]
-    输出:
-    [
-      "cats and dog",
-      "cat sand dog"
-    ]
-    示例 2：
-    输入:
-    s = "pineapplepenapple"
-    wordDict = ["apple", "pen", "applepen", "pine", "pineapple"]
-    输出:
-    [
-      "pine apple pen apple",
-      "pineapple pen apple",
-      "pine applepen apple"
-    ]
-    解释: 注意你可以重复使用字典中的单词。
-    示例 3：
-    输入:
-    s = "catsandog"
-    wordDict = ["cats", "dog", "sand", "and", "cat"]
-    输出:
-    []
-    """
-    def _possible(s, words):
-        n = len(s)
-        dp = [False] * (n+1)
-        dp[0] = True
-        for i in range(n+1):
-            for j in range(i-1, -1, -1):
-                if dp[j] and s[j:i] in words:
-                    dp[i] = True
-                    break
-        return dp[n]
-    if not _possible(s, set(wordDict)): return []
-
-
-
-
-@timeit
 def maximizeSweetness(sweetness: List[int], K: int) -> int:
     """
     5111. 分享巧克力
@@ -349,8 +298,141 @@ def countRangeSum(nums: List[int], lower: int, upper: int) -> int:
     return res
 
 
+@timeit
+def countSmaller(nums: List[int]) -> List[int]:
+    """
+    315. 计算右侧小于当前元素的个数
+    给定一个整数数组 nums，按要求返回一个新数组 counts。
+    数组 counts 有该性质： counts[i] 的值是  nums[i] 右侧小于 nums[i] 的元素的数量。
+    示例:
+    输入: [5,2,6,1]
+    输出: [2,1,1,0]
+    解释:
+    5 的右侧有 2 个更小的元素 (2 和 1).
+    2 的右侧仅有 1 个更小的元素 (1).
+    6 的右侧有 1 个更小的元素 (1).
+    1 的右侧有 0 个更小的元素.
+    """
+    """
+    # 倒序向前二分查找 + 按序插入
+    import bisect
+    q = []
+    res = []
+    for e in nums[::-1]:
+        i = bisect.bisect_left(q, e)
+        res.append(i)
+        bisect.insort(q, e)
+    return res[::-1]
+    """
+    # 归并排序，边归并边找逆序数对
+    arr = []
+    res = [0] * len(nums)
+    for idx, num in enumerate(nums):
+        arr.append((idx, num))
+
+    def merge_sort(arr):
+        if len(arr) <= 1:
+            return arr
+        mid = len(arr) // 2
+        left = merge_sort(arr[:mid])
+        right = merge_sort(arr[mid:])
+        return merge(left, right)
+
+    def merge(left, right):
+        tmp = []
+        i = 0
+        j = 0
+        while i < len(left) or j < len(right):
+            if j == len(right) or i < len(left) and left[i][1] <= right[j][1]:
+                tmp.append(left[i])
+                res[left[i][0]] += j
+                i += 1
+            else:
+                tmp.append(right[j])
+                j += 1
+        return tmp
+
+    merge_sort(arr)
+    return res
+
+
+@timeit
+def wordBreak(s: str, wordDict: List[str]) -> List[str]:
+    """
+    140. 单词拆分 II
+    给定一个非空字符串 s 和一个包含非空单词列表的字典 wordDict，在字符串中增加空格来构建一个句子，使得句子中所有的单词都在词典中。返回所有这些可能的句子。
+    说明：
+    分隔时可以重复使用字典中的单词。
+    你可以假设字典中没有重复的单词。
+    示例 1：
+    输入:
+    s = "catsanddog"
+    wordDict = ["cat", "cats", "and", "sand", "dog"]
+    输出:
+    [
+      "cats and dog",
+      "cat sand dog"
+    ]
+    示例 2：
+    输入:
+    s = "pineapplepenapple"
+    wordDict = ["apple", "pen", "applepen", "pine", "pineapple"]
+    输出:
+    [
+      "pine apple pen apple",
+      "pineapple pen apple",
+      "pine applepen apple"
+    ]
+    解释: 注意你可以重复使用字典中的单词。
+    示例 3：
+    输入:
+    s = "catsandog"
+    wordDict = ["cats", "dog", "sand", "and", "cat"]
+    输出:
+    []
+    """
+    def _possible(s, words):
+        n = len(s)
+        dp = [False] * (n+1)
+        dp[0] = True
+        for i in range(n+1):
+            for j in range(i-1, -1, -1):
+                if dp[j] and s[j:i] in words:
+                    dp[i] = True
+                    break
+        return dp[n]
+    if not _possible(s, set(wordDict)): return []
+
+
+def shortestSubarray(A: List[int], K: int) -> int:
+    """
+    862. 和至少为 K 的最短子数组
+    返回 A 的最短的非空连续子数组的长度，该子数组的和至少为 K 。
+    如果没有和至少为 K 的非空子数组，返回 -1 。
+    示例 1：
+    输入：A = [1], K = 1
+    输出：1
+    示例 2：
+    输入：A = [1,2], K = 4
+    输出：-1
+    示例 3：
+    输入：A = [2,-1,2], K = 3
+    输出：3
+    提示：
+    1 <= A.length <= 50000
+    -10 ^ 5 <= A[i] <= 10 ^ 5
+    1 <= K <= 10 ^ 9
+    """
+    pre = [0]
+    for x in A:
+        pre += [pre[-1] + x]
+
+
+
+
 if __name__ == '__main__':
-    countRangeSum([-2,5,-1,0],-2,0)
+    countSmaller([5,2,6,1])
+    # countRangeSum([-2,5,-1,0],-2,0)
     # maximizeSweetness([1,2,3,4,5,6,7,8,9], 5)
     # wordBreak("catsanddog", ["cat", "cats", "and", "sand", "dog"])
     # res = numDupDigitsAtMostN(1962)

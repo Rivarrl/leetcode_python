@@ -356,6 +356,40 @@ def countSmaller(nums: List[int]) -> List[int]:
     return res
 
 
+def shortestSubarray(A: List[int], K: int) -> int:
+    """
+    862. 和至少为 K 的最短子数组
+    返回 A 的最短的非空连续子数组的长度，该子数组的和至少为 K 。
+    如果没有和至少为 K 的非空子数组，返回 -1 。
+    示例 1：
+    输入：A = [1], K = 1
+    输出：1
+    示例 2：
+    输入：A = [1,2], K = 4
+    输出：-1
+    示例 3：
+    输入：A = [2,-1,2], K = 3
+    输出：3
+    提示：
+    1 <= A.length <= 50000
+    -10 ^ 5 <= A[i] <= 10 ^ 5
+    1 <= K <= 10 ^ 9
+    """
+    pre = [0]
+    for x in A:
+        pre += [pre[-1] + x]
+    q = []
+    i, n = 0, len(pre)
+    res = n + 1
+    for i in range(n):
+        while q and pre[i] <= pre[q[-1]]:
+            q.pop()
+        while q and pre[i] >= pre[q[0]] + K:
+            res = min(res, i - q.pop(0))
+        q.append(i)
+    return res if res != n + 1 else -1
+
+
 @timeit
 def wordBreak(s: str, wordDict: List[str]) -> List[str]:
     """
@@ -392,7 +426,6 @@ def wordBreak(s: str, wordDict: List[str]) -> List[str]:
     []
     """
     def _possible(s, words):
-        n = len(s)
         dp = [False] * (n+1)
         dp[0] = True
         for i in range(n+1):
@@ -401,40 +434,29 @@ def wordBreak(s: str, wordDict: List[str]) -> List[str]:
                     dp[i] = True
                     break
         return dp[n]
-    if not _possible(s, set(wordDict)): return []
 
-
-def shortestSubarray(A: List[int], K: int) -> int:
-    """
-    862. 和至少为 K 的最短子数组
-    返回 A 的最短的非空连续子数组的长度，该子数组的和至少为 K 。
-    如果没有和至少为 K 的非空子数组，返回 -1 。
-    示例 1：
-    输入：A = [1], K = 1
-    输出：1
-    示例 2：
-    输入：A = [1,2], K = 4
-    输出：-1
-    示例 3：
-    输入：A = [2,-1,2], K = 3
-    输出：3
-    提示：
-    1 <= A.length <= 50000
-    -10 ^ 5 <= A[i] <= 10 ^ 5
-    1 <= K <= 10 ^ 9
-    """
-    pre = [0]
-    for x in A:
-        pre += [pre[-1] + x]
-
-
+    n = len(s)
+    ws = set(wordDict)
+    if not _possible(s, ws): return []
+    def helper(i):
+        res = []
+        if i == n:
+            res.append("")
+        for j in range(i+1, n+1):
+            if s[i:j] in ws:
+                back = helper(j)
+                for e in back:
+                    cur = s[i:j] + " " + e if e != "" else s[i:j]
+                    res.append(cur)
+        return res
+    return helper(0)
 
 
 if __name__ == '__main__':
-    countSmaller([5,2,6,1])
+    # countSmaller([5,2,6,1])
     # countRangeSum([-2,5,-1,0],-2,0)
     # maximizeSweetness([1,2,3,4,5,6,7,8,9], 5)
-    # wordBreak("catsanddog", ["cat", "cats", "and", "sand", "dog"])
+    wordBreak("pineapplepenapple", ["apple", "pen", "applepen", "pine", "pineapple"])
     # res = numDupDigitsAtMostN(1962)
     # res = isGoodArray([1])
     # print(res)

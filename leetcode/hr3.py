@@ -325,34 +325,42 @@ def countSmaller(nums: List[int]) -> List[int]:
     return res[::-1]
     """
     # 归并排序，边归并边找逆序数对
+    def merge(lo, hi):
+        if lo >= hi: return
+        mid = lo + (hi - lo) // 2
+        merge(lo, mid)
+        merge(mid+1, hi)
+        left, right = lo, mid+1
+        i = lo
+        while left <= mid or right <= hi:
+            if left > mid:
+                aux[i] = arr[right]
+                oid = arr[right][0]
+                right += 1
+            elif right > hi:
+                aux[i] = arr[left]
+                oid = arr[left][0]
+                left += 1
+            elif arr[left][1] > arr[right][1]:
+                aux[i] = arr[right]
+                oid = arr[right][0]
+                right += 1
+            else:
+                aux[i] = arr[left]
+                oid = arr[left][0]
+                left += 1
+            res[oid] += max(0, i - oid)
+            i += 1
+        for i in range(lo, hi+1):
+            arr[i] = aux[i]
+
     arr = []
-    res = [0] * len(nums)
+    n = len(nums)
+    res = [0] * n
     for idx, num in enumerate(nums):
         arr.append((idx, num))
-
-    def merge_sort(arr):
-        if len(arr) <= 1:
-            return arr
-        mid = len(arr) // 2
-        left = merge_sort(arr[:mid])
-        right = merge_sort(arr[mid:])
-        return merge(left, right)
-
-    def merge(left, right):
-        tmp = []
-        i = 0
-        j = 0
-        while i < len(left) or j < len(right):
-            if j == len(right) or i < len(left) and left[i][1] <= right[j][1]:
-                tmp.append(left[i])
-                res[left[i][0]] += j
-                i += 1
-            else:
-                tmp.append(right[j])
-                j += 1
-        return tmp
-
-    merge_sort(arr)
+    aux = [tuple() for _ in range(n)]
+    merge(0, n-1)
     return res
 
 
@@ -453,10 +461,10 @@ def wordBreak(s: str, wordDict: List[str]) -> List[str]:
 
 
 if __name__ == '__main__':
-    # countSmaller([5,2,6,1])
+    countSmaller([2,3,5,1,4,6])
     # countRangeSum([-2,5,-1,0],-2,0)
     # maximizeSweetness([1,2,3,4,5,6,7,8,9], 5)
-    wordBreak("pineapplepenapple", ["apple", "pen", "applepen", "pine", "pineapple"])
+    # wordBreak("pineapplepenapple", ["apple", "pen", "applepen", "pine", "pineapple"])
     # res = numDupDigitsAtMostN(1962)
     # res = isGoodArray([1])
     # print(res)

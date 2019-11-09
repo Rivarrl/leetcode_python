@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # 算法辅助类
 import time
-
+from typing import List
 null = None
 
 class Trie:

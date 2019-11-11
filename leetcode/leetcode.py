@@ -899,8 +899,6 @@ class Solution:
         :type nums: List[int]
         :rtype: int
         """
-        n = 1
-        m = nums[0]
         l = len(nums)
         z = l // 2
         nums.sort()

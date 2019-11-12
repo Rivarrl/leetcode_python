@@ -570,7 +570,6 @@ def criticalConnections(n: int, connections: List[List[int]]) -> List[List[int]]
     connections[i][0] != connections[i][1]
     不存在重复的连接
     """
-    """
     # dfs记录环, 超时
     from collections import defaultdict
     def dfs(u, depth, connections):
@@ -597,8 +596,6 @@ def criticalConnections(n: int, connections: List[List[int]]) -> List[List[int]]
     rank = [-2] * n
     dfs(0, 0, connections)
     return connections
-    """
-    # tarjan 求桥
 
 
 if __name__ == '__main__':

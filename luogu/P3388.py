@@ -5,7 +5,8 @@
 # @Author  : Rivarrl
 # ======================================
 import sys
-
+# 递归默认层数998，一共最多10000个点，设成10010没问题了
+sys.setrecursionlimit(10010)
 # 模板题，割点
 def tarjan(u, fa):
     global timestamp

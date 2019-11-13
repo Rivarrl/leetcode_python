@@ -43,6 +43,31 @@ class Solution:
         return res
 
 
+    @timeit
+    def getSkyline2(self, buildings: List[List[int]]) -> List[List[int]]:
+        """
+        思路：和上面类似，用最大堆来维护一个可选高度集合
+        """
+        import heapq
+        # 按所有竖线顺序遍历，把右边界高度变成0来控制不让它入堆，由于py的heapq默认是最小堆，用两次取反来伪造最大堆（小trick）
+        arr = sorted([[x[0], -x[2], x[1]] for x in buildings] + [[x[1], 0, 0] for x in buildings])
+        arr.sort()
+        # hq = [高度,右边界]
+        hq = [[0, float('inf')]]
+        res = [[0, 0]]
+        for x in arr:
+            # 碰到了一个比当前堆顶右边界还靠右的边界，右边界出堆
+            while x[0] >= hq[0][1]:
+                heapq.heappop(hq)
+            # 把左边界的高度以及它的右边界入堆
+            if x[1] != 0:
+                heapq.heappush(hq, [x[1], x[2]])
+            # 出现与上一个高度有差异的边界，加入到结果中
+            if res[-1][1] != -hq[0][0]:
+                res.append([x[0], -hq[0][0]])
+        return res[1:]
+
 if __name__ == '__main__':
     a = Solution()
-    a.getSkyline([[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,8]])
+    # a.getSkyline([[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,8]])
+    a.getSkyline2([[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,8]])

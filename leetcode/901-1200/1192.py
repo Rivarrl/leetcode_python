@@ -25,8 +25,8 @@ class Solution:
         timestamp = 0
         def tarjan(u, parent):
             nonlocal timestamp
-            dfn[u] = low[u] = timestamp
             timestamp += 1
+            dfn[u] = low[u] = timestamp
             for v in graph[u]:
                 if dfn[v] < 0:
                     tarjan(v, u)

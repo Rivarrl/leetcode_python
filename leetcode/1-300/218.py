@@ -67,6 +67,45 @@ class Solution:
                 res.append([x[0], -hq[0][0]])
         return res[1:]
 
+
+    def getSkyline3(self, buildings: List[List[int]]) -> List[List[int]]:
+        """
+        思路：分治
+        """
+        if not buildings: return []
+        if len(buildings) == 1: return [[buildings[0][0], buildings[0][2]], [buildings[0][1], 0]]
+        n = len(buildings)
+        left_part = self.getSkyline3(buildings[:n//2])
+        right_part = self.getSkyline3(buildings[n//2:])
+        return self.merge(left_part, right_part)
+
+
+    def merge(self, left, right):
+        l = r = 0
+        lmax = rmax = 0
+        nl, nr = len(left), len(right)
+        res = []
+        while l < nl and r < nr:
+            if left[l][0] < right[r][0]:
+                cp = [left[l][0], max(left[l][1], rmax)]
+                lmax = left[l][1]
+                l += 1
+            elif left[l][0] > right[r][0]:
+                cp = [right[r][0], max(right[r][1], lmax)]
+                rmax = right[r][1]
+                r += 1
+            else:
+                cp = [left[l][0], max(left[l][1], right[r][1])]
+                lmax = left[l][1]
+                rmax = right[r][1]
+                l += 1
+                r += 1
+            if len(res) == 0 or res[-1][1] != cp[1]:
+                res.append(cp)
+        res.extend(left[l:] or right[r:])
+        return res
+
+
 if __name__ == '__main__':
     a = Solution()
     # a.getSkyline([[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,8]])

@@ -13,8 +13,7 @@ class Solution:
     @timeit
     def combinationSum2(self, candidates: List[int], target: int) -> List[List[int]]:
         """
-        思路：回溯，建立一个来控制candidates中的元素是否被访问过的数组
-        用一个数二进制可以代替数组
+        思路：回溯，每次把candidates选过的pop掉
         """
         import bisect
         import heapq

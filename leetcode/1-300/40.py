@@ -16,23 +16,23 @@ class Solution:
         思路：回溯，建立一个来控制candidates中的元素是否被访问过的数组
         用一个数二进制可以代替数组
         """
-        candidates.sort()
-        n = len(candidates)
-        a = 0
-        def dfs(i, j, t):
-            nonlocal a, res
-            if candidates[i] > t: return []
-            if candidates[i] == t: return [[candidates[i]]]
-            for j in range(n):
-                if a & (1 << j): continue
-                if candidates[j]
-            a |= (1 << i)
-            dfs(i+1, t - candidates[i])
-
-
-
+        import bisect
+        import heapq
+        def dfs(candidates, target):
+            if target == 0: return [[]]
+            if not candidates or min(candidates) > target: return []
+            res = []
+            while candidates:
+                x = heapq.heappop(candidates)
+                for y in dfs([e for e in candidates if e <= target - x], target-x):
+                    bisect.insort(y, x)
+                    if y not in res:
+                        res += [y]
+            return res
+        return dfs(candidates, target)
 
 
 if __name__ == '__main__':
     a = Solution()
+    a.combinationSum2([3,1,3,5,1,5,2,3,2,5,4],1)
     a.combinationSum2([10,1,2,7,6,1,5], 8)

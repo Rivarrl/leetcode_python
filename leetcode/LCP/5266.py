@@ -58,6 +58,7 @@ class Solution:
     """
     @timeit
     def minPushBox(self, grid: List[List[str]]) -> int:
+        import heapq
         n, m = len(grid), len(grid[0])
         vis = {}
         box = []
@@ -66,39 +67,80 @@ class Solution:
         for i in range(n):
             for j in range(m):
                 if grid[i][j] == 'S':
-                    start = [(i, j), 0]
+                    start = (i, j)
                 if grid[i][j] == 'B':
                     box = (i, j)
                 if grid[i][j] == 'T':
                     des = (i, j)
-        stk = [(start, box, 0)]
-        dxy = ((0, 1), (0, -1), (1, 0), (-1, 0))
+        dxy = ((0, 1), (1, 0), (0, -1), (-1, 0))
         def near(i, j, bi, bj):
             for dx, dy in dxy:
                 a, b = i + dx, j + dy
                 if (a, b) == (bi, bj): return dx, dy
+        def na(bi, bj):
+            ctr = [0] * 4
+            i = 0
+            for dx, dy in dxy:
+                a, b = bi + dx, bj + dy
+                if a < 0 or a == n or b < 0 or b == m or grid[a][b] == '#':
+                    ctr[i] += 1
+                i += 1
+            for i in range(4):
+                if ctr[i] and ctr[(i+1) % 4]: return True
+            return False
+        stk = [(0, (start, box))]
+        vis[(start, box)] = True
         while stk:
-            start, box, step = stk.pop()
+            step, info = heapq.heappop(stk)
+            start, box = info
             if box == des: return step
-            vis[(start, box)] = True
-            nr = near(*start, *box)
             si, sj = start
             bi, bj = box
+            if na(*box): continue
+            nr = near(*start, *box)
             for dx, dy in dxy:
                 sx, sy = si + dx, sj + dy
                 if nr and (dx, dy) == nr:
                     bx, by = bi + dx, bj + dy
+                    if 0 <= bx < n and 0 <= by < m and grid[bx][by] != '#' and not ((sx, sy), (bx, by)) in vis:
+                        if (bx, by) == des: return step + 1
+                        vis[((sx, sy), (bx, by))] = True
+                        heapq.heappush(stk, (step + 1, ((sx, sy), (bx, by))))
                 else:
-                    if 0 <= sx < n and 0 <= sy < m and not (sx, sy, bi, bj):
-                        stk.insert(0, [(x, y), step + 1])
+                    if 0 <= sx < n and 0 <= sy < m and grid[sx][sy] != '#' and not ((sx, sy), (bi, bj)) in vis:
+                        vis[((sx, sy), (bi, bj))] = True
+                        heapq.heappush(stk, (step, ((sx, sy), (bi, bj))))
         return -1
 
 
 if __name__ == '__main__':
     a = Solution()
-    a.minPushBox(grid = [["#","#","#","#","#","#"],
-                 ["#","T","#","#","#","#"],
-                 ["#",".",".","B",".","#"],
-                 ["#","#","#","#",".","#"],
-                 ["#",".",".",".","S","#"],
-                 ["#","#","#","#","#","#"]])
+    # a.minPushBox([["#","#","#","#","#","#"],
+    #              ["#","T","#","#","#","#"],
+    #              ["#",".",".","B",".","#"],
+    #              ["#",".","#","#",".","#"],
+    #              ["#",".",".",".","S","#"],
+    #              ["#","#","#","#","#","#"]])
+    # a.minPushBox([["#","#","#","#","#","#"],
+    #               ["#","T","#","#","#","#"],
+    #               ["#",".",".","B",".","#"],
+    #               ["#","#","#","#",".","#"],
+    #               ["#",".",".",".","S","#"],
+    #               ["#","#","#","#","#","#"]])
+    # a.minPushBox([["#","#","#","#","#","#","#"],
+    #              ["#","S","#",".","B","T","#"],
+    #              ["#","#","#","#","#","#","#"]])
+    # a.minPushBox([["#","#","#","#","#","#"],
+    #              ["#","T",".",".","#","#"],
+    #              ["#",".","#","B",".","#"],
+    #              ["#",".",".",".",".","#"],
+    #              ["#",".",".",".","S","#"],
+    #              ["#","#","#","#","#","#"]])
+    a.minPushBox([[".",".","#",".",".",".",".","#"],
+                  [".","B",".",".",".",".",".","#"],
+                  [".",".","S",".",".",".",".","."],
+                  [".","#",".",".",".",".",".","."],
+                  [".",".",".",".",".",".",".","."],
+                  [".",".",".","T",".",".",".","."],
+                  [".",".",".",".",".",".",".","#"],
+                  [".","#",".",".",".",".",".","."]])

@@ -53,76 +53,9 @@ class Solution:
         dfs(target)
         return dp[target]
 
-    def minStickers2(self, stickers: List[str], target: str) -> int:
-        """
-        非递归
-        """
-        def to_str(bi, s):
-            r = ""
-            i = 0
-            while bi >> i:
-                if (bi >> i) & 1:
-                    r += s[i]
-                i += 1
-            return r
-
-        def calc(s, i=0):
-            if i == len(s): return {}
-            d = {}
-            d[s[i]] = 1
-            for k, v in calc(s, i+1).items():
-                d[s[i] + k] = 1
-                d[k] = v
-            return d
-
-        n = len(stickers)
-        target = ''.join(sorted([c for c in target]))
-        count_target = Counter(target)
-        ss = []
-        for i in range(n):
-            tmp = Counter(stickers[i])
-            ss.append("")
-            for k, v in count_target.items():
-                if k in tmp:
-                    ss[-1] += k * min(v, tmp[k])
-        print(ss)
-        ds = []
-        for s in ss:
-            ds.append(calc(s))
-        print(ds)
-        nt = len(target)
-        boundary = 1 << nt
-        dp = {}
-        rec = {"": 0}
-        for c in list(set(target)):
-            dp[c] = [float('inf')] * (nt + 1)
-        for d in ds:
-            for k in d:
-                dp[k[0]][len(k)] = 1
-                rec[k] = 1
-        for k, v in dp.items():
-            if v[1] == float('inf'): return -1
-        # 有k个1
-        for k in range(1, nt+1):
-            i = (1 << k) - 1
-            for q in range(nt):
-                while i < boundary:
-                    i, j = (i << q) + 1, i
-                    while j < boundary:
-                        s = to_str(j, target)
-                        print(s)
-                        # if not s in rec:
-                        #     res = float('inf')
-                        #     rec[s] = -1 if res == float('inf') else res
-                        j <<= 1
-                    # 更新dp
-                    # for
-        print(dp)
-        print(rec)
-
 
 if __name__ == '__main__':
     a = Solution()
-    a.minStickers2(["with", "example", "science"], "thehat")
+    a.minStickers(["with", "example", "science"], "thehat")
     # a.minStickers(["notice", "possible"], "basicbasic")
     # a.minStickers(["notice", "possible", "with", "example", "science", "accuracy", "price", "risk"], "rmpsleththrellc")

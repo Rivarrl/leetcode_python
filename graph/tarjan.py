@@ -5,16 +5,7 @@
 # @Author  : Rivarrl
 # ======================================
 from algorithm_utils import *
-from collections import defaultdict
-
-
-def build_graph(connections):
-    # 构图，邻接表
-    graph = defaultdict(list)
-    for a, b in connections:
-        graph[a].append(b)
-    return graph
-
+from graph.graph_utils import *
 
 @timeit
 def strongly_connected(n, connections):
@@ -168,7 +159,7 @@ def to_dag(n, connections):
 
 
 if __name__ == '__main__':
-    # strongly_connected(10, [[0,1],[1,2],[2,3],[2,4],[4,3],[4,5],[5,2],[4,6],[6,7],[7,1],[7,8],[8,9]])
+    strongly_connected(10, [[0,1],[1,2],[2,3],[2,4],[4,3],[4,5],[5,2],[4,6],[6,7],[7,1],[7,8],[8,9]])
     # find_cut_point(11, [[0,1],[0,3],[0,4],[0,5],[1,10],[1,2],[3,2],[3,8],[4,7],[4,6],[5,6],[6,9],[10,2]])
     # find_bridge(11, [[0,1],[0,3],[0,4],[0,5],[1,10],[1,2],[3,2],[3,8],[4,7],[4,6],[5,6],[6,9],[10,2]])
-    to_dag(10, [[0,1],[1,2],[2,3],[2,4],[4,3],[4,5],[5,2],[4,6],[6,7],[7,1],[7,8],[8,9]])
+    # to_dag(10, [[0,1],[1,2],[2,3],[2,4],[4,3],[4,5],[5,2],[4,6],[6,7],[7,1],[7,8],[8,9]])

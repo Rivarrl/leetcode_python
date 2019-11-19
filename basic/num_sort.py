@@ -238,5 +238,5 @@ def radix_sort(arr):
 
 if __name__ == '__main__':
     x = [15, 6, 41, 24, 37, 96, 421]
-    radix_sort(x)
+    heap_sort(x)
     print(x)

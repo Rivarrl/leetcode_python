@@ -7,6 +7,11 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    5215. 最多可握手次数
+    偶数个人站成一圈握手，不能相交的情况下最多可以有多少钟握手的阵型
+    思路：卡塔兰数
+    """
     @timeit
     def numberOfWays(self, num_people: int) -> int:
         dp = [0] * (num_people+1)

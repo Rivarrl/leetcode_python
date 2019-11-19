@@ -12,7 +12,7 @@ def strongly_connected(n, connections):
     """
     找所有强连通分量，并染色
     """
-    graph = build_graph(connections)
+    graph = build_graph(n, connections)
     # tarjan所需的数据结构
     stk, dfn, low, vis, color = [], [0] * n, [0] * n, [0] * n, [0] * n
     timestamp, idx = 0, 0
@@ -56,7 +56,7 @@ def find_cut_point(n, connections):
     """
     找割点，割点就是把这个点和它的边删除之后，图不再连通(连通分量数量增多)
     """
-    graph = build_graph(connections)
+    graph = build_graph(n, connections)
     dfn, low = [0] * n, [0] * n
     # 割点
     cut = [0] * n
@@ -93,7 +93,7 @@ def find_bridge(n, connections):
     """
     找桥
     """
-    graph = build_graph(connections)
+    graph = build_graph(n, connections)
     dfn, low, res = [0] * n, [0] * n, []
     timestamp = 0
     def tarjan(u, fa):
@@ -119,7 +119,7 @@ def to_dag(n, connections):
     """
     缩点，前面几乎与强连通分量相同
     """
-    graph = build_graph(connections)
+    graph = build_graph(n, connections)
     stk, dfn, low, vis, color = [], [0] * n, [0] * n, [0] * n, [0] * n
     timestamp, idx = 0, 0
 

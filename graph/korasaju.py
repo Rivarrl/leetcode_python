@@ -46,7 +46,7 @@ def kosaraju(n, graph):
 
 
 def strongly_connected(n, connections):
-    graph = build_graph(connections)
+    graph = build_graph(n, connections)
     color, ctr = kosaraju(n, graph)
     print(ctr)
     print(color)

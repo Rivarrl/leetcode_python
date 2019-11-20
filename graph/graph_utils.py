@@ -10,13 +10,15 @@ from collections import defaultdict
 inf_w = (1 << 31) - 1
 
 def build_graph(n, connections, direction=1, tp=1):
-    # tp 1：dict伪邻接表，2：邻接表，3：邻接矩阵，4：链式前向星
-    return {
-            1: _fake_linked_list(n, connections, direction),
-            2: _linked_list(n, connections, direction),
-            3: _matrix(n, connections, direction),
-            4: _forward_star_list(n, connections, direction)
-            }[tp]
+    """
+    tp: 1：dict伪邻接表，2：邻接表，3：邻接矩阵，4：链式前向星
+    """
+    return globals().get({
+        1: "_fake_linked_list",
+        2: "_linked_list",
+        3: "_matrix",
+        4: "_forward_star_list"
+    }[tp])(n, connections, direction)
 
 
 def _fake_linked_list(n, connections, direction=1):
@@ -30,24 +32,27 @@ def _fake_linked_list(n, connections, direction=1):
 
 
 class Node:
-    def __init__(self, idx, weight = 1, next = None):
-        self.idx = idx
-        self.weight = weight
-        self.next = next
+    def __init__(self, u, v, w = 1, nxt = None):
+        self.u = u
+        self.v = v
+        self.w = w
+        self.next = nxt
 
 def _linked_list(n, connections, direction = 1):
     # direction 有向无向 0 无向，1 有向
     # weights 点权 None 无权，list(int) 带权
     def build_connections(a, b, c=None):
-        p = arr[a]
-        while p.next:
-            p = p.next
-        p.next = Node(b)
-        if c: p.weight = c
+        node = Node(a, b)
+        if c: node.w = c
+        if not arr[a]:
+            arr[a] = node
+        else:
+            p = arr[a]
+            while p.next:
+                p = p.next
+            p.next = node
 
     arr = [None] * n
-    for i in range(n):
-        arr[i] = Node(i)
     w = len(connections[0]) == 3
     for i in range(len(connections)):
         a, b = connections[i][0], connections[i][1]
@@ -118,7 +123,39 @@ def reverse_graph(graph: dict) -> dict:
 
 
 if __name__ == '__main__':
+    # 伪邻接表的图遍历
+    print("="*30)
+    print("伪邻接表的图遍历")
+    a = build_graph(10, [[0,1],[1,2],[2,3],[2,4],[4,3],[4,5],[5,2],[4,6],[6,7],[7,1],[7,8],[8,9]])
+    for u in range(10):
+        for v in a[u]:
+            print("%d -> %d" % (u, v))
+    print("="*30)
+
+    # 邻接表的图遍历
+    print("="*30)
+    print("邻接表的图遍历")
+    a = build_graph(10, [[0,1],[1,2],[2,3],[2,4],[4,3],[4,5],[5,2],[4,6],[6,7],[7,1],[7,8],[8,9]], tp=2)
+    for u in range(10):
+        p = a[u]
+        while p:
+            print("%d -> %d" % (p.u, p.v))
+            p = p.next
+    print("="*30)
+
+    # 邻接矩阵的图遍历
+    print("="*30)
+    print("邻接矩阵的图遍历")
+    a = build_graph(10, [[0,1],[1,2],[2,3],[2,4],[4,3],[4,5],[5,2],[4,6],[6,7],[7,1],[7,8],[8,9]], tp=3)
+    for u in range(10):
+        for v, w in enumerate(a[u]):
+            if w != 0:
+                print("%d -> %d" % (u, v))
+    print("="*30)
+
     # 链式前向星的图遍历
+    print("="*30)
+    print("链式前向星的图遍历")
     a = build_graph(10, [[0,1],[1,2],[2,3],[2,4],[4,3],[4,5],[5,2],[4,6],[6,7],[7,1],[7,8],[8,9]], tp=4)
     head, arr = a
     for i in range(10):
@@ -126,4 +163,5 @@ if __name__ == '__main__':
         while j != -1:
             print("%d -> %d" % (i, arr[j].to))
             j = arr[j].next
+    print("="*30)
 

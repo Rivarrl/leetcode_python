@@ -71,45 +71,6 @@ class Bucket:
         self.M = M
         self.isempty = isempty
 
-def binary_search(bs, b, e, x):
-    """
-    二分查找返回位置，查不到则返回大于x的第一个值的位置
-    :param bs: 待查数组（非递减）
-    :param b: 起始位置
-    :param e: 结束位置
-    :param x: 待查数字
-    :return:
-    """
-    l, r = b, e
-    while l <= r:
-        mid = (l + r) // 2
-        if bs[mid] == x:
-            return mid
-        elif bs[mid] < x:
-            l = mid + 1
-        elif bs[mid] > x:
-            r = mid - 1
-    return l
-
-def quick_sort(arr, l, r):
-    def swap(arr, i, j):
-        arr[i], arr[j] = arr[j], arr[i]
-
-    if l >= r:
-        return
-    i, j = l, r
-    base = arr[l]
-    while i < j:
-        while arr[j] >= base and i < j:
-            j -= 1
-        while arr[i] <= base and i < j:
-            i += 1
-        swap(arr, i, j)
-    swap(arr, l, j)
-    quick_sort(arr, l, i-1)
-    quick_sort(arr, i+1, r)
-
-
 def print_list_node(head, cnt=20):
     while head.next and cnt > 0:
         print(head.val, end='->')
@@ -207,34 +168,6 @@ def matrix_pretty_print(matrix):
             print(matrix[i][j], end=' ')
         print()
     print()
-
-def build_max_heap(arr):
-    for i in range(len(arr)//2, -1, -1):
-        heapify(arr, i)
-
-def heapify(arr, i):
-    left = 2 * i + 1
-    right = left + 1
-    root = i
-    if left < arr_size and arr[left] > arr[root]:
-        root = left
-    if right < arr_size and arr[right] > arr[root]:
-        root = right
-    if root != i:
-        swap(arr, i, root)
-        heapify(arr, root)
-
-def swap(arr, i, j):
-    arr[i], arr[j] = arr[j], arr[i]
-
-def heap_sort(arr):
-    global arr_size
-    arr_size = len(arr)
-    build_max_heap(arr)
-    for i in range(len(arr)-1, 0, -1):
-        swap(arr, 0, i)
-        arr_size -= 1
-        heapify(arr, 0)
 
 
 def timeit(f):

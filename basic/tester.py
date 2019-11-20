@@ -85,10 +85,21 @@ def dict_collections(n):
             stk.insert(0, i + 1)
 
 
+def heapq_test():
+    # pq可以重复值吗
+    # 可以
+    import heapq
+    pq = []
+    for x, y in [[1, 2], [1, 3]]:
+        heapq.heappush(pq, (x, y))
+    print(pq)
+
+
 if __name__ == '__main__':
+    heapq_test()
     # carrots3()
     # carrots(3, 7)
-    carrots2(3, 7)
+    # carrots2(3, 7)
     # dict_collections(5)
     # init_array(10, 600000)
     # init_array(600000, 10)

@@ -38,6 +38,9 @@ class Node:
         self.w = w
         self.next = nxt
 
+    def __lt__(self, other):
+        return self.w < other.w
+
 def _linked_list(n, connections, direction = 1):
     # direction 有向无向 0 无向，1 有向
     # weights 点权 None 无权，list(int) 带权
@@ -86,6 +89,10 @@ class StarNode:
         self.to = to
         self.w = w
         self.next = nxt
+
+    def __lt__(self, other):
+        return self.w < other.w
+
 
 def _forward_star_list(n, connections, direction=1):
     # direction 有向无向 0 无向，1 有向

@@ -8,7 +8,7 @@ from graph.graph_utils import *
 import heapq
 
 # Dijkstra单源最短路径算法
-
+# 有向带非负权图
 def dijkstra(n, graph, s):
     def relax(u):
         e = graph[u]
@@ -33,13 +33,27 @@ def dijkstra(n, graph, s):
     while pq:
         w, u = heapq.heappop(pq)
         relax(u)
-    i = 0
-    for e in edge_to:
-        i += 1
-        if not e:
-            print(i)
+    display(n, s, dist_to, edge_to)
+
+def display(n, s, dist_to, edge_to):
+    paths = [list() for _ in range(n)]
+    for v in range(n):
+        if v != s and dist_to[v] != inf_w:
+            e = edge_to[v]
+            while e:
+                paths[v].append(e)
+                e = edge_to[e.u]
+    for i, path in enumerate(paths):
+        if not path:
+            print(i, "/")
             continue
-        print("%d -[%.2f]- %d" % (e.u, e.w, e.v))
+        print(i, end=' ')
+        for j in range(len(path)-1, -1, -1):
+            e = path[j]
+            if j == 0:
+                print("%d -[%.2f]-> %d" % (e.u, e.w, e.v))
+            else:
+                print("%d -[%.2f]-> " % (e.u, e.w), end='')
 
 
 if __name__ == '__main__':

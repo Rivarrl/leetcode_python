@@ -13,7 +13,11 @@ class Solution:
     @timeit
     def maxSubarraySumCircular(self, A: List[int]) -> int:
         """
-        思路：复制出来一个数组A贴在后面
+        思路：分类
+        1：答案在数组中间，2：答案在两端
+        1就是求一次最大子数组和，2等价于sum(A) - 最小子数组和，取反求最大然后加就可以
+        两种情况取较大的返回
+        特殊情况：最大值小于0，那么求得的1的结果是这个小于0的最大值，但2的结果肯定是大于0的最大值，会误判为情况2
         """
         def f(B):
             res = cur = 0
@@ -26,6 +30,7 @@ class Solution:
         r1 = f(A)
         r2 = sum(A) + f([-e for e in A])
         return (r1, r2)[r1 < r2]
+
 
 if __name__ == '__main__':
     a = Solution()

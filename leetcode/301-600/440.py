@@ -14,23 +14,26 @@ class Solution:
     @timeit
     def findKthNumber(self, n: int, k: int) -> int:
         """
-        思路：递归
+        思路：模拟10叉树的先序非递归遍历。
+        每棵树访问前计算完整遍历它一共需要多少步，如果步数大于k，说明第k小数字在该树中
         """
-        stk = [1]
+        k -= 1
+        res = 1
         while k > 0:
-            k -= 1
-            if stk[-1] * 10 <= n:
-                stk += [stk[-1] * 10]
+            step, left, right = 0, res, res+1
+            while left <= n:
+                step += min(n+1, right) - left
+                left *= 10
+                right *= 10
+            if step <= k:
+                k -= step
+                res += 1
             else:
-                x = stk.pop()
-                if k < 10:
-                    return x + k
-                else:
-                    k -= 10
-        return stk[-1]
+                k -= 1
+                res *= 10
+        return res
+
 
 if __name__ == '__main__':
     a = Solution()
-    a.findKthNumber(13, 2)
-    a.findKthNumber(25, 12)
-    a.findKthNumber(25000, 1521)
+    a.findKthNumber(7747794, 5857460)

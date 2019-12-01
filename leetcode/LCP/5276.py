@@ -15,6 +15,7 @@ class Solution:
     """
     @timeit
     def numOfBurgers(self, tomatoSlices: int, cheeseSlices: int) -> List[int]:
+        # 二分查找
         def tomato(x, y): return 4 * x + 2 * y
         lo, hi = 0, cheeseSlices
         while lo <= hi:

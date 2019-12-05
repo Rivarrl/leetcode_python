@@ -298,72 +298,6 @@ def countRangeSum(nums: List[int], lower: int, upper: int) -> int:
     return res
 
 
-@timeit
-def countSmaller(nums: List[int]) -> List[int]:
-    """
-    315. 计算右侧小于当前元素的个数
-    给定一个整数数组 nums，按要求返回一个新数组 counts。
-    数组 counts 有该性质： counts[i] 的值是  nums[i] 右侧小于 nums[i] 的元素的数量。
-    示例:
-    输入: [5,2,6,1]
-    输出: [2,1,1,0]
-    解释:
-    5 的右侧有 2 个更小的元素 (2 和 1).
-    2 的右侧仅有 1 个更小的元素 (1).
-    6 的右侧有 1 个更小的元素 (1).
-    1 的右侧有 0 个更小的元素.
-    """
-    """
-    # 倒序向前二分查找 + 按序插入
-    import bisect
-    q = []
-    res = []
-    for e in nums[::-1]:
-        i = bisect.bisect_left(q, e)
-        res.append(i)
-        bisect.insort(q, e)
-    return res[::-1]
-    """
-    # 归并排序，边归并边找逆序数对
-    def merge(lo, hi):
-        if lo >= hi: return
-        mid = lo + (hi - lo) // 2
-        merge(lo, mid)
-        merge(mid+1, hi)
-        left, right = lo, mid+1
-        i = lo
-        while left <= mid or right <= hi:
-            if left > mid:
-                aux[i] = arr[right]
-                oid = arr[right][0]
-                right += 1
-            elif right > hi:
-                aux[i] = arr[left]
-                oid = arr[left][0]
-                left += 1
-            elif arr[left][1] > arr[right][1]:
-                aux[i] = arr[right]
-                oid = arr[right][0]
-                right += 1
-            else:
-                aux[i] = arr[left]
-                oid = arr[left][0]
-                left += 1
-            res[oid] += max(0, i - oid)
-            i += 1
-        for i in range(lo, hi+1):
-            arr[i] = aux[i]
-
-    arr = []
-    n = len(nums)
-    res = [0] * n
-    for idx, num in enumerate(nums):
-        arr.append((idx, num))
-    aux = [tuple() for _ in range(n)]
-    merge(0, n-1)
-    return res
-
-
 def shortestSubarray(A: List[int], K: int) -> int:
     """
     862. 和至少为 K 的最短子数组
@@ -461,7 +395,6 @@ def wordBreak(s: str, wordDict: List[str]) -> List[str]:
 
 
 if __name__ == '__main__':
-    countSmaller([2,3,5,1,4,6])
     # countRangeSum([-2,5,-1,0],-2,0)
     # maximizeSweetness([1,2,3,4,5,6,7,8,9], 5)
     # wordBreak("pineapplepenapple", ["apple", "pen", "applepen", "pine", "pineapple"])

@@ -36,8 +36,33 @@ class Solution:
             return r1 + r2 + r3
         return merge_sort(0, n-1)
 
+    @timeit
+    def reversePairs2(self, nums: List[int]) -> int:
+        # 逆序遍历, 二分查找满足条件的最大值的下标, 再将x插入
+        import bisect
+        q = []
+        res = 0
+        for x in nums[::-1]:
+            rk = bisect.bisect_right(q, (x-1)//2)
+            res += rk
+            bisect.insort(q, x)
+        return res
+
+class Segment:
+    def __init__(self, l=None, r=None, v=None):
+        self.l = l
+        self.r = r
+        self.v = v
+
+    @timeit
+    def reversePairs3(self, nums: List[int]) -> int:
+        # 线段树, 保存rank值
+        n = len(nums)
+        st = [Segment() for _ in range(4*(n+1))]
+
+
 if __name__ == '__main__':
     a = Solution()
-    a.reversePairs([1,3,2,3,1])
-    a.reversePairs([2,4,3,5,1])
-    a.reversePairs([7,7,-7,-7,-7,7])
+    a.reversePairs2([1,3,2,3,1])
+    a.reversePairs2([2,4,3,5,1])
+    a.reversePairs2([7,7,-7,-7,-7,7])

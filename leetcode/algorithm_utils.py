@@ -72,6 +72,9 @@ class Bucket:
         self.isempty = isempty
 
 def print_list_node(head, cnt=20):
+    if not head:
+        print(None)
+        return
     while head.next and cnt > 0:
         print(head.val, end='->')
         head = head.next

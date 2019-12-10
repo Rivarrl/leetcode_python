@@ -18,13 +18,7 @@ class Solution:
         根据n的长相, 分为是回文串和不是回文串两种情况:
             是回文串的话:
                 需要考虑两种情况:
-                    case1: 形如x000x 或 x9999x, 例如19991 ~ 20002
-                    case1可以根据首尾数字大小直接写出最终返回的结果
-                    case2: 18181 ~ 18281 / 18081; 1221 ~ 1331 / 1111
-                    case2对每一位添加/删除的字符串合起来看也是回文结构的, 那么最小代价一定是00100或者0110这样的
-                    注意上面举例的数+或-结果相同的时候都选择较小的
-                    由于case1和case2的判断用的是夹在中间的部分是否全为0或9,
-                    对于特殊情况(length == 2时all函数会直接通过的)特殊处理: 分为11和99和其他, 单独写个分支
+                枚举两种情况, 左半边回文串+1/-1, 计算距离, 去较小的一个
             不是回文串的话:
                 特殊情况(就是上面的case1):
                     如果是x9999y或者x0000y, 那最近的回文数走几步就能找到, 枚举查找一下即可.
@@ -44,30 +38,27 @@ class Solution:
                         注意如果两个分支计算的距离相等的时候取较小的一个..
                         否则取距离较小的一个
         """
+        import re
         length = len(n)
         if length == 1: return str((int(n) - 1 + 10) % 10)
         mid = length // 2
         if n == n[::-1]:
-            if length == 2:
-                if n == '11': return '9'
-                elif n == '99': return '101'
-                else: return str(int(n) - 11)
-            # case1
-            if all(e == '9' for e in n[1:-1]):
-                x = int(n[0]) + 1
-                if x == 10: return '10' + '0' * (length - 2) + '1'
-                return str(x) + '0' * (length - 2) + str(x)
-            elif all(e == '0' for e in n[1:-1]):
-                x = int(n[0]) - 1
-                if x == 0: return '9' * (length - 1)
-                return str(x) + '9' * (length - 2) + str(x)
+            # 产生进退位的
+            if re.match('^10*1$', n):
+                return str(int(n) - 2)
+            if re.match('^9+$', n):
+                return str(int(n) + 2)
+            if length & 1:
+                s1 = str(int(n[:mid+1]) + 1)
+                s2 = str(int(n[:mid+1]) - 1)
+                si1 = int(s1[:-1] + s1[::-1])
+                si2 = int(s2[:-1] + s2[::-1])
             else:
-                # case2
-                if length & 1:
-                    if int(n[mid]) > 0:
-                        return n[:mid] + str(int(n[mid]) - 1) + n[mid+1:]
-                    else:
-                        return n[:mid] + str(int(n[mid]) + 1) + n[mid+1:]
+                s1 = str(int(n[:mid]) + 1)
+                s2 = str(int(n[:mid]) - 1)
+                si1 = int(s1 + s1[::-1])
+                si2 = int(s2 + s2[::-1])
+            return str([si2, si1][abs(si1 - int(n)) < abs(si2 - int(n))])
         else:
             # case1
             if all(e == '0' or e == '9' for e in n[1:-1]):
@@ -137,6 +128,7 @@ if __name__ == '__main__':
     # a.nearestPalindromic("1234")
     # a.nearestPalindromic("1213")
     # a.nearestPalindromic("1805170081")
-    # ???
-    a.nearestPalindromic("1170131")
-    a.nearestPalindromic("1119731")
+    # a.nearestPalindromic("1170131")
+    # a.nearestPalindromic("1119731")
+    a.nearestPalindromic("11100111")
+    a.nearestPalindromic("1100011")

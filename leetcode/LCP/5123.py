@@ -7,7 +7,9 @@
 from itertools import combinations
 
 class CombinationIterator:
-
+    """
+    [5123. 字母组合迭代器](https://leetcode-cn.com/problems/iterator-for-combination/)
+    """
     def __init__(self, characters: str, combinationLength: int):
         self.arr = list(combinations(characters, combinationLength))
         self.size = len(self.arr)

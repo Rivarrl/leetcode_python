@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [5127. 删除被覆盖区间](https://leetcode-cn.com/problems/remove-covered-intervals/)
+    """
     @timeit
     def removeCoveredIntervals(self, intervals: List[List[int]]) -> int:
         n = len(intervals)

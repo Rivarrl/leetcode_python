@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [5126. 有序数组中出现次数超过25%的元素](https://leetcode-cn.com/problems/element-appearing-more-than-25-in-sorted-array/)
+    """
     @timeit
     def findSpecialInteger(self, arr: List[int]) -> int:
         from collections import Counter

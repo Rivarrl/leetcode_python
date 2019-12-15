@@ -9,6 +9,7 @@ from algorithm_utils import *
 class Solution:
     """
     [5285. 元素和小于等于阈值的正方形的最大边长](https://leetcode-cn.com/problems/maximum-side-length-of-a-square-with-sum-less-than-or-equal-to-threshold/)
+    思路：前缀和+二分查找 O(n^2logn)
     """
     @timeit
     def maxSideLength(self, mat: List[List[int]], threshold: int) -> int:

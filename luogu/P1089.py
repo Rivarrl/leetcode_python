@@ -7,15 +7,15 @@
 import sys
 
 def solve():
-    cur = mom = 0
+    jinjin = mom = 0
     for i in range(12):
         cost = int(sys.stdin.readline().strip())
-        cur += 300 - cost
-        if cur < 0: return ~i
-        if cur >= 100:
-            mom += cur - cur % 100
-            cur %= 100
-    return int(mom * 1.2) + cur
+        jinjin += 300 - cost
+        if jinjin < 0: return ~i
+        if jinjin >= 100:
+            mom += jinjin - jinjin % 100
+            jinjin %= 100
+    return int(mom * 1.2) + jinjin
 
 if __name__ == '__main__':
     print(solve())

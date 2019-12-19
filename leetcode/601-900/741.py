@@ -4,8 +4,6 @@
 # @Time    : 2019/12/19 11:24
 # @Author  : Rivarrl
 # ======================================
-import sys
-print(sys.path)
 from algorithm_utils import *
 
 class Solution:
@@ -31,17 +29,17 @@ class Solution:
                 picked += grid[i1][j1]
             else:
                 picked += grid[i1][j1] + grid[i2][j2]
+            if step == steps: continue
             dp[step] = max(dp[step], picked)
             for dx1, dy1 in dxy:
                 x1, y1 = i1 + dx1, j1 + dy1
-                if x1 < 0 or x1 == N or y1 < 0 or y2 == N: continue
+                if x1 < 0 or x1 == N or y1 < 0 or y1 == N: continue
                 for dx2, dy2 in dxy:
                     x2, y2 = i2 + dx2, j2 + dy2
                     if x2 < 0 or x2 == N or y2 < 0 or y2 == N or grid[x1][x2] == -1 or (x1, x2) in vis[step+1]: continue
                     vis[step+1].add((x1, x2))
-                    stk.insert(0, (x1, x2))
-
-
+                    stk.insert(0, (x1, x2, step+1, picked))
+        return dp[-1]
 
 
 if __name__ == '__main__':

@@ -10,18 +10,18 @@ class Solution:
     """
     [335. 路径交叉](https://leetcode-cn.com/problems/self-crossing/)
     """
+    @timeit
     def isSelfCrossing(self, x: List[int]) -> bool:
         """
-        数学题：记录东南西北方向最外圈的值
+        分三类：2112，21311，213222
         """
         n = len(x)
-        if n < 4: return True
-        N, W, S, E = x[:4]
-
-        i = 4
-        while i < n:
-
-
+        if n >= 4:
+            for i in range(3, n):
+                if x[i] >= x[i-2] and x[i-1] <= x[i-3]: return True
+                if i > 3 and x[i] >= x[i-2] - x[i-4] and x[i-1] == x[i-3]: return True
+                if i > 4 and x[i-2] > x[i-4] and x[i-2] >= x[i] >= x[i-2] - x[i-4] and x[i-3] >= x[i-1] >= x[i-3] - x[i-5]: return True
+        return False
 
 
 if __name__ == '__main__':

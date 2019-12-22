@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [5293. 子串的最大出现次数](https://leetcode-cn.com/problems/maximum-number-of-occurrences-of-a-substring/)
+    """
     @timeit
     def maxFreq(self, s: str, maxLetters: int, minSize: int, maxSize: int) -> int:
         h = {}

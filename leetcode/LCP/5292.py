@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [5292. 划分数组为连续数字的集合](https://leetcode-cn.com/problems/divide-array-in-sets-of-k-consecutive-numbers)
+    """
     @timeit
     def isPossibleDivide(self, nums: List[int], k: int) -> bool:
         from collections import Counter

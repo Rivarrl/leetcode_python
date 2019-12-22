@@ -14,25 +14,25 @@ class Solution:
     def maxCandies(self, status: List[int], candies: List[int], keys: List[List[int]], containedBoxes: List[List[int]],
                    initialBoxes: List[int]) -> int:
         stk = [e for e in initialBoxes if status[e] == 1]
-        vis = [0] * len(status)
+        bag = [0] * len(status)
         for i in range(len(status)):
             if i in initialBoxes:
-                vis[i] |= 1
+                bag[i] |= 1
             if status[i] == 1:
-                vis[i] |= 2
+                bag[i] |= 2
         res = 0
         while stk:
             i = stk.pop()
             res += candies[i]
             for x in containedBoxes[i]:
-                if vis[x] == 3: continue
-                vis[x] |= 1
-                if vis[x] == 3:
+                if bag[x] == 3: continue
+                bag[x] |= 1
+                if bag[x] == 3:
                     stk.insert(0, x)
             for j in keys[i]:
-                if vis[j] == 3: continue
-                vis[j] |= 2
-                if vis[j] == 3:
+                if bag[j] == 3: continue
+                bag[j] |= 2
+                if bag[j] == 3:
                     stk.insert(0, j)
         return res
 

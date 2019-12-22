@@ -20,10 +20,10 @@ class Solution:
                 bag[i] |= 1
             if status[i] == 1:
                 bag[i] |= 2
-        res = 0
+        score = 0
         while stk:
             i = stk.pop()
-            res += candies[i]
+            score += candies[i]
             for x in containedBoxes[i]:
                 if bag[x] == 3: continue
                 bag[x] |= 1
@@ -34,7 +34,7 @@ class Solution:
                 bag[j] |= 2
                 if bag[j] == 3:
                     stk.insert(0, j)
-        return res
+        return score
 
 
 if __name__ == '__main__':

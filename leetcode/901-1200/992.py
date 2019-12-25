@@ -23,12 +23,14 @@ class Solution:
                 if count[A[left]] == 0: window -= 1
                 left += 1
             if window == K:
+                # 计数的时候左边界不动，用左边界的拷贝做移动
                 j = left
                 while window == K:
                     count[A[j]] -= 1
                     if count[A[j]] == 0: window -= 1
                     j += 1
                     res += 1
+                # 计数完毕恢复窗口计数器
                 for i in range(left, j):
                     if count[A[i]] == 0: window += 1
                     count[A[i]] += 1

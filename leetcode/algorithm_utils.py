@@ -71,7 +71,7 @@ class Bucket:
         self.M = M
         self.isempty = isempty
 
-def print_list_node(head, cnt=20):
+def list_node_print(head, cnt=20):
     if not head:
         print(None)
         return
@@ -134,7 +134,7 @@ def construct_tree_node_v2(arr):
     return _construct(0)
 
 
-def print_tree_node(root):
+def tree_node_print(root):
     def inner(root):
         res = None
         if root:

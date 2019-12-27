@@ -783,7 +783,7 @@ def recoverTree(root):
         pre = root
         root = root.right
     p.val, q.val = q.val, p.val
-    print_tree_node(x)
+    tree_node_print(x)
 
 
 def isAdditiveNumber(num):

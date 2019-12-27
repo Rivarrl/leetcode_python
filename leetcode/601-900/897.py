@@ -95,4 +95,4 @@ if __name__ == '__main__':
     a = Solution()
     x = construct_tree_node([5,3,6,2,4,null,8,1,null,null,null,null,null,7,9])
     res = a.increasingBST3(x)
-    print_tree_node(res)
+    tree_node_print(res)

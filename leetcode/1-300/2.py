@@ -39,4 +39,4 @@ if __name__ == '__main__':
     l1, l2 = construct_list_node([9,8,7]), construct_list_node([1,1,2])
     sol = Solution()
     res = sol.addTwoNumbers(l1, l2)
-    print_list_node(res)
+    list_node_print(res)

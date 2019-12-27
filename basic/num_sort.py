@@ -78,8 +78,42 @@ def quick_sort(arr):
                 i += 1
             swap(arr, i, j)
         swap(arr, l, j)
-        _quick_sort(arr, l, i)
-        _quick_sort(arr, i+1, r)
+        _quick_sort(arr, l, j - 1)
+        _quick_sort(arr, j + 1, r)
+    _quick_sort(arr, 0, len(arr) - 1)
+    return arr
+
+
+# 快排的另一种写法
+def quick_sort2(arr):
+    def _quick_sort(arr, l, r):
+        if l >= r: return
+        j, base = l - 1, arr[r]
+        for i in range(l, r):
+            if arr[i] < base:
+                j += 1
+                swap(arr, i, j)
+        j += 1
+        swap(arr, j, r)
+        _quick_sort(arr, l, j-1)
+        _quick_sort(arr, j+1, r)
+    _quick_sort(arr, 0, len(arr) - 1)
+    return arr
+
+
+def quick_sort3(arr):
+    def _quick_sort(arr, l, r):
+        if l >= r: return
+        pivot = arr[l]
+        i, j = l, r
+        while i < j:
+            while i < j and arr[j] >= pivot: j -= 1
+            arr[i] = arr[j]
+            while i < j and arr[i] <= pivot: i += 1
+            arr[j] = arr[i]
+        arr[j] = pivot
+        _quick_sort(arr, l, j-1)
+        _quick_sort(arr, j+1, r)
     _quick_sort(arr, 0, len(arr) - 1)
     return arr
 
@@ -238,5 +272,5 @@ def radix_sort(arr):
 
 if __name__ == '__main__':
     x = [15, 6, 41, 24, 37, 96, 421]
-    heap_sort(x)
+    quick_sort(x)
     print(x)

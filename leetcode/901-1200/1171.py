@@ -36,4 +36,4 @@ if __name__ == '__main__':
     a = Solution()
     x = construct_list_node([1,3,2,-3,-2,5,5,-5,1])
     r = a.removeZeroSumSublists(x)
-    print_list_node(r)
+    list_node_print(r)

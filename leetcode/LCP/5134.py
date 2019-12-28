@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [5134. 将每个元素替换为右侧最大元素](https://leetcode-cn.com/contest/biweekly-contest-16/problems/replace-elements-with-greatest-element-on-right-side/)
+    """
     @timeit
     def replaceElements(self, arr: List[int]) -> List[int]:
         n = len(arr)

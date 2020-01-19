@@ -2,7 +2,7 @@ import random
 import time
 from algorithm_utils import *
 
-
+@timeit
 def question1(arr):
     """
     数字键盘按键
@@ -12,57 +12,39 @@ def question1(arr):
     :param arr: List[int]
     :return: int
     """
-    """
-    # dfs + 剪枝 感觉还是会超时
-    def dfs(i, j, k, cur):
-        nonlocal ans
-        if cur >= ans: return
-        if k == n:
-            ans = min(ans, cur)
-            return
-        arr[k] = arr[k] + 10 if arr[k] == 0 else arr[k]
-        if arr[k] >= j:
-            dfs(i, arr[k], k + 1, cur + arr[k] - j)
-        elif arr[k] <= i:
-            dfs(arr[k], j, k + 1, cur + i - arr[k])
-        else:
-            dfs(i, arr[k], k + 1, cur + j - arr[k])
-            dfs(arr[k], j, k + 1, cur + arr[k] - i)
+    from functools import lru_cache
+    def score(i, j):
+        if i == '': return 0
+        x, y = int(i), int(j)
+        if x == 0: x = 10
+        if y == 0: y = 10
+        return abs(x - y) + 1
+    @lru_cache(None)
+    def dfs(i, j, k):
+        if k == len(arr):
+            return 0
+        if i == '': return dfs(arr[k], j, k+1)
+        return min(score(i, arr[k]) + dfs(arr[k], j, k+1), score(j, arr[k]) + dfs(i, arr[k], k+1))
+    return dfs('5', '6', 0)
 
+@timeit
+def question1_v2(arr):
+    inf = 0x3f3f3f3f
     n = len(arr)
-    ans = float("inf")
-    dfs(5, 6, 0, n)
-    print(ans)
-    return ans
-    """
-    # dfs + memo
-    def dfs(i, j, k, cur):
-        if k == n or cur > memo[k][i][j]:
-            return
-        memo[k][i][j] = cur
-        arr[k] = arr[k] + 10 if arr[k] == 0 else arr[k]
-        if arr[k] >= j:
-            dfs(i, arr[k], k + 1, cur + arr[k] - j)
-        elif arr[k] <= i:
-            dfs(arr[k], j, k + 1, cur + i - arr[k])
-        else:
-            dfs(i, arr[k], k + 1, cur + j - arr[k])
-            dfs(arr[k], j, k + 1, cur + arr[k] - i)
-
-    n = len(arr)
-    inf = float("inf")
-    # 保存某状态的最优解 memo[k][i][j]表示第k次操作两只手在i和j时的最小操作次数
-    memo = [[[inf] * 10 for _ in range(11)] for _ in range(n)]
-    x, y = 5, 6
-    dfs(x, y, 0, n)
-    if n == 1:
-        x = arr[-1]
-    elif n >= 2:
-        x, y = arr[-2], arr[-1]
-    if x > y:
-        x, y = y, x
-    print(memo[n-1][x][y])
-    return memo[n-1][x][y]
+    dp = [[[inf] * (n+1) for _ in range(10)] for _ in range(10)]
+    dp[5][6][0] = 0
+    for k in range(n):
+        x = 10 if arr[k] == '0' else int(arr[k])
+        for i in range(10):
+            for j in range(10):
+                p = x if x < 10 else 0
+                dp[p][j][k+1] = min(dp[p][j][k+1], abs(x - i) + dp[i][j][k])
+                dp[i][p][k+1] = min(dp[i][p][k+1], abs(x - j) + dp[i][j][k])
+    res = inf
+    for i in range(10):
+        for j in range(10):
+            res = min(res, dp[i][j][n])
+    return res + n
 
 
 def question2(arr):
@@ -671,8 +653,8 @@ def yt_4_beam_search(arr, n, m, k):
 if __name__ == '__main__':
     # res = sc_dev2(3, [1,5,3,4,2])
     # print(res)
-    res = yt_3_party([[2, 3, 4], [3, 2, 2]], 7, 2)
-    print(res)
+    # res = yt_3_party([[2, 3, 4], [3, 2, 2]], 7, 2)
+    # print(res)
     # res = yt_4_beam_search([[500, 500],[900, 100],[100, 900]], 3, 2, 3)
     # print(res)
     # yt_2_ensemble([[0, 750, 250, 250, 750], [1, 500, 500, 500, 500], [0, 450, 550, 800, 200], [1, 340, 660, 410, 590]])
@@ -692,6 +674,7 @@ if __name__ == '__main__':
     # jd_dev1([1,3,2,6,5,4,7,8,10,9])
     # x = construct_tree_node([4,2,6,1,3,5,7])
     # question3(x)
-    # question1([6,9,7,1,7])
+    question1([6,9,7,1,7])
+    question1_v2([6,9,7,1,7])
     # question2([8, 7, 6, 5, 4, 2, 3, 1])
     pass

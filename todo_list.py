@@ -32,13 +32,18 @@
 ############################
 
 # 1. leetcode sql x
-# 2. leetcode shell
+# 2. leetcode shell x
 # 3. leetcode 100 x
 # 4. leetcode 200 x
 # 5. leetcode 300 x
 # 6. leetcode 400 x
 # 7. leetcode 500 x
-# 8. leetcode 600
-# 9. leetcode 700
+# 8. leetcode 600 x
+# 9. leetcode 700 x
 # 10. leetcode 800
+# 11. leetcode 900
+# 12. leetcode 1000
+# 13. leetcode 1100
+# 14. leetcode 1200
+# 15. leetcode multi_processing
 """

@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1335. 工作计划的最低难度](https://leetcode-cn.com/problems/minimum-difficulty-of-a-job-schedule/)
+    """
     @timeit
     def minDifficulty(self, jobDifficulty: List[int], d: int) -> int:
         from functools import lru_cache

@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    5155. 数组序号转换
+    [5155. 数组序号转换](https://leetcode-cn.com/problems/rank-transform-of-an-array/)
     """
     @timeit
     def arrayRankTransform(self, arr: List[int]) -> List[int]:

@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1344. 跳跃游戏 V](https://leetcode-cn.com/problems/jump-game-v/)
+    """
     @timeit
     def maxJumps(self, arr: List[int], d: int) -> int:
         from functools import lru_cache

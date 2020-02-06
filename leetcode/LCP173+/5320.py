@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-
+    [1333. 餐厅过滤器](https://leetcode-cn.com/problems/filter-restaurants-by-vegan-friendly-price-and-distance/)
     """
     @timeit
     def filterRestaurants(self, restaurants: List[List[int]], veganFriendly: int, maxPrice: int, maxDistance: int) -> List[int]:

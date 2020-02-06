@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1332. 删除回文子序列](https://leetcode-cn.com/problems/remove-palindromic-subsequences/)
+    """
     def removePalindromeSub(self, s: str) -> int:
         if s == "": return 0
         if s == s[::-1]: return 1

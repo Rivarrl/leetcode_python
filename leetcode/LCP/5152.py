@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    5152. 将矩阵按对角线排序
+    [5152. 将矩阵按对角线排序](https://leetcode-cn.com/problems/sort-the-matrix-diagonally/)
     """
     @timeit
     def diagonalSort(self, mat: List[List[int]]) -> List[List[int]]:

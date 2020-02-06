@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    5154. 翻转子数组得到最大的数组值
+    [5154. 翻转子数组得到最大的数组值](https://leetcode-cn.com/problems/reverse-subarray-to-maximize-array-value/)
     """
     @timeit
     def maxValueAfterReverse(self, nums: List[int]) -> int:

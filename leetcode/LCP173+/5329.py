@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1342. 数组大小减半](https://leetcode-cn.com/problems/reduce-array-size-to-the-half/)
+    """
     @timeit
     def minSetSize(self, arr: List[int]) -> int:
         from collections import Counter

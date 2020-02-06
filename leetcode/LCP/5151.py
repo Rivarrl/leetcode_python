@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    5151. 破坏回文串
+    [5151. 破坏回文串](https://leetcode-cn.com/problems/break-a-palindrome/)
     """
     @timeit
     def breakPalindrome(self, palindrome: str) -> str:

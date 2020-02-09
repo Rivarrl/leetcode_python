@@ -12,14 +12,6 @@ class Solution:
     """
     @timeit
     def minJumps(self, arr: List[int]) -> int:
-        if len(arr) > 1:
-            narr = [arr[0]]
-            for i in range(1, len(arr) - 1):
-                if arr[i-1] == arr[i] == arr[i+1]:
-                    continue
-                narr.append(arr[i])
-            narr.append(arr[-1])
-            arr = narr[:]
         n = len(arr)
         move = {}
         for i in range(n):
@@ -36,6 +28,7 @@ class Solution:
                 if not j in vis_1:
                     vis_1[j] = step + 1
                     stk_1.insert(0, (j, step + 1))
+            move[arr[i]] = []
 
 
 if __name__ == '__main__':

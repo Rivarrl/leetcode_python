@@ -30,7 +30,14 @@ def solve(arr, n, m):
         # 不能把炮兵放在山上
         if sta[i] & arr[0]: continue
         dp[0][i][0] = count[i]
-    for row in range(1, n):
+    # 初始化dp[1][i][j]
+    for i in range(length):
+        if sta[i] & arr[1]: continue
+        for j in range(length):
+            if sta[j] & arr[0]: continue
+            if sta[i] & sta[j]: continue
+            dp[1][i][j] = max(dp[1][i][j], dp[0][j][0] + count[i])
+    for row in range(2, n):
         # 枚举当前第row行状态
         for i in range(length):
             if sta[i] & arr[row]: continue

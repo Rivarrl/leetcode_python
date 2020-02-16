@@ -11,3 +11,4 @@ class Solution:
     [100269. 狼人杀模拟器](https://leetcode-cn.com/contest/sf-2020/problems/werewolves-of-leetcode/)
     """
     def canVillagersWin(self, players: List[str], credibility: List[int]) -> bool:
+        

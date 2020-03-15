@@ -21,7 +21,7 @@ class Solution:
             if i >= k:
                 t -= heapq.heappop(p)
             res = max(res, e * t)
-        return res
+        return res % (10**9+7)
 
 if __name__ == '__main__':
     a = Solution()

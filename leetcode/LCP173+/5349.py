@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [5349. 安排电影院座位](https://leetcode-cn.com/problems/cinema-seat-allocation/)
+    """
     @timeit
     def maxNumberOfFamilies(self, n: int, reservedSeats: List[List[int]]) -> int:
         reservedSeats.sort()

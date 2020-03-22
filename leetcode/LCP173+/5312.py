@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5312. 大小为 K 且平均值大于等于阈值的子数组数目]()
+    [5312. 大小为 K 且平均值大于等于阈值的子数组数目](https://leetcode-cn.com/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/)
     """
     @timeit
     def numOfSubarrays(self, arr: List[int], k: int, threshold: int) -> int:

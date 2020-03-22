@@ -10,7 +10,6 @@ class Solution:
     """
     [5340. 统计有序矩阵中的负数](https://leetcode-cn.com/problems/count-negative-numbers-in-a-sorted-matrix/)
     """
-
     @timeit
     def countNegatives(self, grid: List[List[int]]) -> int:
         ctr = 0

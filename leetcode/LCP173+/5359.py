@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1383. 最大的团队表现值](https://leetcode-cn.com/problems/maximum-performance-of-a-team/)
+    """
     @timeit
     def maxPerformance(self, n: int, speed: List[int], efficiency: List[int], k: int) -> int:
         import heapq

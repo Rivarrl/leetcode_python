@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1376. 通知所有员工所需的时间](https://leetcode-cn.com/problems/time-needed-to-inform-all-employees/)
+    """
     @timeit
     def numOfMinutes(self, n: int, headID: int, manager: List[int], informTime: List[int]) -> int:
         from collections import defaultdict

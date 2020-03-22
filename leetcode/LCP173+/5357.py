@@ -5,7 +5,9 @@
 # @Author  : Rivarrl
 # ======================================
 class CustomStack:
-
+    """
+    [1381. 设计一个支持增量操作的栈](https://leetcode-cn.com/problems/design-a-stack-with-increment-operation/)
+    """
     def __init__(self, maxSize: int):
         self.stk = []
         self.ms = maxSize

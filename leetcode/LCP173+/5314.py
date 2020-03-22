@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5314. 跳跃游戏 IV]()
+    [5314. 跳跃游戏 IV](https://leetcode-cn.com/problems/jump-game-iv/)
     """
     @timeit
     def minJumps(self, arr: List[int]) -> int:

@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1375. 灯泡开关 III](https://leetcode-cn.com/problems/bulb-switcher-iii/)
+    """
     @timeit
     def numTimesAllBlue(self, light: List[int]) -> int:
         res = 0

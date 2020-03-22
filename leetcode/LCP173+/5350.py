@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [5350. 将整数按权重排序](https://leetcode-cn.com/problems/sort-integers-by-the-power-value/)
+    """
     @timeit
     def getKth(self, lo: int, hi: int, k: int) -> int:
         def cmp(x):

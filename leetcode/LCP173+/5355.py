@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1377. T 秒后青蛙的位置](https://leetcode-cn.com/problems/frog-position-after-t-seconds/)
+    """
     @timeit
     def frogPosition(self, n: int, edges: List[List[int]], t: int, target: int) -> float:
         from collections import defaultdict

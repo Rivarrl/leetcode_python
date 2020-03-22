@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1370. 上升下降字符串](https://leetcode-cn.com/problems/increasing-decreasing-string/)
+    """
     @timeit
     def sortString(self, s: str) -> str:
         d = {}

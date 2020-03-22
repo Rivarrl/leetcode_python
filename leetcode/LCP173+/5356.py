@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1380. 矩阵中的幸运数](https://leetcode-cn.com/problems/lucky-numbers-in-a-matrix/)
+    """
     @timeit
     def luckyNumbers (self, matrix: List[List[int]]) -> List[int]:
         n, m = len(matrix), len(matrix[0])

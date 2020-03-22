@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5178. 四因数]()
+    [5178. 四因数](https://leetcode-cn.com/problems/four-divisors/)
     """
     @timeit
     def sumFourDivisors(self, nums: List[int]) -> int:

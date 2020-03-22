@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5367. 最长快乐前缀]()
+    [5367. 最长快乐前缀](https://leetcode-cn.com/problems/longest-happy-prefix/)
     """
     @timeit
     def longestPrefix(self, s: str) -> str:

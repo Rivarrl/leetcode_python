@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5364. 按既定顺序创建目标数组]()
+    [5364. 按既定顺序创建目标数组](https://leetcode-cn.com/problems/create-target-array-in-the-given-order/)
     """
     @timeit
     def createTargetArray(self, nums: List[int], index: List[int]) -> List[int]:

@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5366. 检查网格中是否存在有效路径]()
+    [5366. 检查网格中是否存在有效路径](https://leetcode-cn.com/problems/check-if-there-is-a-valid-path-in-a-grid/)
     """
     @timeit
     def hasValidPath(self, grid: List[List[int]]) -> bool:

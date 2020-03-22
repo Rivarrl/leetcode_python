@@ -29,6 +29,17 @@ class Solution:
             res = max(res, dp2[i][n//3])
         return res
 
+    @timeit
+    def maxSizeSlices2(self, slices: List[int]) -> int:
+        from functools import lru_cache
+        n = len(slices)
+        @lru_cache(None)
+        def f(i, j, last):
+            if j == 0 or i >= n - last: return 0
+            return max(f(i + 2, j - 1, last) + slices[i], f(i + 1, j, last))
+        return max(f(2, n//3-1, 1) + slices[0], f(1, n//3, 0))
+
+
 
 if __name__ == '__main__':
     a = Solution()
@@ -37,3 +48,9 @@ if __name__ == '__main__':
     a.maxSizeSlices([4,1,2,5,8,3,1,9,7])
     a.maxSizeSlices([3,1,2])
     a.maxSizeSlices([9,5,1,7,8,4,4,5,5,8,7,7])
+
+    a.maxSizeSlices2([1,2,3,4,5,6])
+    a.maxSizeSlices2([8,9,8,6,1,1])
+    a.maxSizeSlices2([4,1,2,5,8,3,1,9,7])
+    a.maxSizeSlices2([3,1,2])
+    a.maxSizeSlices2([9,5,1,7,8,4,4,5,5,8,7,7])

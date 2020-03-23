@@ -179,7 +179,12 @@ def timeit(f):
         x = f(*args, **kwargs)
         t2 = time.time()
         print("{0} runs: {1:.4f} sec".format(f.__name__, t2 - t1))
-        print(x)
+        if isinstance(x, ListNode):
+            list_node_print(x)
+        elif isinstance(x, TreeNode):
+            tree_node_print(x)
+        else:
+            print(x)
         return x
     return inner
 

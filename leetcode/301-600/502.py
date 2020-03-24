@@ -13,35 +13,22 @@ class Solution:
     @timeit
     def findMaximizedCapital(self, k: int, W: int, Profits: List[int], Capital: List[int]) -> int:
         import heapq
-        from functools import cmp_to_key
-        if W > max(Capital): return sum(Profits)
+        if W > max(Capital): return sum(heapq.nlargest(k, Profits)) + W
         n = len(Profits)
         arr = [[Capital[i], Profits[i]] for i in range(n)]
-        def cmp(x, y):
-            if x[0] == y[0]:
-                if x[1] < y[1]:
-                    return 1
-                else:
-                    return -1
-            if x[0] > y[0]:
-                return 1
-            else:
-                return -1
-        arr.sort(key=cmp_to_key(cmp))
+        arr.sort(key=lambda x:-x[0])
         hp = []
-        res = W
-        for i in range(n):
-            c, p = arr[i]
-            if i >= k + 1:
-                heapq.heappop(hp)
-            res -= c
-            if res < 0: break
-            res += p
-            heapq.heappush(hp, (p, c))
-
-        return res - W if res - W > 0 else 0
+        for i in range(k):
+            while arr and arr[-1][0] <= W:
+                heapq.heappush(hp, -arr.pop()[1])
+            if hp:
+                W -= heapq.heappop(hp)
+            else:
+                break
+        return W
 
 
 if __name__ == '__main__':
     a = Solution()
     a.findMaximizedCapital(k=2, W=0, Profits=[1,2,3], Capital=[0,1,1])
+    a.findMaximizedCapital(3,0,[1,2,3],[0,1,2])

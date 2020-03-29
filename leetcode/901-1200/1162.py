@@ -16,35 +16,25 @@ class Solution:
         思路：暴力求解，记录每个点向右向下最长的边
         """
         n, m = len(grid), len(grid[0])
-        dp = [[None] * m for _ in range(n)]
+        vis = [[0] * m for _ in range(n)]
+        stk = []
         for i in range(n):
             for j in range(m):
-                if grid[i][j] == 0:
-                    dp[i][j] = (0, 0)
-                    continue
-                k = i + 1
-                while k < n:
-                    if grid[k][j] == 0: break
-                    k += 1
-                ki = k - i
-                k = j + 1
-                while k < m:
-                    if grid[i][k] == 0: break
-                    k += 1
-                kj = k - j
-                dp[i][j] = (ki, kj)
-        res = 0
-        for i in range(n):
-            for j in range(m):
-                if grid[i][j] == 0: continue
-                x = min(dp[i][j][0], dp[i][j][1])
-                while x > 0:
-                    if dp[i+x-1][j][1] >= x and dp[i][j+x-1][0] >= x:
-                        break
-                    x -= 1
-                res = max(res, x)
-        return res ** 2
-
+                if grid[i][j] == 1:
+                    stk.append((i, j, 0))
+                    vis[i][j] = 1
+        dxy = ((0, 1), (1, 0), (0, -1), (-1, 0))
+        res = -1
+        while stk:
+            i, j, step = stk.pop()
+            if grid[i][j] == 0:
+                res = max(res, step)
+            for dx, dy in dxy:
+                x, y = i + dx, j + dy
+                if 0 <= x < n and 0 <= y < m and not vis[x][y]:
+                    vis[x][y] = 1
+                    stk.insert(0, (x, y, step+1))
+        return res
 
 if __name__ == '__main__':
     a = Solution()

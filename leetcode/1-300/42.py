@@ -36,8 +36,44 @@ class Solution:
         for i in range(n):
             res += max(0, min(l[i], r[i]) - height[i])
         return res
+    
+    def trap3(self, height: List[int]) -> int:
+        # 每次更新横条的面积，使用单调栈记录索引，单调递减
+        n = len(height)
+        res = 0
+        stk = []
+        for i in range(n):
+            while stk and height[stk[-1]] < height[i]:
+                j = stk.pop()
+                while stk and height[stk[-1]] == height[j]:
+                    j = stk.pop()
+                if stk:
+                    res += (i - 1 - stk[-1]) * (min(height[i], height[stk[-1]]) - height[j])
+            stk.append(i)
+        return res
+
+    def trap4(self, height: List[int]) -> int:
+        # 双指针记录左边最大值和右边最大值
+        n = len(height)
+        l, r = 0, n - 1
+        res = lm = rm = 0
+        while l < r:
+            if height[l] < height[r]:
+                if height[l] < lm:
+                    res += lm - height[l]
+                else:
+                    lm = height[l]
+                l += 1
+            else:
+                if height[r] < rm:
+                    res += rm - height[r]
+                else:
+                    rm = height[r]
+                r -= 1
+        return res
+
 
 if __name__ == '__main__':
     a = Solution()
-    r = a.trap2([0,1,0,2,1,0,1,3,2,1,2,1])
+    r = a.trap3([0,1,0,2,1,0,1,3,2,1,2,1])
     print(r)

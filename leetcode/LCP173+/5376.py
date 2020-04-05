@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5376. 非递增顺序的最小子序列]()
+    [5376. 非递增顺序的最小子序列](https://leetcode-cn.com/problems/minimum-subsequence-in-non-increasing-order/)
     """
     @timeit
     def minSubsequence(self, nums: List[int]) -> List[int]:

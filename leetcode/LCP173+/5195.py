@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5195. 最长快乐字符串]()
+    [5195. 最长快乐字符串](https://leetcode-cn.com/problems/longest-happy-string/)
     """
     @timeit
     def longestDiverseString(self, a: int, b: int, c: int) -> str:
@@ -63,9 +63,27 @@ class Solution:
                 break
         return res
 
+    @timeit
+    def longestDiverseString2(self, a: int, b: int, c: int) -> str:
+        # a > b > c
+        def dfs(a, b, c, sa, sb, sc):
+            if a < b:
+                return dfs(b,a,c,sb,sa,sc)
+            if a < c:
+                return dfs(c,b,a,sc,sb,sa)
+            if b < c:
+                return dfs(a,c,b,sa,sc,sb)
+            ta = min(a, 2)
+            if b == 0:
+                return sa * ta
+            tb = 1 if a - ta >= b else 0
+            return sa*ta+sb*tb+dfs(a-ta,b-tb,c,sa,sb,sc)
+        return dfs(a, b, c, 'a', 'b', 'c')
+
 
 if __name__ == '__main__':
     a = Solution()
-    a.longestDiverseString(a = 1, b = 1, c = 7)
-    a.longestDiverseString(a = 2, b = 2, c = 1)
-    a.longestDiverseString(a = 7, b = 1, c = 0)
+    a.longestDiverseString2(a = 1, b = 1, c = 7)
+    a.longestDiverseString2(a = 2, b = 2, c = 1)
+    a.longestDiverseString2(a = 7, b = 1, c = 0)
+    a.longestDiverseString2(a = 0, b = 8, c = 11)

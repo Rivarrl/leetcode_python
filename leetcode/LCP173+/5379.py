@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5379. 石子游戏 III]()
+    [5379. 石子游戏 III](https://leetcode-cn.com/problems/stone-game-iii/)
     """
     @timeit
     def stoneGameIII(self, stoneValue: List[int]) -> str:

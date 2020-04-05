@@ -19,8 +19,7 @@ def helper(s, t):
         dp[0][i] = i
     for i in range(n):
         for j in range(m):
-            c = 0 if s[i] == t[j] else 1
-            dp[i+1][j+1] = min(dp[i][j], dp[i+1][j], dp[i][j+1]) + c
+            dp[i+1][j+1] = min(dp[i][j] + int(s[i] != t[i]), dp[i+1][j] + 1, dp[i][j+1] + 1)
     return dp[n][m]
 
 ans = 0

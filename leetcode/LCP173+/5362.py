@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [5362. 构造 K 个回文字符串](https://leetcode-cn.com/problems/construct-k-palindrome-strings/)
+    """
     @timeit
     def canConstruct(self, s: str, k: int) -> bool:
         n = len(s)

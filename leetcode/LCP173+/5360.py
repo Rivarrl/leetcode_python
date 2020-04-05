@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5360. 统计最大组的数目]()
+    [5360. 统计最大组的数目](https://leetcode-cn.com/problems/count-largest-group/)
     """
     @timeit
     def countLargestGroup(self, n: int) -> int:

@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5363. 做菜顺序]()
+    [5363. 做菜顺序](https://leetcode-cn.com/problems/reducing-dishes/)
     """
     @timeit
     def maxSatisfaction(self, satisfaction: List[int]) -> int:

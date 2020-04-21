@@ -165,10 +165,11 @@ def deconstruct_tree_node(root):
     return res
 
 
-def matrix_pretty_print(matrix):
+def matrix_pretty_print(matrix, b=0):
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
-            print(matrix[i][j], end=' ')
+            x = int(matrix[i][j]) if b else matrix[i][j]
+            print(x, end=' ')
         print()
     print()
 

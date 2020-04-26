@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5390. 数青蛙]()
+    [5390. 数青蛙](https://leetcode-cn.com/problems/minimum-number-of-frogs-croaking/)
     """
     @timeit
     def minNumberOfFrogs(self, croakOfFrogs: str) -> int:

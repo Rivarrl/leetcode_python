@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5389. 点菜展示表]()
+    [5389. 点菜展示表](https://leetcode-cn.com/problems/display-table-of-food-orders-in-a-restaurant/)
     """
     @timeit
     def displayTable(self, orders: List[List[str]]) -> List[List[str]]:

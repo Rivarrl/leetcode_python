@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5388. 重新格式化字符串]()
+    [5388. 重新格式化字符串](https://leetcode-cn.com/problems/reformat-the-string/)
     """
     @timeit
     def reformat(self, s: str) -> str:

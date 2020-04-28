@@ -5,6 +5,9 @@
 # @Author  : Rivarrl
 # ======================================
 class Solution:
+    """
+    [65. 有效数字](https://leetcode-cn.com/problems/valid-number/)
+    """
     def isNumber(self, s: str) -> bool:
         trans_table = [[ 1,-1, 2, 4, 0,-1],
                        [-1,-1, 2, 4,-1,-1],

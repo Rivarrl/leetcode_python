@@ -57,14 +57,38 @@ class Solution:
         return res * flag
 
 
+    @timeit
+    def myAtoi2(self, str: str) -> int:
+        # dfa解法
+        trans_table = [[0,1,2,3],
+                       [3,3,2,3],
+                       [3,3,2,3],
+                       [3,3,3,3]]
+        INT_MIN, INT_MAX = -2 ** 31, 2 ** 31 - 1
+        def f(c):
+            if c == ' ': return 0
+            elif c in ('+', '-'): return 1
+            elif c in '0123456789': return 2
+            else: return 3
+        sta = 0
+        res, sign = 0, 1
+        for c in str:
+            sta = trans_table[sta][f(c)]
+            if sta == 2:
+                res = res * 10 + int(c)
+                res = min(res, INT_MAX) if sign == 1 else min(res, -INT_MIN)
+            elif sta == 1:
+                sign = 1 if c == '+' else -1
+        return sign * res
+
 if __name__ == '__main__':
     sol = Solution()
-    sol.myAtoi("42")
-    sol.myAtoi("    -42")
-    sol.myAtoi("4193 with words")
-    sol.myAtoi("words and 987")
-    sol.myAtoi("-91283472332")
-    sol.myAtoi("-0000000000001")
-    sol.myAtoi("2147483648")
-    sol.myAtoi("0-1")
-    sol.myAtoi("0 123")
+    sol.myAtoi2("42")
+    sol.myAtoi2("    -42")
+    sol.myAtoi2("4193 with words")
+    sol.myAtoi2("words and 987")
+    sol.myAtoi2("-91283472332")
+    sol.myAtoi2("-0000000000001")
+    sol.myAtoi2("2147483648")
+    sol.myAtoi2("0-1")
+    sol.myAtoi2("0 123")

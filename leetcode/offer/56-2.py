@@ -10,8 +10,12 @@ from algorithm_utils import *
 class Solution:
     @timeit
     def singleNumber(self, nums: List[int]) -> int:
-
-
+        # 状态机
+        one = two = 0
+        for x in nums:
+            one = one ^ x & ~two
+            two = two ^ x & ~one
+        return one
 
 if __name__ == '__main__':
     a = Solution()

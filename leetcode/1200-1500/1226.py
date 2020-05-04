@@ -9,7 +9,6 @@ from algorithm_utils import *
 
 import threading
 class DiningPhilosophers:
-
     def wantsToEat(self,
                    philosopher: int,
                    pickLeftFork: 'Callable[[], None]',

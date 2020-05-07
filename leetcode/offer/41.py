@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 # ======================================
-# @File    : 295.py
-# @Time    : 2020/4/29 22:36
+# @File    : 41.py
+# @Time    : 2020/5/7 1:20
 # @Author  : Rivarrl
 # ======================================
+# [面试题41. 数据流中的中位数](https://leetcode-cn.com/problems/shu-ju-liu-zhong-de-zhong-wei-shu-lcof/)
+
 from algorithm_utils import *
 import heapq
-
 class MedianFinder:
-    """
-    [295. 数据流的中位数](https://leetcode-cn.com/problems/find-median-from-data-stream/)
-    """
+
     def __init__(self):
         self.ctr = 0
         self.q = []
@@ -32,7 +31,6 @@ class MedianFinder:
                 heapq.heappush(self.q, -x)
         self.ctr += 1
 
-    @timeit
     def findMedian(self) -> float:
         if self.ctr == 0: return 0
         elif self.ctr & 1:

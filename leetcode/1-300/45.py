@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [45. 跳跃游戏 II](https://leetcode-cn.com/problems/jump-game-ii/)
+    """
     @timeit
     def jump(self, nums: List[int]) -> int:
         # O(n^2)选择下一次可跳的最远的

@@ -4,14 +4,19 @@
 # @Time    : 2020/5/10 20:35
 # @Author  : Rivarrl
 # ======================================
-
 def f(n, board):
-    mi = min(board)
-    res = mi
-    for i in range(n):
-        if board[i] >= n:
-            res += 1
-    return min(n, res)
+    def dfs(l, r, x=0):
+        if l > r: return 0
+        if l == r: return board[l]
+        res = mi = min(board[l:r+1]) - x
+        i = l
+        for j in range(l, r+1):
+            if board[j] - x == mi:
+                res += dfs(i, j-1, mi)
+                i = j + 1
+        res += dfs(i, r, mi)
+        return min(res, r - l + 1)
+    return dfs(0, n-1)
 
 if __name__ == '__main__':
     n = int(input())

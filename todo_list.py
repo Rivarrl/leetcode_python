@@ -40,9 +40,9 @@
 # 7. leetcode 500 x
 # 8. leetcode 600 x
 # 9. leetcode 700 x
-# 10. leetcode 800
-# 11. leetcode 900
-# 12. leetcode 1000
+# 10. leetcode 800 x
+# 11. leetcode 900 x
+# 12. leetcode 1000 x
 # 13. leetcode 1100
 # 14. leetcode 1200
 # 15. leetcode multi_processing

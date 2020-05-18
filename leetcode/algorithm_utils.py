@@ -185,7 +185,7 @@ def timeit(f):
         elif isinstance(x, TreeNode):
             tree_node_print(x)
         else:
-            if isinstance(x, List) and isinstance(x[0], List):
+            if x and isinstance(x, List) and isinstance(x[0], List):
                 matrix_pretty_print(x)
             else:
                 print(x)

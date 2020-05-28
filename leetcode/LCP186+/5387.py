@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1434. 每个人戴不同帽子的方案数](https://leetcode-cn.com/problems/number-of-ways-to-wear-different-hats-to-each-other/)
+    """
     @timeit
     def numberWays(self, hats: List[List[int]]) -> int:
         # 人选帽子，O(2^40)超时

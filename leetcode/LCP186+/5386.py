@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1433. 检查一个字符串是否可以打破另一个字符串](https://leetcode-cn.com/problems/check-if-a-string-can-break-another-string/)
+    """
     # @timeit
     def checkIfCanBreak(self, s1: str, s2: str) -> bool:
         s1 = ''.join(sorted([e for e in s1]))

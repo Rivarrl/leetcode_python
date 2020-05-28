@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5384. 拥有最多糖果的孩子]()
+    [5384. 拥有最多糖果的孩子](https://leetcode-cn.com/problems/kids-with-the-greatest-number-of-candies/)
     """
     @timeit
     def kidsWithCandies(self, candies: List[int], extraCandies: int) -> List[bool]:

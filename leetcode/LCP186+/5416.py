@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [5416. 检查单词是否为句中其他单词的前缀]()
+    """
     @timeit
     def isPrefixOfWord(self, sentence: str, searchWord: str) -> int:
         for i, word in enumerate(sentence.split(' ')):

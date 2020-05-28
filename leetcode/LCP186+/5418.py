@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [5418. 二叉树中的伪回文路径]()
+    """
     @timeit
     def pseudoPalindromicPaths(self, root: TreeNode) -> int:
         def ok(c, q):

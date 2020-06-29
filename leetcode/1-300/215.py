@@ -32,10 +32,11 @@ class Solution:
 
     @timeit
     def findKthLargest2(self, nums: List[int], k: int) -> int:
-        # 使用大顶堆，移除k次
-
+        import heapq
+        heapq.heapify(nums)
+        print(nums)
 
 if __name__ == '__main__':
     a = Solution()
-    a.findKthLargest([3,2,1,5,6,4], 2)
-    a.findKthLargest([3,2,3,1,2,4,5,5,6], 4)
+    a.findKthLargest2([3,2,1,5,6,4], 2)
+    a.findKthLargest2([3,2,3,1,2,4,5,5,6], 4)

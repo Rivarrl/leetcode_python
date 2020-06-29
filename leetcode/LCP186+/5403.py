@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5403. 有序矩阵中的第 k 个最小数组和]()
+    [5403. 有序矩阵中的第 k 个最小数组和](https://leetcode-cn.com/problems/find-the-kth-smallest-sum-of-a-matrix-with-sorted-rows)
     """
     @timeit
     def kthSmallest(self, mat: List[List[int]], k: int) -> int:

@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5433. n 的第 k 个因子]()
+    [5433. n 的第 k 个因子](https://leetcode-cn.com/problems/the-kth-factor-of-n)
     """
     @timeit
     def kthFactor(self, n: int, k: int) -> int:

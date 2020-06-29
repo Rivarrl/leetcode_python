@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5434. 删掉一个元素以后全为 1 的最长子数组]()
+    [5434. 删掉一个元素以后全为 1 的最长子数组](https://leetcode-cn.com/problems/longest-subarray-of-1s-after-deleting-one-element)
     """
     @timeit
     def longestSubarray(self, nums: List[int]) -> int:

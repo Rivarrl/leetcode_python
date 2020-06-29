@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5399. 数位成本和为目标值的最大数字]()
+    [5399. 数位成本和为目标值的最大数字](https://leetcode-cn.com/problems/form-largest-integer-with-digits-that-add-up-to-target)
     """
     @timeit
     def largestNumber(self, cost: List[int], target: int) -> str:

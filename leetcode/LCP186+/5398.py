@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5398. 统计二叉树中好节点的数目]()
+    [5398. 统计二叉树中好节点的数目](https://leetcode-cn.com/problems/count-good-nodes-in-binary-tree)
     """
     @timeit
     def goodNodes(self, root: TreeNode) -> int:

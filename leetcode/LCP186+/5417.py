@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5417. 定长子串中元音的最大数目]()
+    [5417. 定长子串中元音的最大数目](https://leetcode-cn.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length)
     """
     @timeit
     def maxVowels(self, s: str, k: int) -> int:

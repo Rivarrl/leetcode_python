@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5432. 去掉最低工资和最高工资后的工资平均值]()
+    [5432. 去掉最低工资和最高工资后的工资平均值](https://leetcode-cn.com/problems/average-salary-excluding-the-minimum-and-maximum-salary)
     """
     @timeit
     def average(self, salary: List[int]) -> float:

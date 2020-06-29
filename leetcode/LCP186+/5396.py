@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5396. 连续字符]()
+    [5396. 连续字符](https://leetcode-cn.com/problems/consecutive-characters)
     """
     @timeit
     def maxPower(self, s: str) -> int:

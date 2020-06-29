@@ -7,7 +7,7 @@
 from algorithm_utils import *
 class Solution:
     """
-    [5419. 两个子序列的最大点积]()
+    [5419. 两个子序列的最大点积](https://leetcode-cn.com/problems/max-dot-product-of-two-subsequences)
     """
     @timeit
     def maxDotProduct(self, nums1: List[int], nums2: List[int]) -> int:

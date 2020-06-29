@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5400. 旅行终点站]()
+    [5400. 旅行终点站](https://leetcode-cn.com/problems/destination-city)
     """
     @timeit
     def destCity(self, paths: List[List[str]]) -> str:

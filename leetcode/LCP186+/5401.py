@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5401. 是否所有 1 都至少相隔 k 个元素]()
+    [5401. 是否所有 1 都至少相隔 k 个元素](https://leetcode-cn.com/problems/check-if-all-1s-are-at-least-length-k-places-away)
     """
     @timeit
     def kLengthApart(self, nums: List[int], k: int) -> bool:

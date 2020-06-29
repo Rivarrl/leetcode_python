@@ -12,39 +12,21 @@ class Solution:
     """
     @timeit
     def minSumOfLengths(self, arr: List[int], target: int) -> int:
-        # 超时了
-        INT_MAX = 0x3f3f3f3f
-        left = right = 0
+        d = {0:-1}
         n = len(arr)
-        total = 0
-        d = {}
-        while right < n:
-            total += arr[right]
-            right += 1
-            if total < target: continue
-            while left <= right and total > target:
-                total -= arr[left]
-                left += 1
-            if total == target:
-                d[right - left] = d.get(right - left, []) + [left]
-        res = INT_MAX
-        sd = sorted(d)
-        for k in sd:
-            if k * 2 > res: break
-            idxs = d[k]
-            f = True
-            for i in idxs:
-                l1, l2 = i, i + k
-                for k2 in sd:
-                    for j in d[k2]:
-                        l3, l4 = j, j + k2
-                        if (l3 < l2 and l1 < l4) or (l4 < l1 and l2 < l3): continue
-                        res = min(res, k + k2)
-                        f = False
-                        break
-                    if not f: break
-                if not f: break
-        return res if res != INT_MAX else -1
+        c = 0
+        res = n + 1
+        dp = [n+1] * n
+        for i in range(n):
+            c += arr[i]
+            if i > 0: dp[i] = dp[i-1]
+            if c - target in d:
+                j = d[c-target]
+                if j != -1:
+                    res = min(res, dp[j] + i - j)
+                dp[i] = min(dp[i], i - j)
+            d[c] = i
+        return res if res < n + 1 else -1
 
 if __name__ == '__main__':
     a = Solution()

@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5397. 最简分数]()
+    [5397. 最简分数](https://leetcode-cn.com/problems/simplified-fractions)
     """
     @timeit
     def simplifiedFractions(self, n: int) -> List[str]:

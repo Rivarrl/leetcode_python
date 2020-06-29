@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5402. 绝对差不超过限制的最长连续子数组]()
+    [5402. 绝对差不超过限制的最长连续子数组](https://leetcode-cn.com/problems/longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit)
     """
     @timeit
     def longestSubarray(self, nums: List[int], limit: int) -> int:

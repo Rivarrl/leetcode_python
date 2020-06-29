@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5418. 二叉树中的伪回文路径]()
+    [5418. 二叉树中的伪回文路径](https://leetcode-cn.com/problems/pseudo-palindromic-paths-in-a-binary-tree)
     """
     @timeit
     def pseudoPalindromicPaths(self, root: TreeNode) -> int:

@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [5435. 并行课程 II](https://leetcode-cn.com/problems/parallel-courses-ii/)
+    """
     @timeit
     def minNumberOfSemesters(self, n: int, dependencies: List[List[int]], k: int) -> int:
         from collections import defaultdict

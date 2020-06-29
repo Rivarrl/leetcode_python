@@ -32,9 +32,21 @@ class Solution:
 
     @timeit
     def findKthLargest2(self, nums: List[int], k: int) -> int:
-        import heapq
-        heapq.heapify(nums)
-        print(nums)
+        # 维护堆
+        # 大顶堆就是建好堆之后删除k-1个堆顶元素
+        # 小顶堆就是维护一个大小为k的小顶堆，遍历过后堆顶即为所求
+        # 这里用小顶堆
+        def min_heapify(arr, i):
+            j = i
+            left, right = j * 2 + 1, j * 2 + 2
+            if arr[j] > arr[left]:
+                j = left
+            if arr[j] > arr[right]:
+                j = right
+            if j != i:
+                arr[i], arr[j] = arr[j], arr[i]
+                min_heapify(arr, j)
+
 
 if __name__ == '__main__':
     a = Solution()

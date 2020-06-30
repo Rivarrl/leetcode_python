@@ -36,17 +36,22 @@ class Solution:
         # 大顶堆就是建好堆之后删除k-1个堆顶元素
         # 小顶堆就是维护一个大小为k的小顶堆，遍历过后堆顶即为所求
         # 这里用小顶堆
-        def min_heapify(arr, i):
+        def sift_down(arr, i):
             j = i
             left, right = j * 2 + 1, j * 2 + 2
-            if arr[j] > arr[left]:
+            if left < len(arr) and arr[j] > arr[left]:
                 j = left
-            if arr[j] > arr[right]:
+            if right < len(arr) and arr[j] > arr[right]:
                 j = right
             if j != i:
                 arr[i], arr[j] = arr[j], arr[i]
-                min_heapify(arr, j)
-
+                sift_down(arr, j)
+        mheap = [-0x3f3f3f3f] * k
+        for x in nums:
+            if x > mheap[0]:
+                mheap[0] = x
+                sift_down(mheap, 0)
+        return mheap[0]
 
 if __name__ == '__main__':
     a = Solution()

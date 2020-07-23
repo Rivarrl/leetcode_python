@@ -7,10 +7,11 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1521. 找到最接近目标值的函数值](https://leetcode-cn.com/problems/find-a-value-of-a-mysterious-function-closest-to-target/)
+    """
     @timeit
     def closestToTarget(self, arr: List[int], target: int) -> int:
-        n = len(arr)
-        for i in range(n):
 
 
 if __name__ == '__main__':

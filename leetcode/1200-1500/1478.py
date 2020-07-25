@@ -7,7 +7,13 @@
 from algorithm_utils import *
 
 class Solution:
+    @timeit
     def minDistance(self, houses: List[int], k: int) -> int:
+        houses.sort()
+        n = len(houses)
+        dp = [[0] * (k+1) for _ in range(n+1)]
+
+
 
 if __name__ == '__main__':
     a = Solution()

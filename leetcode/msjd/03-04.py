@@ -7,7 +7,9 @@
 from algorithm_utils import *
 
 class MyQueue:
-
+    """
+    [面试题 03.04. 化栈为队](https://leetcode-cn.com/problems/implement-queue-using-stacks-lcci/)
+    """
     def __init__(self):
         self.stk1 = []
         self.stk2 = []

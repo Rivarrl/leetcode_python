@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ======================================
-# @File    : 5476.py
+# @File    : 1535.py
 # @Time    : 2020/8/3 9:48 上午
 # @Author  : Rivarrl
 # ======================================
@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5476. 找出数组游戏的赢家](https://leetcode-cn.com/problems/find-the-winner-of-an-array-game/)
+    [1535. 找出数组游戏的赢家](https://leetcode-cn.com/problems/find-the-winner-of-an-array-game/)
     """
     @timeit
     def getWinner(self, arr: List[int], k: int) -> int:

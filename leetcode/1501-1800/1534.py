@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ======================================
-# @File    : 5475.py
+# @File    : 1534.py
 # @Time    : 2020/8/3 9:43 上午
 # @Author  : Rivarrl
 # ======================================
@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5475. 统计好三元组](https://leetcode-cn.com/problems/count-good-triplets/)
+    [1534. 统计好三元组](https://leetcode-cn.com/problems/count-good-triplets/)
     """
     @timeit
     def countGoodTriplets(self, arr: List[int], a: int, b: int, c: int) -> int:

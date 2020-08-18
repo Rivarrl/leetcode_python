@@ -34,9 +34,22 @@ class Solution:
                 if p >= 3 and p % 3 < 2:
                     r[p%3] += 1
                 p = 1
-        print(r)
+        c += p // 3
+        r[p%3] += 1
         if n <= 20: return max(3 - sms, c)
-
+        dd = n - 20
+        if r[0] and dd:
+            q = min(r[0], dd)
+            c -= q
+            dd -= q
+        if r[1] and dd:
+            q = min(r[1], dd)
+            c -= q
+            dd -= q
+        if r[2] and dd:
+            q = min(r[2], dd)
+            c -= q
+            dd -= q
 
 
 if __name__ == '__main__':

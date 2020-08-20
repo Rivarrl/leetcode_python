@@ -12,6 +12,15 @@ class Solution:
     """
     @timeit
     def sortedArrayToBST(self, nums: List[int]) -> TreeNode:
+        def f(i, j):
+            if i > j: return
+            if i == j: return TreeNode(nums[i])
+            k = i + j >> 1
+            root = TreeNode(nums[k])
+            root.left = f(i, k-1)
+            root.right = f(k+1, j)
+            return root
+        return f(0, len(nums)-1)
 
 
 if __name__ == '__main__':

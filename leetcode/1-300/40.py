@@ -35,3 +35,4 @@ if __name__ == '__main__':
     a = Solution()
     a.combinationSum2([3,1,3,5,1,5,2,3,2,5,4],1)
     a.combinationSum2([10,1,2,7,6,1,5], 8)
+    a.combinationSum2(candidates = [2,5,2,1,2], target = 5)

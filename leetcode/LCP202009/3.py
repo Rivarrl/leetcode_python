@@ -10,13 +10,17 @@ class Solution:
     @timeit
     def minimumOperations(self, leaves: str) -> int:
         n = len(leaves)
-        dp = [[0] * n for _ in range(3)]
-        dp[0][0] = 0 if leaves[0] == 'r' else 1
-        for i in range(1, n):
-            if leaves[i] == 'r':
-                dp[0][i] = dp[0][i-1]
+        r, ry, ryr = 0, 0x3f3f3f3f, 0x3f3f3f3f
+        for i in range(n):
+            c = int(leaves[i] != 'r')
+            if i == 0:
+                r = c
+            else:
+                r, ry, ryr = r + c, min(r, ry) + (c^1), min(ry, ryr) + c
+        return ryr
 
 if __name__ == '__main__':
     a = Solution()
-    a.minimumOperations(leaves = "rrryyyrryyyrr")
-    a.minimumOperations(leaves = "ryr")
+    # a.minimumOperations(leaves = "rrryyyrryyyrr")
+    # a.minimumOperations(leaves = "ryr")
+    a.minimumOperations("yry")

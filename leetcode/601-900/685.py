@@ -6,6 +6,21 @@
 # ======================================
 from algorithm_utils import *
 
+class UnionFind:
+    """
+    并查集
+    """
+    def __init__(self, n):
+        self.arr = list(range(n))
+
+    def union(self, i: int, j: int):
+        self.arr[self.find(i)] = self.find(j)
+
+    def find(self, i: int) -> int:
+        if self.arr[i] != i:
+            self.arr[i] = self.find(self.arr[i])
+        return self.arr[i]
+
 class Solution:
     """
     [685. 冗余连接 II](https://leetcode-cn.com/problems/redundant-connection-ii/)
@@ -47,6 +62,34 @@ class Solution:
                 if ok(v): return [u, v]
                 graph[u].append(v)
         return [-1, -1]
+
+    @timeit
+    def findRedundantDirectedConnection2(self, edges: List[List[int]]) -> List[int]:
+        n = len(edges)
+        uf = UnionFind(n + 1)
+        parent = list(range(n + 1))
+        conflict = -1
+        cycle = -1
+        # u->v
+        for i, (u, v) in enumerate(edges):
+            if parent[v] != v:
+                conflict = i
+            else:
+                parent[v] = u
+                if uf.find(u) == uf.find(v):
+                    cycle = i
+                else:
+                    uf.union(u, v)
+
+        if conflict < 0:
+            return [edges[cycle][0], edges[cycle][1]]
+        else:
+            conflict_edge = edges[conflict]
+            if cycle >= 0:
+                return [parent[conflict_edge[1]], conflict_edge[1]]
+            else:
+                return [conflict_edge[0], conflict_edge[1]]
+
 
 if __name__ == '__main__':
     a = Solution()

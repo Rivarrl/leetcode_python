@@ -20,8 +20,8 @@ class Solution:
             g[v - 1] = g.get(v - 1, []) + [u - 1]
         def bfs(p, st):
             stk = deque([[p, 0]])
-            seen = 0
-            res, q = 0, p
+            seen = (1 << p)
+            res, q = -1, p
             while stk:
                 u, s = stk.popleft()
                 if res < s:
@@ -37,21 +37,21 @@ class Solution:
             r = 0
             while s & 1 == 0:
                 s >>= 1
+                r += 1
             return r
         res = [0] * n
         for st in range(1, 1 << n):
             if st & (st - 1) == 0: continue
             p = start(st)
-            r, q, seen = bfs(p, st)
-            if seen != st: continue
-            if q != p:
-                r, _, _ = bfs(q, st)
+            _, q, seen = bfs(p, st)
+            if seen != st or p == q: continue
+            r, _, _ = bfs(q, st)
             res[r] += 1
         return res[1:]
 
 if __name__ == '__main__':
     a = Solution()
     a.countSubgraphsForEachDiameter(n=4, edges=[[1, 2], [2, 3], [2, 4]])
-    # a.countSubgraphsForEachDiameter(n=2, edges=[[1, 2]])
-    # a.countSubgraphsForEachDiameter(n=3, edges=[[1, 2], [2, 3]])
-    # a.countSubgraphsForEachDiameter(4, [[1,3],[1,4],[2,3]])
+    a.countSubgraphsForEachDiameter(n=2, edges=[[1, 2]])
+    a.countSubgraphsForEachDiameter(n=3, edges=[[1, 2], [2, 3]])
+    a.countSubgraphsForEachDiameter(4, [[1,3],[1,4],[2,3]])

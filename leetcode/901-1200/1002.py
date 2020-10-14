@@ -24,3 +24,8 @@ class Solution:
             for i in range(v):
                 res.append(k)
         return res
+
+if __name__ == '__main__':
+    a = Solution()
+    a.commonChars(["bella","label","roller"])
+    a.commonChars(["cool","lock","cook"])

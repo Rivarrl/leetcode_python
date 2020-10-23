@@ -14,11 +14,10 @@ class Solution:
     def areConnected(self, n: int, threshold: int, queries: List[List[int]]) -> List[bool]:
         def primes(x):
             res = set()
-            for i in range(threshold+1, int((x**0.5)+1)+1):
+            for i in range(1, int((x**0.5)+1)+1):
                 if x % i == 0:
-                    res.add(i)
-                    if x//i > threshold:
-                        res.add(x//i)
+                    if i > threshold: res.add(i)
+                    if x//i > threshold: res.add(x//i)
             return res
         pr = [set() for _ in range(n+1)]
         for i in range(1, n+1):
@@ -39,9 +38,8 @@ class Solution:
             pri = list(pr[i])
             m = len(pri)
             for j in range(m):
-                for k in range(i+1, m):
+                for k in range(j+1, m):
                     union(pri[j], pri[k])
-        print(pr)
         return [find(u) == find(v) for u, v in queries]
 
 if __name__ == '__main__':

@@ -12,17 +12,6 @@ class Solution:
     """
     @timeit
     def areConnected(self, n: int, threshold: int, queries: List[List[int]]) -> List[bool]:
-        def primes(x):
-            res = set()
-            for i in range(1, int((x**0.5)+1)+1):
-                if x % i == 0:
-                    if i > threshold: res.add(i)
-                    if x//i > threshold: res.add(x//i)
-            return res
-        pr = [set() for _ in range(n+1)]
-        for i in range(1, n+1):
-            for j in primes(i):
-                pr[j].add(i)
         uf = [i for i in range(n+1)]
         def find(u):
             if uf[u] == u: return u
@@ -34,12 +23,12 @@ class Solution:
             if x == y: return
             uf[x] = y
             find(u)
-        for i in range(1, n+1):
-            pri = list(pr[i])
-            m = len(pri)
-            for j in range(m):
-                for k in range(j+1, m):
-                    union(pri[j], pri[k])
+
+        for i in range(threshold+1, (n//2)+1):
+            j = 2
+            while i * j <= n:
+                union(i, i*j)
+                j += 1
         return [find(u) == find(v) for u, v in queries]
 
 if __name__ == '__main__':

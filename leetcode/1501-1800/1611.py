@@ -12,19 +12,12 @@ class Solution:
     """
     @timeit
     def minimumOneBitOperations(self, n: int) -> int:
-        from collections import deque
-        seen = {n}
-        q = deque([[n, 0]])
-        while q:
-            n, step = q.popleft()
-            if n == 0: return step
-            s1 = n ^ 1
-            s2 = n ^ ((n ^ (n-1)) + 1)
-            for s in (s1, s2):
-                if s not in seen:
-                    seen.add(s)
-                    q.append([s, step+1])
-        return -1
+        # 格雷码的解码运算，编码为Gray(n) = n ^ (n >> 1)
+        res = n
+        while n >> 1:
+            res ^= (n >> 1)
+            n >>= 1
+        return res
 
 if __name__ == '__main__':
     a = Solution()
@@ -33,4 +26,3 @@ if __name__ == '__main__':
     a.minimumOneBitOperations(n = 6)
     a.minimumOneBitOperations(n = 9)
     a.minimumOneBitOperations(n = 333)
-    a.minimumOneBitOperations(n = 10**8 + 3256)

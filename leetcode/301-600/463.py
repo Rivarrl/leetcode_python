@@ -26,9 +26,15 @@ class Solution:
                     res += 4 - lrud(i, j)
         return res
 
+    @timeit
+    def islandPerimeter2(self, grid: List[List[int]]) -> int:
+        from scipy.signal import convolve2d
+        return int(abs(convolve2d(grid, [[1,-2],[0,1]])).sum())
+
+
 if __name__ == '__main__':
     a = Solution()
-    a.islandPerimeter([[0,1,0,0],
+    a.islandPerimeter2([[0,1,0,0],
                      [1,1,1,0],
                      [0,1,0,0],
                      [1,1,0,0]])

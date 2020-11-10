@@ -16,7 +16,7 @@ class Operations:
             self.neg += [self.neg[-1] + self.neg[-1]]
 
     def ng(self, x: int):
-        if not x: return x
+        if x == 0: return 0
         if x > 0:
             p, n, op = self.pos, self.neg, lambda x, y: x >= y
         else:
@@ -31,26 +31,11 @@ class Operations:
         return res
 
     def minus(self, a: int, b: int) -> int:
-        # 写一种都是正数的情况，然后配合取反函数适应所有情况
-        if not b: return a
-        if a < 0 and b < 0: return self.minus(self.ng(b), self.ng(a))
-        if a < 0 and b > 0: return self.ng(self.ng(a) + b)
-        if a > 0 and b < 0: return a + self.ng(b)
-        res = 0
-        i = 30
-        while i >= 0 and (a > 0 or b > 0):
-            if a >= self.pos[i]:
-                a += self.neg[i]
-                res += self.pos[i]
-            if b >= self.pos[i]:
-                b += self.neg[i]
-                res += self.neg[i]
-            i += self.neg[0]
-        return res
+        return a + self.ng(b)
 
     def multiply(self, a: int, b: int) -> int:
         # 写一种b大于0时的情况，然后配合取反函数适应所有情况，快速乘得用右移，只能递归了
-        if not a or not b: return 0
+        if a == 0 or b == 0: return 0
         if a == 1: return b
         if b == 1: return a
         if b < 0: return self.ng(self.multiply(a, self.ng(b)))
@@ -65,33 +50,27 @@ class Operations:
         return res
 
     def divide(self, a: int, b: int) -> int:
-        if not a: return 0
         if b == 1: return a
         if a < 0: return self.ng(self.divide(self.ng(a), b))
         if b < 0: return self.ng(self.divide(a, self.ng(b)))
-        mask = res = i = 0
+        if a < b: return 0
+        mask = cur = i = 0
         base = b
-        while res < a and i < 30:
+        while cur + base <= a and i < 30:
             mask += self.pos[i]
-            res += base
+            cur += base
             base += base
             i += 1
+        res = mask + self.divide(self.minus(a, cur), b)
+        return res
 
 if __name__ == '__main__':
     a = Operations()
-    # x = a.minus(5, 3)
-    # print(x, 2)
-    # x = a.minus(-5, 3)
-    # print(x, -8)
-    # x = a.minus(5, -3)
-    # print(x, 8)
-    # x = a.minus(-5, -3)
-    # print(x, -2)
-    x = a.multiply(3, 5)
-    print(x)
-    x = a.multiply(-3, 5)
-    print(x)
-    x = a.multiply(5, -3)
-    print(x)
-    x = a.multiply(-5, -3)
-    print(x)
+    x = a.divide(1, -109883727)
+    print(x) # 0
+    x = a.divide(-13969484, -5)
+    print(x) # 2793896
+    x = a.divide(-11954206, 5401)
+    print(x) # -221
+    x = a.divide(404385, -263)
+    print(x) # -1537

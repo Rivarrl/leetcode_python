@@ -12,25 +12,14 @@ class Solution:
     """
     @timeit
     def getMaxMatrix(self, matrix: List[List[int]]) -> List[int]:
+        res = [0] * 4
+        m = matrix[0][0]
         n, m = len(matrix), len(matrix[0])
-        pre = [[0] * (m+1) for _ in range(n+1)]
-        res = [-1,-1,-1,-1]
-        mx = -0x3f3f3f3f
-        for i in range(n):
-            for j in range(m):
-                pre[i+1][j+1] += pre[i+1][j] + matrix[i][j]
-        for j in range(1, m+1):
-            for i in range(1, n+1):
-                pre[i][j] += pre[i-1][j]
-        for xi in range(n):
-            for xj in range(m):
-                for yi in range(xi, n):
-                    for yj in range(xj, m):
-                        cur = pre[yi+1][yj+1] + pre[xi][xj] - pre[xi][yj+1] - pre[yi+1][xj]
-                        if mx < cur:
-                            mx = cur
-                            res = [xi, xj, yi, yj]
-        return res
+        for r1 in range(n):
+            dp = [0] * m
+            for r2 in range(r1, n):
+                dp[]
+
 
 if __name__ == '__main__':
     a = Solution()

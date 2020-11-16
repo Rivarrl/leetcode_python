@@ -7,6 +7,9 @@
 from algorithm_utils import *
 
 class Solution:
+    """
+    [面试题 17.17. 多次搜索](https://leetcode-cn.com/problems/multi-search-lcci)
+    """
     @timeit
     def multiSearch(self, big: str, smalls: List[str]) -> List[List[int]]:
         trie = {}

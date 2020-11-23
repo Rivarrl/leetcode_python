@@ -17,29 +17,29 @@ class Solution:
         direction = ['R', 'D', 'L', 'U']
         dxy = [[0, 1], [-1, 0], [0, -1], [1, 0]]
         cur = [0, 0, 0]
-        for _ in range(K):
+        for step in range(K):
             i, j, k = cur
-            dx, dy = dxy[k]
-            i += dx
-            j += dy
-            if rec.get((i, j), 0) == 0:
+            color = rec[(i, j)]
+            rec[(i, j)] = 1 - color
+            if color == 0:
                 k = (k + 1) % 4
             else:
                 k = (k + 3) % 4
-            rec[(i, j)] = 1 - rec.get((i, j), 0)
+            dx, dy = dxy[k]
+            i += dx
+            j += dy
             cur = [i, j, k]
-            l, r, d, u = min(l, i), max(r, i), min(d, j), max(u, j)
-        print(l, r, d, u)
-        res = [[''] * (u-d+1) for _ in range(l, r+1)]
-        pos = tuple(cur[:2])
-        for di in range(l, r+1):
-            for dj in range(d, u+1):
-                i, j = di - l, dj - d
+            rec[(i, j)] = rec.get((i, j), 0)
+            l, r, d, u = min(l, j), max(r, j), min(d, i), max(u, i)
+        res = [['_' for _ in range(l, r+1)] for _ in range(d, u+1)]
+        for di in range(u - d + 1):
+            for dj in range(r - l + 1):
+                i, j = di + d, dj + l
                 if i == cur[0] and j == cur[1]:
-                    res[i][j] = direction[cur[-1]]
+                    res[di][dj] = direction[cur[-1]]
                 else:
-                    res[i][j] = 'X' if rec.get((i, j), 0) == 1 else '_'
-        return [''.join(e) for e in res]
+                    res[di][dj] = 'X' if rec.get((i, j), 0) == 1 else '_'
+        return [''.join(e) for e in res[::-1]]
 
 if __name__ == '__main__':
     a = Solution()

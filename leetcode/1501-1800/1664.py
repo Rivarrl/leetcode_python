@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # ======================================
-# @File    : 5607.py
+# @File    : 1664.py
 # @Time    : 2020/11/22 11:04
 # @Author  : Rivarrl
 # ======================================
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1664. 生成平衡数组的方案数](https://leetcode-cn.com/problems/ways-to-make-a-fair-array/)
+    """
     @timeit
     def waysToMakeFair(self, nums: List[int]) -> int:
         pre0 = [0]

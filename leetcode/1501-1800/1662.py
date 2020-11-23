@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # ======================================
-# @File    : 5605.py
+# @File    : 1662.py
 # @Time    : 2020/11/22 10:33
 # @Author  : Rivarrl
 # ======================================
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1662. 检查两个字符串数组是否相等](https://leetcode-cn.com/problems/check-if-two-string-arrays-are-equivalent/)
+    """
     @timeit
     def arrayStringsAreEqual(self, word1: List[str], word2: List[str]) -> bool:
         return ''.join(word1) == ''.join(word2)

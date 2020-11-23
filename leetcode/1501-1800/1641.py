@@ -12,9 +12,18 @@ class Solution:
     """
     @timeit
     def countVowelStrings(self, n: int) -> int:
+        a = e = i = o = u = 1
+        for _ in range(1, n):
+            e += a
+            i += e
+            o += i
+            u += o
+        return a + e + i + o + u
+
 
 
 if __name__ == '__main__':
     a = Solution()
     a.countVowelStrings(1)
     a.countVowelStrings(2)
+    a.countVowelStrings(33)

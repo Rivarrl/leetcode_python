@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # ======================================
-# @File    : 5606.py
+# @File    : 1663.py
 # @Time    : 2020/11/22 10:35
 # @Author  : Rivarrl
 # ======================================
 from algorithm_utils import *
-import sys
-sys.setrecursionlimit(100000)
 
 class Solution:
+    """
+    [1663. 具有给定数值的最小字符串](https://leetcode-cn.com/problems/smallest-string-with-a-given-numeric-value/)
+    """
     @timeit
     def getSmallestString(self, n: int, k: int) -> str:
         alp = "abcdefghijklmnopqrstuvwxyz"

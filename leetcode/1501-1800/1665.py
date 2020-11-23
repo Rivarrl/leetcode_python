@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # ======================================
-# @File    : 5608.py
+# @File    : 1665.py
 # @Time    : 2020/11/22 11:20
 # @Author  : Rivarrl
 # ======================================
 from algorithm_utils import *
 
 class Solution:
+    """
+    [1665. 完成所有任务的最少初始能量](https://leetcode-cn.com/problems/minimum-initial-energy-to-finish-tasks/)
+    """
     @timeit
     def minimumEffort(self, tasks: List[List[int]]) -> int:
         tasks.sort(key=lambda x:(x[1]-x[0], x[1], x[0]))

@@ -5,10 +5,12 @@
 # @Author  : Rivarrl
 # ======================================
 from algorithm_utils import *
-from collections import deque
+import bisect
 
 class Codec:
-
+    """
+    [449. 序列化和反序列化二叉搜索树](https://leetcode-cn.com/problems/serialize-and-deserialize-bst/)
+    """
     def pre_order(self, root):
         arr = []
         def f(p):
@@ -36,16 +38,17 @@ class Codec:
         return str(pre) + '|' + str(mid)
 
     def deserialize(self, data: str) -> TreeNode:
-        if data == '[]|[]': return None
+        if not data or data == '[]|[]': return None
         pre, mid = [list(map(int, e[1:-1].split(','))) for e in data.split('|')]
-        n = len(pre)
-        def _des(i1, j1, i2, j2):
-            rv = pre[i1]
+        def _des(pre, mid):
+            if not pre: return
+            rv = pre[0]
             root = TreeNode(rv)
-
-        return _des(0, n-1, 0, n-1)
-
-
+            j = bisect.bisect_left(mid, rv)
+            root.left = _des(pre[1:j+1], mid[:j])
+            root.right = _des(pre[j+1:], mid[j+1:])
+            return root
+        return _des(pre, mid)
 
 
 if __name__ == '__main__':
@@ -54,4 +57,5 @@ if __name__ == '__main__':
     xs = a.serialize(x)
     print(xs)
     xx = a.deserialize(xs)
-    print(x == xx)
+    tree_node_print(x)
+    tree_node_print(xx)

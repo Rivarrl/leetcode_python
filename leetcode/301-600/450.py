@@ -12,19 +12,32 @@ class Solution:
     """
     @timeit
     def deleteNode(self, root: TreeNode, key: int) -> TreeNode:
-        p, q = root, None
-        while p:
-            if not p: break
-            if p.val == key:
-                if not q:
-                    t = p.right
-                else:
-
-            elif p.val > key:
-                p, q = p.left, p
+        if not root: return root
+        elif root.val > key:
+            root.left = self.deleteNode(root.left, key)
+        elif root.val < key:
+            root.right = self.deleteNode(root.right, key)
+        else:
+            if not root.left:
+                root = root.right
+            elif not root.right:
+                root = root.left
             else:
-                p, q = p.right, p
+                prev = self.getPrevNode(root.left)
+                prev.left = self.deletePrevNode(root.left)
+                prev.right = root.right
+                root = prev
         return root
+
+    def deletePrevNode(self, root: TreeNode) -> TreeNode:
+        if not root.right: return root.left
+        root.right = self.deletePrevNode(root.right)
+        return root
+
+    def getPrevNode(self, root: TreeNode) -> TreeNode:
+        if not root.right: return root
+        return self.getPrevNode(root.right)
+
 
 if __name__ == '__main__':
     a = Solution()

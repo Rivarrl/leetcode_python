@@ -12,22 +12,26 @@ class Solution:
     """
     @timeit
     def circularArrayLoop(self, nums: List[int]) -> bool:
+        getnext = lambda i: (n + i + nums[i]) % n
         n = len(nums)
         for i in range(n):
-            j = i
-            rec = [False] * n
-            rnd = False
-            d, tot = nums[i], 0
-            while not rec[(j + nums[j] + n) % n]:
-                j = (j + nums[j] + n) % n
-                if d * nums[j] < 0: break
-                if j + nums[j] < 0 or j + nums[j] >= n:
-                    rnd = True
-                tot += 1
-                rec[j] = True
-            else:
-                if rnd and j == i and tot > 1:
+            cur = nums[i]
+            # 访问过之后置0
+            if cur == 0: continue
+            slow, fast = i, getnext(i)
+            # 相同方向相乘>0，同时保证fast的两步都是同向
+            while cur * nums[fast] > 0 and cur * nums[getnext(fast)] > 0:
+                if slow == fast:
+                    # 如果相遇，还要判断是否步长为1，让slow再走一步看看是不是自己
+                    if slow == getnext(slow):
+                        break
                     return True
+                slow = getnext(slow)
+                fast = getnext(getnext(fast))
+            # 将本次路过的节点标记
+            slow = i
+            while cur * nums[slow] > 0:
+                slow, nums[slow] = getnext(slow), 0
         return False
 
 
@@ -38,3 +42,4 @@ if __name__ == '__main__':
     a.circularArrayLoop([-2,1,-1,-2,-2])
     a.circularArrayLoop([1,1,2])
     a.circularArrayLoop([1,2,2,-1])
+    a.circularArrayLoop([-1,2,1,2])

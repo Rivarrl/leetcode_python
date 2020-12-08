@@ -12,47 +12,35 @@ class Solution:
     """
     @timeit
     def minimumIncompatibility(self, nums: List[int], k: int) -> int:
-        from collections import Counter
         from functools import lru_cache
-        d = Counter(nums)
-        if max(d.values()) > k: return -1
+        from collections import Counter
+        if max(Counter(nums).values()) > k: return -1
         n = len(nums)
-        m = n // k
-        nums.sort()
-        def count1(x):
-            res = 0
-            while x:
-                x &= (x-1)
-                res += 1
-            return res
-        inf = (nums[-1] - nums[0]) * k + 1
+        kn = n // k
+        nums = sorted(nums)
+        inf =(nums[-1] - nums[0]) * k + 1
+
         @lru_cache(None)
-        def f(i, st):
-            if i == n:
-                return calc(st)
+        def solve(st, pre):
+            nonlocal kn
+            rest = [i for i in range(n) if (1 << i) & st == 0]
+            m = len(rest)
+            if m == 0: return 0
+            if pre >= n: return inf
+            # 为新子集分配数字
+            if m % kn == 0: return solve(st | (1 << rest[0]), rest[0])
+            if m % kn > 1:
+                rest = rest[:-(m % kn - 1)]
             res = inf
-            st = list(st)
-            for j in range(k):
-                if count1(st[j]) == m: continue
-                st[j] ^= (1 << i)
-                res = min(res, f(i+1, tuple(st)))
-                st[j] ^= (1 << i)
+            for t in rest:
+                if nums[t] <= nums[pre]:
+                    continue
+                res = min(res, nums[t] - nums[pre] + solve(st | (1 << t), t))
             return res
-        def calc(st):
-            res = 0
-            for j in range(k):
-                x = st[j]
-                i = 0
-                rec = []
-                while x:
-                    if x & 1:
-                        rec.append(nums[i])
-                    i += 1
-                    x >>= 1
-                if len(set(rec)) < m: return inf
-                res += rec[-1] - rec[0]
-            return res
-        return f(0, tuple([0 for _ in range(k)]))
+        ret = solve(0, -1)
+        if ret >= inf:
+            return -1
+        return ret
 
 
 if __name__ == '__main__':

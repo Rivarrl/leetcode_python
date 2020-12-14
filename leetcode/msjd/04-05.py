@@ -12,13 +12,17 @@ class Solution:
     """
     @timeit
     def isValidBST(self, root: TreeNode) -> bool:
-        def f(p):
+        inf = float('inf')
+        def f(p, lo=-inf, hi=inf):
             if not p: return True
-            if p.left
+            return lo < p.val < hi and f(p.left, lo, p.val) and f(p.right, p.val, hi)
+        return f(root)
 
 if __name__ == '__main__':
     a = Solution()
     x = construct_tree_node([2,1,3])
     a.isValidBST(x)
     x = construct_tree_node([5,1,4,null,null,3,6])
+    a.isValidBST(x)
+    x = construct_tree_node([10,5,15,null,null,6,20])
     a.isValidBST(x)

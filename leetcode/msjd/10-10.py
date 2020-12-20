@@ -8,7 +8,11 @@ from algorithm_utils import *
 
 class StreamRank:
 
+    """
+    [面试题 10.10. 数字流的秩](https://leetcode-cn.com/problems/rank-from-stream-lcci/)
+    """
     def __init__(self):
+
 
     def track(self, x: int) -> None:
 

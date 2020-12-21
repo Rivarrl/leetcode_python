@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ======================================
-# @File    : 5629.py
+# @File    : 1694.py
 # @Time    : 2020/12/20 12:11
 # @Author  : Rivarrl
 # ======================================
@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5629. 重新格式化电话号码](https://leetcode-cn.com/problems/reformat-phone-number)
+    [1694. 重新格式化电话号码](https://leetcode-cn.com/problems/reformat-phone-number)
     """
     @timeit
     def reformatNumber(self, number: str) -> str:

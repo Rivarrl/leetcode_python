@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # ======================================
-# @File    : 5630.py
+# @File    : 1695.py
 # @Time    : 2020/12/20 12:20
 # @Author  : Rivarrl
 # ======================================
@@ -8,7 +8,7 @@ from algorithm_utils import *
 
 class Solution:
     """
-    [5630. 删除子数组的最大得分](https://leetcode-cn.com/problems/maximum-erasure-value/)
+    [1695. 删除子数组的最大得分](https://leetcode-cn.com/problems/maximum-erasure-value/)
     """
     @timeit
     def maximumUniqueSubarray(self, nums: List[int]) -> int:

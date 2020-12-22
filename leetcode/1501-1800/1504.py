@@ -12,6 +12,9 @@ class Solution:
     """
     @timeit
     def numSubmat(self, mat: List[List[int]]) -> int:
+        n, m = len(mat), len(mat[0])
+        pre = [[0] for _ in range(n)]
+        
 
 if __name__ == '__main__':
     a = Solution()

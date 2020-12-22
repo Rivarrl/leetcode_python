@@ -21,6 +21,16 @@ class Solution:
         return -1
 
 
+    def firstUniqChar2(self, s: str) -> int:
+        n = len(s)
+        m = n
+        for i in range(26):
+            x = chr(ord('a') + i)
+            if s.find(x) >= 0 and s.find(x) == s.rfind(x):
+                j = s.index(x)
+                if j < m: m = j
+        return -1 if m == n else m
+
 if __name__ == '__main__':
     a = Solution()
     a.firstUniqChar("leetcode")

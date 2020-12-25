@@ -12,14 +12,14 @@ class Solution:
     """
     @timeit
     def countEval(self, s: str, result: int) -> int:
-        res = 0
+        from functools import lru_cache
         n = len(s)
-        def f(i, s):
-            if i == n:
+        @lru_cache(None)
+        def f(s):
+            if not s: return 0
 
 
-        f(0)
-        return res
+        return f(s)
 
 if __name__ == '__main__':
     a = Solution()

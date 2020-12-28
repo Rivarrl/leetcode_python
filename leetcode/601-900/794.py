@@ -19,22 +19,24 @@ class Solution:
                     x += 1
                 elif e == 'O':
                     o += 1
+        def can_win(x):
+            return (board[0][0] == x and board[0][1] == x and board[0][2] == x) \
+                   or (board[1][0] == x and board[1][1] == x and board[1][2] == x) \
+                   or (board[2][0] == x and board[2][1] == x and board[2][2] == x) \
+                   or (board[0][0] == x and board[1][0] == x and board[2][0] == x) \
+                   or (board[0][1] == x and board[1][1] == x and board[2][1] == x) \
+                   or (board[0][2] == x and board[1][2] == x and board[2][2] == x) \
+                   or (board[0][0] == x and board[1][1] == x and board[2][2] == x) \
+                   or (board[0][2] == x and board[1][1] == x and board[2][0] == x)
+
         if x - o > 1 or x - o < 0:
             return False
-        l3 = 0
-        for i in range(3):
-            if board[i].count('X') == 3 or board[i].count('O') == 3:
-                l3 += 1
-        for j in range(3):
-            col = board[0][j] + board[1][j] + board[2][j]
-            if col.count('X') == 3 or col.count('O') == 3:
-                l3 += 1
-        d1, d2 = board[0][0] + board[1][1] + board[2][2], board[0][2] + board[1][1] + board[2][0]
-        if d1.count('X') == 3:
-            l3 += 1
-        if d2.count('O') == 3:
-            l3 += 1
-        return l3 <= 1
+
+        if can_win('X') and x == o:
+            return False
+        if can_win('O') and x > o:
+            return False
+        return True
 
 
 if __name__ == '__main__':

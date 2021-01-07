@@ -16,23 +16,39 @@ class Solution:
         for x in nums:
             pre.append(pre[-1] + x)
         n = len(nums)
-        def f(i, j):
-            a = pre[i]
-            b = pre[j] - pre[i]
-            c = pre[-1] - pre[j]
-            if a <= b <= c: return 1
-            if a > b: return -1
-            return 0
-
+        pm = (pre[-1] // 3) + (pre[-1] % 3)
         res = 0
-        for i in range(1, n-1):
+        for i in range(1, n):
+            a = pre[i]
+            if a > pm: break
             lo, hi = i + 1, n
-            flag = False
             while lo < hi:
                 mi = lo + hi >> 1
-                st = f(i, mi)
-            if flag:
-                res += hi - i
+                b = pre[mi] - pre[i]
+                c = pre[-1] - pre[mi]
+                if b > c:
+                    hi = mi
+                elif b < a:
+                    lo = mi + 1
+                else:
+                    if hi == mi: break
+                    hi = mi
+            l = hi
+
+            lo, hi = i + 1, n
+            while lo < hi:
+                mi = lo + hi >> 1
+                b = pre[mi] - pre[i]
+                c = pre[-1] - pre[mi]
+                if b > c:
+                    hi = mi
+                elif b < a:
+                    lo = mi + 1
+                else:
+                    if lo == mi: break
+                    lo = mi
+            r = lo
+            res += r - l + 1
         return res % (10 ** 9 + 7)
 
 
@@ -41,3 +57,4 @@ if __name__ == '__main__':
     a.waysToSplit(nums = [1,1,1])
     a.waysToSplit(nums = [1,2,2,2,5,0])
     a.waysToSplit(nums = [3,2,1])
+    a.waysToSplit([0, 3, 3])

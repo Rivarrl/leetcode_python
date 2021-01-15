@@ -15,27 +15,28 @@ class Solution:
         import heapq
         q = []
         n = len(apples)
+        res = 0
         for i in range(n):
-            if apples[i] > 0:
-                heapq.heappush(q, [apples[i], i + days[i] - 1])
-            while q and q[0][1] <= i:
+            while q and q[0][0] < i:
                 heapq.heappop(q)
+            if apples[i] > 0:
+                heapq.heappush(q, [i + days[i] - 1, apples[i]])
             if q:
                 t = heapq.heappop(q)
-                if t[0] > 1:
-                    t[0] -= 1
+                res += 1
+                t[1] -= 1
+                if t[1] > 0:
                     heapq.heappush(q, t)
         last_day = n - 1
-        res = 0
         while q:
             t = heapq.heappop(q)
-            if last_day < t[1]:
-                if t[1] - last_day <= t[0]: # 全吃了
-                    res += t[0]
-                    last_day += t[0]
+            if last_day < t[0]:
+                if t[0] - last_day >= t[1]:
+                    res += t[1]
+                    last_day += t[1]
                 else:
-                    res += t[1] - last_day
-                    last_day = t[1]
+                    res += t[0] - last_day
+                    last_day = t[0]
         return res
 
 if __name__ == '__main__':

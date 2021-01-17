@@ -33,7 +33,6 @@ def minimumMoves(arr: List[int]) -> int:
             else:
                 for x in range(i, j):
                     dp[i][j] = min(dp[i][j], dp[i][x] + dp[x+1][j])
-    print(dp)
     return dp[0][n-1]
 
 
@@ -60,7 +59,6 @@ def minimumMoves2(arr):
     n = len(arr)
     dp = [[-1] * n for _ in range(n)]
     res = fdp(0, n-1)
-    print(dp)
     return res
 
 

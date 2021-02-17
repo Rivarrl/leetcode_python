@@ -45,7 +45,7 @@ class Solution:
         dsu = []
         for i, j in hits:
             grid[i][j] -= 1
-        
+
 
 
 if __name__ == '__main__':

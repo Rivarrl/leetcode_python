@@ -12,7 +12,21 @@ class Solution:
     """
     @timeit
     def maxEnvelopes(self, envelopes: List[List[int]]) -> int:
+        import bisect
+        if not envelopes:
+            return 0
+        n = len(envelopes)
+        envelopes.sort(key=lambda x: (x[0], -x[1]))
+        f = [envelopes[0][1]]
+        for i in range(1, n):
+            num = envelopes[i][1]
+            if num > f[-1]:
+                f.append(num)
+            else:
+                index = bisect.bisect_left(f, num)
+                f[index] = num
 
+        return len(f)
 
 if __name__ == '__main__':
     a = Solution()

@@ -12,8 +12,18 @@ class Solution:
     """
     @timeit
     def minOperations(self, s: str) -> int:
+        cnt1 = cnt2 = 0
+        x1, x2 = "0", "1"
+        for c in s:
+            if c != x1:
+                cnt1 += 1
+            if c != x2:
+                cnt2 += 1
+            x1, x2 = x2, x1
+        return min(cnt1, cnt2)
 
 if __name__ == '__main__':
     a = Solution()
-    a.minOperations()
-    a.minOperations()
+    a.minOperations(s = "0100")
+    a.minOperations(s = "10")
+    a.minOperations(s = "1111")
